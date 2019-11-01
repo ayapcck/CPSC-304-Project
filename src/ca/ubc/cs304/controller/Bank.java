@@ -19,6 +19,7 @@ public class Bank implements LoginWindowDelegate, TerminalTransactionsDelegate {
 	}
 	
 	private void start() {
+		dbHandler.addRequiredTables();
 		loginWindow = new LoginWindow();
 		loginWindow.showFrame(this);
 	}

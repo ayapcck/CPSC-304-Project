@@ -1,5 +1,6 @@
 package ca.ubc.cs304.database;
 
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.ibatis.db.util.ScriptRunner;
 
 import ca.ubc.cs304.model.BranchModel;
 
@@ -39,6 +43,25 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
+
+	public void addRequiredTables() {
+        ScriptRunner sr = new ScriptRunner();
+        String pathRoot = new File("").getAbsolutePath();
+        String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
+        path = pathRoot + path;
+        File tableDir = new File(path);
+        File[] tables = tableDir.listFiles();
+        if (tables != null) {
+            for (File file : tables) {
+                try {
+                    Reader reader = new BufferedReader(new FileReader(file));
+                    sr.runScript(connection, reader);
+                } catch (IOException | SQLException e) {
+                    System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+                }
+            }
+        }
+    }
 
 	public void deleteBranch(int branchId) {
 		try {
