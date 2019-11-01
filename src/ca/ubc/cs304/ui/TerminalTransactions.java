@@ -33,6 +33,7 @@ public class TerminalTransactions {
 		
 		while (choice != 5) {
 			System.out.println();
+			// TODO: Fix which transactions we want to have here
 			System.out.println("1. Insert branch");
 			System.out.println("2. Delete branch");
 			System.out.println("3. Update branch name");
