@@ -9,8 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.ibatis.db.util.ScriptRunner;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import ca.ubc.cs304.model.BranchModel;
 
@@ -45,7 +44,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	public void addRequiredTables() {
-        ScriptRunner sr = new ScriptRunner();
+        ScriptRunner sr = new ScriptRunner(connection);
         String pathRoot = new File("").getAbsolutePath();
         String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
         path = pathRoot + path;
@@ -55,8 +54,8 @@ public class DatabaseConnectionHandler {
             for (File file : tables) {
                 try {
                     Reader reader = new BufferedReader(new FileReader(file));
-                    sr.runScript(connection, reader);
-                } catch (IOException | SQLException e) {
+                    sr.runScript(reader);
+                } catch (IOException e) {
                     System.out.println(EXCEPTION_TAG + " " + e.getMessage());
                 }
             }
@@ -169,7 +168,7 @@ public class DatabaseConnectionHandler {
 	
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
-	
+
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {

@@ -38,7 +38,8 @@ public class TerminalTransactions {
 			System.out.println("3. Update branch name");
 			System.out.println("4. Show branch");
 			System.out.println("5. Quit");
-			System.out.print("Please choose one of the above 5 options: ");
+			System.out.println("6. Add required tables");
+			System.out.print("Please choose one of the above 6 options: ");
 
 			choice = readInteger(false);
 
@@ -61,12 +62,18 @@ public class TerminalTransactions {
 				case 5:
 					handleQuitOption();
 					break;
+				case 6:
+					handleAddTablesOption();
 				default:
 					System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
 					break;
 				}
 			}
 		}		
+	}
+
+	private void handleAddTablesOption() {
+		delegate.addRequiredTables();
 	}
 	
 	private void handleDeleteOption() {

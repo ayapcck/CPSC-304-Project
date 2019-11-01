@@ -19,7 +19,6 @@ public class Bank implements LoginWindowDelegate, TerminalTransactionsDelegate {
 	}
 	
 	private void start() {
-		dbHandler.addRequiredTables();
 		loginWindow = new LoginWindow();
 		loginWindow.showFrame(this);
 	}
@@ -77,7 +76,12 @@ public class Bank implements LoginWindowDelegate, TerminalTransactionsDelegate {
     	dbHandler.updateBranch(branchId, name);
     }
 
-    /**
+	@Override
+	public void addRequiredTables() {
+		dbHandler.addRequiredTables();
+	}
+
+	/**
 	 * TermainalTransactionsDelegate Implementation
 	 * 
 	 * Displays information about varies bank branches.
