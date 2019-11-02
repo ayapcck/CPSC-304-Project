@@ -12,5 +12,14 @@ CREATE TABLE Vehicle(
     city VARCHAR(255),
     PRIMARY KEY (vID),
     FOREIGN KEY (location, city) REFERENCES Branch,
-    FOREIGN KEY (VTName) REFERENCES VehicleType
+    FOREIGN KEY (VTName) REFERENCES VehicleType,
+    CHECK (status = 'for_rent' OR status = 'for_sale')
 );
+
+CREATE VIEW ForRent AS
+SELECT * FROM Vehicle
+WHERE status = 'for_rent';
+
+CREATE VIEW ForSale AS
+SELECT * FROM Vehicle
+WHERE status = 'for_sale';

@@ -1,7 +1,7 @@
 CREATE TABLE TimePeriod(
-    fromDate date,
+    fromDate DATE,
     fromTime VARCHAR(255),
-    toDate date,
+    toDate DATE,
     toTime VARCHAR(255),
     PRIMARY KEY (fromDate, fromTime, toDate, toTime)
 );
