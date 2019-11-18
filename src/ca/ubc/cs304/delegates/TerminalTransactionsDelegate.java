@@ -16,6 +16,7 @@ public interface TerminalTransactionsDelegate {
 	public void insertBranch(BranchModel model);
 	public void showBranch();
 	public void updateBranch(int branchId, String name);
-	
+	public void addRequiredTables();
+
 	public void terminalTransactionsFinished();
 }
