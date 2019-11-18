@@ -14,7 +14,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library name="ojdbc8.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/resources/ojdbc8.jar!/" />
