@@ -1,6 +1,7 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.BranchModel;
+import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.*;
 import java.sql.*;
@@ -36,24 +37,28 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void addRequiredTables() {
-	    // ScriptRunner sr = new ScriptRunner(connection);
-        String pathRoot = new File("").getAbsolutePath();
-        String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
-        path = pathRoot + path;
-        File tableDir = new File(path);
-        File[] tables = tableDir.listFiles();
-        if (tables != null) {
-            for (File file : tables) {
-                try {
-                    Reader reader = new BufferedReader(new FileReader(file));
-                    // sr.runScript(reader);
-                } catch (IOException e) {
-                    System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-                }
-            }
-        }
+	private void executeSQLFile(String path) {
+		ScriptRunner sr = new ScriptRunner(connection);
+		String pathRoot = new File("").getAbsolutePath();
+		path = pathRoot + path;
+		File file = new File(path);
+		try {
+			Reader reader = new BufferedReader(new FileReader(file));
+			sr.runScript(reader);
+		} catch (IOException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+	}
+
+	public void addRequiredTablesAndData() {
+		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
+		executeSQLFile(path);
     }
+
+	public void dropAllRequiredTables() {
+		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
+		executeSQLFile(path);
+	}
 
 	public void deleteBranch(int branchId) {
 		try {
