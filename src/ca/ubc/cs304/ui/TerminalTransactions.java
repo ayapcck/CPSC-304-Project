@@ -34,13 +34,11 @@ public class TerminalTransactions {
 		while (choice != 5) {
 			System.out.println();
 			// TODO: Fix which transactions we want to have here
-			System.out.println("1. Insert branch");
-			System.out.println("2. Delete branch");
-			System.out.println("3. Update branch name");
-			System.out.println("4. Show branch");
-			System.out.println("5. Quit");
-			System.out.println("6. Add required tables");
-			System.out.print("Please choose one of the above 6 options: ");
+			System.out.println("1. ADMIN: Setup Database (Option 2, then 3, together)");
+			System.out.println("2. ADMIN: Drop Tables");
+			System.out.println("3. ADMIN: Add Tables and Data");
+			System.out.println("4. Quit");
+			System.out.print("Please choose one of the above 4 options: ");
 
 			choice = readInteger(false);
 
@@ -48,84 +46,24 @@ public class TerminalTransactions {
 
 			if (choice != INVALID_INPUT) {
 				switch (choice) {
-				case 1:  
-					handleInsertOption(); 
+				case 1:
+					delegate.setupDatabase();
 					break;
-				case 2:  
-					handleDeleteOption(); 
+				case 2:
+					delegate.dropTables();
 					break;
-				case 3: 
-					handleUpdateOption();
+				case 3:
+					delegate.addTablesAndData();
 					break;
-				case 4:  
-					delegate.showBranch(); 
-					break;
-				case 5:
+				case 4:
 					handleQuitOption();
 					break;
-				case 6:
-					handleAddTablesOption();
 				default:
 					System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
 					break;
 				}
 			}
 		}		
-	}
-
-	private void handleAddTablesOption() {
-		delegate.addRequiredTables();
-	}
-	
-	private void handleDeleteOption() {
-		int branchId = INVALID_INPUT;
-		while (branchId == INVALID_INPUT) {
-			System.out.print("Please enter the branch ID you wish to delete: ");
-			branchId = readInteger(false);
-			if (branchId != INVALID_INPUT) {
-				delegate.deleteBranch(branchId);
-			}
-		}
-	}
-	
-	private void handleInsertOption() {
-		int id = INVALID_INPUT;
-		while (id == INVALID_INPUT) {
-			System.out.print("Please enter the branch ID you wish to insert: ");
-			id = readInteger(false);
-		}
-		
-		String name = null;
-		while (name == null || name.length() <= 0) {
-			System.out.print("Please enter the branch name you wish to insert: ");
-			name = readLine().trim();
-		}
-		
-		// branch address is allowed to be null so we don't need to repeatedly ask for the address
-		System.out.print("Please enter the branch address you wish to insert: ");
-		String address = readLine().trim();
-		if (address.length() == 0) {
-			address = null;
-		}
-		
-		String city = null;
-		while (city == null || city.length() <= 0) {
-			System.out.print("Please enter the branch city you wish to insert: ");
-			city = readLine().trim();
-		}
-		
-		int phoneNumber = INVALID_INPUT;
-		while (phoneNumber == INVALID_INPUT) {
-			System.out.print("Please enter the branch phone number you wish to insert: ");
-			phoneNumber = readInteger(true);
-		}
-		
-		BranchModel model = new BranchModel(address,
-											city,
-											id,
-											name,
-											phoneNumber);
-		delegate.insertBranch(model);
 	}
 	
 	private void handleQuitOption() {
@@ -140,22 +78,6 @@ public class TerminalTransactions {
 		}
 		
 		delegate.terminalTransactionsFinished();
-	}
-	
-	private void handleUpdateOption() {
-		int id = INVALID_INPUT;
-		while (id == INVALID_INPUT) {
-			System.out.print("Please enter the branch ID you wish to update: ");
-			id = readInteger(false);
-		}
-		
-		String name = null;
-		while (name == null || name.length() <= 0) {
-			System.out.print("Please enter the branch name you wish to update: ");
-			name = readLine().trim();
-		}
-
-		delegate.updateBranch(id, name);
 	}
 	
 	private int readInteger(boolean allowEmpty) {
