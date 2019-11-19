@@ -3,18 +3,18 @@ package ca.ubc.cs304.model;
 public class Reservations {
     private Integer confNo;
     private String vtName;
-    private String cellNum;
+    private String dLicense;
     private String fromDate; // DATE in SQL
     private String toDate; // DATE in SQL
     private String fromTime;
     private String toTime;
 
-    public Reservations(Integer confNo, String vtName, String cellNum, String fromDate, String fromTime, String toDate,
+    public Reservations(Integer confNo, String vtName, String dLicense, String fromDate, String fromTime, String toDate,
                         String toTime) {
         // TODO: ENFORCE PRIMARY KEY AND REFERENCES
         this.confNo = confNo;
         this.vtName = vtName;
-        this.cellNum = cellNum;
+        this.dLicense = dLicense;
         this.fromDate = fromDate;
         this.fromTime = fromTime;
         this.toDate = toDate;
@@ -30,8 +30,8 @@ public class Reservations {
         return vtName;
     }
 
-    public String getCellNum() {
-        return cellNum;
+    public String getdLicense() {
+        return dLicense;
     }
 
     public String getFromDate() {

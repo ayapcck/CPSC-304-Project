@@ -11,7 +11,7 @@ CREATE TABLE Customer(
     name VARCHAR(255),
     address VARCHAR(255),
     driversLicense VARCHAR(255),
-    PRIMARY KEY (cellNum)
+    PRIMARY KEY (driversLicense)
 );
 
 CREATE TABLE Branch(
@@ -45,7 +45,7 @@ CREATE TABLE Vehicle(
     VTName VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
-    PRIMARY KEY (vID),
+    PRIMARY KEY (vLicense),
     FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (VTName) REFERENCES VehicleType,
     CHECK (status = 'for_rent' OR status = 'for_sale')
@@ -62,14 +62,14 @@ WHERE status = 'for_sale';
 CREATE TABLE Reservations(
     confNo INTEGER,
     VTName VARCHAR(255) NOT NULL,
-    cellNum VARCHAR(255) NOT NULL,
+    driversLicense VARCHAR(255) NOT NULL,
     fromDate DATE,
     fromTime VARCHAR(255),
     toDate DATE,
     toTime VARCHAR(255),
     PRIMARY KEY (confNo),
     FOREIGN KEY (VTName) REFERENCES VehicleType,
-    FOREIGN KEY (cellNum) REFERENCES Customer,
+    FOREIGN KEY (driversLicense) REFERENCES Customer,
     FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES TimePeriod
 );
 
