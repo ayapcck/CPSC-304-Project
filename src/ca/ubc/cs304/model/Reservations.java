@@ -19,6 +19,7 @@ public class Reservations {
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
+
     }
 
     public Integer getConfNo() {

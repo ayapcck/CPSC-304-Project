@@ -47,71 +47,30 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			}
 		}
 	}
-	
-	/**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Insert a branch with the given info
-	 */
-    public void insertBranch(BranchModel model) {
-    	dbHandler.insertBranch(model);
-    }
 
-    /**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Delete branch with given branch ID.
-	 */ 
-    public void deleteBranch(int branchId) {
-    	dbHandler.deleteBranch(branchId);
-    }
-    
-    /**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Update the branch name for a specific ID
-	 */
+	public void addRequiredTablesAndData() {
+		dbHandler.addRequiredTablesAndData();
+	}
 
-    public void updateBranch(int branchId, String name) {
-    	dbHandler.updateBranch(branchId, name);
-    }
+	public void dropRequiredTables() {
+		dbHandler.dropAllRequiredTables();
+	}
 
 	@Override
-	public void addRequiredTables() {
-		dbHandler.addRequiredTables();
+	public void setupDatabase() {
+    	dbHandler.dropAllRequiredTables();
+		dbHandler.addRequiredTablesAndData();
+	}
+
+	@Override
+	public void viewAllTables() {
+		String[] tables = dbHandler.getAllTables();
+		for (String table : tables) {
+			System.out.println(table);
+		}
 	}
 
 	/**
-	 * TermainalTransactionsDelegate Implementation
-	 * 
-	 * Displays information about varies bank branches.
-	 */
-    public void showBranch() {
-    	BranchModel[] models = dbHandler.getBranchInfo();
-    	
-    	for (int i = 0; i < models.length; i++) {
-    		BranchModel model = models[i];
-    		
-    		// simplified output formatting; truncation may occur
-    		System.out.printf("%-10.10s", model.getId());
-    		System.out.printf("%-20.20s", model.getName());
-    		if (model.getAddress() == null) {
-    			System.out.printf("%-20.20s", " ");
-    		} else {
-    			System.out.printf("%-20.20s", model.getAddress());
-    		}
-    		System.out.printf("%-15.15s", model.getCity());
-    		if (model.getPhoneNumber() == 0) {
-    			System.out.printf("%-15.15s", " ");
-    		} else {
-    			System.out.printf("%-15.15s", model.getPhoneNumber());
-    		}
-    		
-    		System.out.println();
-    	}
-    }
-	
-    /**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
      * The TerminalTransaction instance tells us that it is done with what it's 
