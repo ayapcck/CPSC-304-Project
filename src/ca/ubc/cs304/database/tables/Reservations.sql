@@ -1,5 +1,5 @@
 CREATE TABLE Reservations(
-    confNo INTEGER,
+    confNo INTEGER not null,
     VTName VARCHAR(255),
     cellNum VARCHAR(255),
     fromDate DATE,

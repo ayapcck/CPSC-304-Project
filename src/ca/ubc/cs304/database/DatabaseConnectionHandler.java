@@ -1,17 +1,10 @@
 package ca.ubc.cs304.database;
 
-import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.ibatis.jdbc.ScriptRunner;
-
 import ca.ubc.cs304.model.BranchModel;
+
+import java.io.*;
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  * This class handles all database related transactions
@@ -44,7 +37,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	public void addRequiredTables() {
-        ScriptRunner sr = new ScriptRunner(connection);
+	    // ScriptRunner sr = new ScriptRunner(connection);
         String pathRoot = new File("").getAbsolutePath();
         String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
         path = pathRoot + path;
@@ -54,7 +47,7 @@ public class DatabaseConnectionHandler {
             for (File file : tables) {
                 try {
                     Reader reader = new BufferedReader(new FileReader(file));
-                    sr.runScript(reader);
+                    // sr.runScript(reader);
                 } catch (IOException e) {
                     System.out.println(EXCEPTION_TAG + " " + e.getMessage());
                 }

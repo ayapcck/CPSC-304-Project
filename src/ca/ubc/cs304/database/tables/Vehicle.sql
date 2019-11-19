@@ -1,6 +1,6 @@
 CREATE TABLE Vehicle(
     vID INTEGER,
-    vLicense VARCHAR(255),
+    vLicense VARCHAR(255) not null,
     make VARCHAR(255),
     model VARCHAR(255),
     year INTEGER,
@@ -10,7 +10,7 @@ CREATE TABLE Vehicle(
     VTName VARCHAR(255),
     location VARCHAR(255),
     city VARCHAR(255),
-    PRIMARY KEY (vID),
+    PRIMARY KEY (vLicense),
     FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (VTName) REFERENCES VehicleType,
     CHECK (status = 'for_rent' OR status = 'for_sale')

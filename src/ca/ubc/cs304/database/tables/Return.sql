@@ -1,5 +1,5 @@
 CREATE TABLE Return(
-    rID INTEGER,
+    rID INTEGER not null,
     returnDate DATE,
     odometer INTEGER,
     fullTank NUMBER(1),
