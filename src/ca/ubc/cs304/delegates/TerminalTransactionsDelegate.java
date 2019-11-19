@@ -12,9 +12,10 @@ import ca.ubc.cs304.model.BranchModel;
  * Bank is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-	public void addTablesAndData();
-	public void dropTables();
+	public void addRequiredTablesAndData();
+	public void dropRequiredTables();
 	public void setupDatabase();
+	public void viewAllTables();
 
 	public void terminalTransactionsFinished();
 }

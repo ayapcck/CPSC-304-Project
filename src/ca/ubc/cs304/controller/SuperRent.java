@@ -48,11 +48,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
-	public void addTablesAndData() {
+	public void addRequiredTablesAndData() {
 		dbHandler.addRequiredTablesAndData();
 	}
 
-	public void dropTables() {
+	public void dropRequiredTables() {
 		dbHandler.dropAllRequiredTables();
 	}
 
@@ -61,8 +61,16 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     	dbHandler.dropAllRequiredTables();
 		dbHandler.addRequiredTablesAndData();
 	}
-	
-    /**
+
+	@Override
+	public void viewAllTables() {
+		String[] tables = dbHandler.getAllTables();
+		for (String table : tables) {
+			System.out.println(table);
+		}
+	}
+
+	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
      * The TerminalTransaction instance tells us that it is done with what it's 

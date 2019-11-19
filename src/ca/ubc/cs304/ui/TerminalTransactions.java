@@ -3,6 +3,8 @@ package ca.ubc.cs304.ui;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cs304.model.BranchModel;
@@ -29,14 +31,19 @@ public class TerminalTransactions {
 		this.delegate = delegate;
 		
 	    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+	    handleMainInteractions();
+
+	}
+
+	private void handleMainInteractions() {
 		int choice = INVALID_INPUT;
-		
-		while (choice != 5) {
+
+		while (choice != 4) {
 			System.out.println();
-			// TODO: Fix which transactions we want to have here
-			System.out.println("1. ADMIN: Setup Database (Option 2, then 3, together)");
-			System.out.println("2. ADMIN: Drop Tables");
-			System.out.println("3. ADMIN: Add Tables and Data");
+
+			System.out.println("1. Database Manipulations (Including Setup)");
+			System.out.println("2. Customer Transactions");
+			System.out.println("3. Clerk Transactions");
 			System.out.println("4. Quit");
 			System.out.print("Please choose one of the above 4 options: ");
 
@@ -46,24 +53,75 @@ public class TerminalTransactions {
 
 			if (choice != INVALID_INPUT) {
 				switch (choice) {
-				case 1:
-					delegate.setupDatabase();
-					break;
-				case 2:
-					delegate.dropTables();
-					break;
-				case 3:
-					delegate.addTablesAndData();
-					break;
-				case 4:
-					handleQuitOption();
-					break;
-				default:
-					System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
-					break;
+					case 1:
+						handleDatabaseInteractions();
+						break;
+					case 2:
+						handleCustomerInteracions();
+						break;
+					case 3:
+						handleClerkInteractions();
+						break;
+					case 4:
+						handleQuitOption();
+						break;
+					default:
+						System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+						break;
 				}
 			}
-		}		
+		}
+	}
+
+	private void handleClerkInteractions() {}
+
+	private void handleCustomerInteracions() {}
+
+	private void handleDatabaseInteractions() {
+
+		int choice = INVALID_INPUT;
+
+		while (choice != 6) {
+			System.out.println();
+
+			System.out.println("1. Setup Database (Option 2, then 3, together)");
+			System.out.println("2. Drop Required Tables");
+			System.out.println("3. Add Required Tables and Data");
+			System.out.println("4. View all tables");
+			System.out.println("5. Main Menu");
+			System.out.println("6. Quit");
+			System.out.print("Please choose one of the above 6 options: ");
+
+			choice = readInteger(false);
+
+			System.out.println(" ");
+
+			if (choice != INVALID_INPUT) {
+				switch (choice) {
+					case 1:
+						delegate.setupDatabase();
+						break;
+					case 2:
+						delegate.dropRequiredTables();
+						break;
+					case 3:
+						delegate.addRequiredTablesAndData();
+						break;
+					case 4:
+						delegate.viewAllTables();
+						break;
+					case 5:
+						handleMainInteractions();
+						break;
+					case 6:
+						handleQuitOption();
+						break;
+					default:
+						System.out.println(WARNING_TAG + " The number that you entered was not a valid option.");
+						break;
+				}
+			}
+		}
 	}
 	
 	private void handleQuitOption() {
