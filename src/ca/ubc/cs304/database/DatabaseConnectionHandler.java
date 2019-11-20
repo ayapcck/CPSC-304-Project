@@ -175,42 +175,42 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void checkVehicleNum(TimePeriod timePeriod, VehicleType vehicleType, Branch branch ) {
-		try {
-			// TODO: do we still need the timePeriod parameter?
-			PreparedStatement ps = connection.prepareStatement
-					("SELECT COUNT(*) FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
-			ps.setString(1, vehicleType.getVtName());
-			ps.setString(2, branch.getLocation());
-			ps.setString(3, branch.getCity());
-//			Date fromDate = new Date(timePeriod.getFromDate().getTimeInMillis());
-//			ps.setDate(5, fromDate);
-//			Date toDate = new Date(timePeriod.getToDate().getTimeInMillis());
-//			ps.setDate(6, toDate);
-//			ps.setString(7, branch.getLocation());
-//			ps.setString(8, branch.getCity());
-			ps.executeUpdate();
-			connection.commit();
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
-	}
-
-	public void listVehicleDetail(TimePeriod timePeriod, VehicleType vehicleType, Branch branch) {
-		try {
-			PreparedStatement ps = connection.prepareStatement
-					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
-			ps.setString(1, vehicleType.getVtName());
-			ps.setString(2, branch.getLocation());
-			ps.setString(3, branch.getCity());
-			ps.executeUpdate();
-			connection.commit();
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
-	}
+//	public void checkVehicleNum(TimePeriod timePeriod, VehicleType vehicleType, Branch branch ) {
+//		try {
+//			// TODO: do we still need the timePeriod parameter?
+//			PreparedStatement ps = connection.prepareStatement
+//					("SELECT COUNT(*) FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+//			ps.setString(1, vehicleType.getVtName());
+//			ps.setString(2, branch.getLocation());
+//			ps.setString(3, branch.getCity());
+////			Date fromDate = new Date(timePeriod.getFromDate().getTimeInMillis());
+////			ps.setDate(5, fromDate);
+////			Date toDate = new Date(timePeriod.getToDate().getTimeInMillis());
+////			ps.setDate(6, toDate);
+////			ps.setString(7, branch.getLocation());
+////			ps.setString(8, branch.getCity());
+//			ps.executeUpdate();
+//			connection.commit();
+//			ps.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
+//	}
+//
+//	public void showVehicleDetails(TimePeriod timePeriod, VehicleType vehicleType, Branch branch) {
+//		try {
+//			PreparedStatement ps = connection.prepareStatement
+//					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+//			ps.setString(1, vehicleType.getVtName());
+//			ps.setString(2, branch.getLocation());
+//			ps.setString(3, branch.getCity());
+//			ps.executeUpdate();
+//			connection.commit();
+//			ps.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
+//	}
 }

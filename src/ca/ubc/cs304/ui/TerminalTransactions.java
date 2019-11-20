@@ -1,11 +1,19 @@
 package ca.ubc.cs304.ui;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
 import ca.ubc.cs304.model.BranchModel;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
+import ca.ubc.cs304.delegates.LoginWindowDelegate;
 
 /**
  * The class is only responsible for handling terminal text inputs. 
@@ -18,6 +26,8 @@ public class TerminalTransactions {
 	
 	private BufferedReader bufferedReader = null;
 	private TerminalTransactionsDelegate delegate = null;
+	private JTextField usernameField;
+	private JPasswordField passwordField;
 
 	public TerminalTransactions() {
 	}
@@ -25,10 +35,12 @@ public class TerminalTransactions {
 	/**
 	 * Displays simple text interface
 	 */ 
-	public void showMainMenu(TerminalTransactionsDelegate delegate) {
+	public void showMainMenu(TerminalTransactionsDelegate delegate)
+
+	{
 		this.delegate = delegate;
-		
-	    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
+		bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 		int choice = INVALID_INPUT;
 		
 		while (choice != 5) {
@@ -65,7 +77,7 @@ public class TerminalTransactions {
 			}
 		}		
 	}
-	
+
 	private void handleQuitOption() {
 		System.out.println("Good Bye!");
 		

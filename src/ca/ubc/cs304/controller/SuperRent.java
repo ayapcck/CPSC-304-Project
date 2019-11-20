@@ -1,16 +1,17 @@
 package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
+import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.model.BranchModel;
+import ca.ubc.cs304.ui.CustomerWindow;
 import ca.ubc.cs304.ui.LoginWindow;
-import ca.ubc.cs304.ui.TerminalTransactions;
+import ca.ubc.cs304.ui.TransactionWindow;
 
 /**
  * This is the main controller class that will orchestrate everything.
  */
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate {
+public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate, CustomerTransactionDelegate {
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
 
@@ -35,8 +36,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			// Once connected, remove login window and start text transaction flow
 			loginWindow.dispose();
 
-			TerminalTransactions transaction = new TerminalTransactions();
-			transaction.showMainMenu(this);
+			TransactionWindow transaction = new TransactionWindow();
+			transaction.showMenu(this);
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -47,6 +48,7 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			}
 		}
 	}
+
 
 	public void addTablesAndData() {
 		dbHandler.addRequiredTablesAndData();
@@ -81,5 +83,12 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
+	}
+
+	@Override
+	public void customerTransaction() {
+		CustomerWindow customerWindow = new CustomerWindow();
+		customerWindow.showMenu(this);
+
 	}
 }
