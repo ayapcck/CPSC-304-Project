@@ -1,6 +1,9 @@
 package ca.ubc.cs304.database;
 
+import ca.ubc.cs304.model.Branch;
 import ca.ubc.cs304.model.BranchModel;
+import ca.ubc.cs304.model.TimePeriod;
+import ca.ubc.cs304.model.VehicleType;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import java.io.*;
@@ -108,18 +111,7 @@ public class DatabaseConnectionHandler {
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
-		
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
-			
+
 			while(rs.next()) {
 				BranchModel model = new BranchModel(rs.getString("branch_addr"),
 													rs.getString("branch_city"),
@@ -181,5 +173,45 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+	}
+
+	public void checkVehicleNum(TimePeriod timePeriod, VehicleType vehicleType, Branch branch ) {
+		try {
+			// TODO: do we still need the timePeriod parameter?
+			PreparedStatement ps = connection.prepareStatement
+					("SELECT COUNT(*) FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+			ps.setString(1, vehicleType.getVtName());
+			ps.setString(2, branch.getLocation());
+			ps.setString(3, branch.getCity());
+//			Date fromDate = new Date(timePeriod.getFromDate().getTimeInMillis());
+//			ps.setDate(5, fromDate);
+//			Date toDate = new Date(timePeriod.getToDate().getTimeInMillis());
+//			ps.setDate(6, toDate);
+//			ps.setString(7, branch.getLocation());
+//			ps.setString(8, branch.getCity());
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void listVehicleDetail(TimePeriod timePeriod, VehicleType vehicleType, Branch branch) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+			ps.setString(1, vehicleType.getVtName());
+			ps.setString(2, branch.getLocation());
+			ps.setString(3, branch.getCity());
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
 	}
 }

@@ -1,16 +1,20 @@
 package ca.ubc.cs304.model;
 
+import java.util.Calendar;
+
 public class Reservations {
     private Integer confNo;
     private String vtName;
     private String cellNum;
-    private String fromDate; // DATE in SQL
-    private String toDate; // DATE in SQL
-    private String fromTime;
-    private String toTime;
+    private Calendar fromDate; // DATE in SQL
+    private Calendar toDate; // DATE in SQL
+    private Calendar fromTime;
+    private Calendar toTime;
+    private String location;
+    private String city;
 
-    public Reservations(Integer confNo, String vtName, String cellNum, String fromDate, String fromTime, String toDate,
-                        String toTime) {
+    public Reservations(Integer confNo, String vtName, String cellNum, Calendar fromDate, Calendar fromTime, Calendar toDate,
+                        Calendar toTime, String  location, String city) {
         // TODO: ENFORCE PRIMARY KEY AND REFERENCES
         this.confNo = confNo;
         this.vtName = vtName;
@@ -19,6 +23,8 @@ public class Reservations {
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
+        this.location = location;
+        this.city = city;
     }
 
     public Integer getConfNo() {
@@ -33,19 +39,23 @@ public class Reservations {
         return cellNum;
     }
 
-    public String getFromDate() {
+    public Calendar getFromDate() {
         return fromDate;
     }
 
-    public String getToDate() {
+    public Calendar getToDate() {
         return toDate;
     }
 
-    public String getFromTime() {
+    public Calendar getFromTime() {
         return fromTime;
     }
 
-    public String getToTime() {
+    public Calendar getToTime() {
         return toTime;
     }
+
+    public String getLocation() { return location; }
+
+    public String getCity() { return city; }
 }
