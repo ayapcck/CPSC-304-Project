@@ -30,6 +30,7 @@ public class TerminalTransactions {
 	private JPasswordField passwordField;
 
 	public TerminalTransactions() {
+
 	}
 
 	/**

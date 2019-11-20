@@ -1,7 +1,7 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
-import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
+import ca.ubc.cs304.delegates.CusEnterViewDelegate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,15 +21,15 @@ public class CustomerWindow extends JFrame implements ActionListener {
     private static final int MAX_LOGIN_ATTEMPTS = 3;
     private JButton view;
     private JButton reserve;
-    private CustomerTransactionDelegate customerDelegate = null;
+    private CusEnterViewDelegate cusEnterViewDelegate = null;
     private ClerkTransactionDelegate clerkDelegate = null;
 
     public CustomerWindow() {
-        super("Who are you?");
+        super("What customer transaction?");
     }
 
-    public void showMenu(CustomerTransactionDelegate customerDelegate) {
-        this.customerDelegate = customerDelegate;
+    public void showMenu(CusEnterViewDelegate cusEnterViewDelegate) {
+        this.cusEnterViewDelegate = cusEnterViewDelegate;
 //        this.clerkDelegate = clerkDelegate;
         view = new JButton("view available vehicles");
         reserve = new JButton("reserve");
@@ -71,10 +71,6 @@ public class CustomerWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == view) {
-            customerDelegate.customerTransaction();
-        } else if (actionEvent.getSource() == reserve) {
-            customerDelegate.customerTransaction();
-        }
+        cusEnterViewDelegate.submitView();
     }
 }
