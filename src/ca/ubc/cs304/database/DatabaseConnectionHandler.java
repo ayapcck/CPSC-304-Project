@@ -1,6 +1,10 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.*;
+import ca.ubc.cs304.model.Customer;
+import ca.ubc.cs304.model.Rental;
+import ca.ubc.cs304.model.Reservations;
+import ca.ubc.cs304.model.TimePeriod;
 import ca.ubc.cs304.ui.TerminalTransactions;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -83,44 +87,65 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions) {
+	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions, int confNo) {
 		// TODO: Main fucntion that handles clerk. Delete when clerk has own class that is called appropriately
-		System.out.println("\nEnter confirmation number");
-		int confNo = -99999;
 		try {
 			// TODO Potential bug drivers license and other limited CHARs must be <= specified amount
-			confNo = terminalTransactions.readInteger(false);
 			String for_rent = "for_rent";
-			ArrayList<String> result = new ArrayList<String>();
 			Statement stmt = connection.createStatement();
             Statement stmt1 = connection.createStatement();
             Statement stmt2 = connection.createStatement();
-            System.out.println("1");
 		    ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVATIONS WHERE CONFNO = " + confNo);
+		    String vtName = null;
+		    String driversLicense = null;
+		    Date fromDate = null;
+		    String fromTime = null;
+		    Date toDate = null;
+		    String toTime = null;
+
             while (rs.next()) {
-                int conf = rs.getInt(1);
-                String vtName = rs.getString(2);
-                System.out.println(conf + "\t" + vtName);
+                confNo = rs.getInt(1);
+                vtName = rs.getString(2);
+                driversLicense = rs.getString(3);
+                fromDate = rs.getDate(4);
+                fromTime = rs.getString(5);
+                toDate = rs.getDate(6);
+                toTime = rs.getString(7);
             }
-		    ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTNAME = " + rs.getString(2)
-                    + " AND STATUS = " + for_rent);
-            System.out.println("3");
-		    ResultSet customer = stmt2.executeQuery("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = " + rs.getString(3));
-            System.out.println("4");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM VEHICLE WHERE VTNAME = ? AND STATUS = 'for_rent'");
+            ps.setString(1, vtName);
+            ResultSet vehicle = ps.executeQuery();
+            String vLicense = null;
+            int odometer = 0;
+            while (vehicle.next()) {
+                vLicense = vehicle.getString(2);
+                odometer = vehicle.getInt(7);
+                break;
+            }
+//		    ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = " + vtName
+//                    + " AND STATUS = " + for_rent);
+            // ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = 'truck' AND STATUS = 'for_rent' ");
+		    // ResultSet customer = stmt2.executeQuery("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = " + rs.getString(3));
+            PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE  DRIVERSLICENSE = ?");
+            ps1.setString(1, driversLicense);
+            ResultSet customer = ps1.executeQuery();
 		    // arbitrarily choose the first car of the make since we don't know availability
-            String vLicense = vehicle.getString(2);
-            int odometer = vehicle.getInt(7);
-            String cardName = customer.getString(2);
+            String cardName = null;
+            while (customer.next()) {
+                cardName = customer.getString(2);
+            }
             int cardNo = odometer % 2 + 564979545;
 		    // have the reservation made at this confNo. Should be unique because confNo is a primary key
             int rID = confNo / 2;
-            Rental rental = new Rental(rID, vLicense, rs.getString(3), rs.getDate(4), rs.getString(5),
-                    rs.getDate(6), rs.getString(7), odometer, cardName, cardNo, "02/21",
-                    rs.getInt(1));
+            Rental rental = new Rental(rID, vLicense, driversLicense, fromDate, fromTime, toDate, toTime, odometer, cardName, cardNo, "02/21",
+                    confNo);
             // inserts into database
             insertIntoRental(rental);
+            // TODO: display receipt in new UI
             // TODO: remove car from available?
             stmt.close();
+            ps.close();
+            ps1.close();
 		} catch (SQLException s) {
 			System.out.println("No reservation with that confirmation is found. Please make a new reservation or enter" +
                     "a new confirmation number");
@@ -128,6 +153,58 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
+		// create new reservation;
+		int confNo = (int) (Math.random() * 1000);
+		System.out.println("Enter type of vehicle");
+		String VtName = terminalTransactions.readLine();
+		System.out.println("Enter customer's driver license");
+		String driverLicense = terminalTransactions.readLine();
+		System.out.println("Enter fromDate");
+		String stringDate = terminalTransactions.readLine();
+		Date fromDate = Date.valueOf(stringDate);
+		System.out.println("Enter from Time");
+		String fromTime = terminalTransactions.readLine();
+		System.out.println("Enter end date (toDate)");
+		String stringToDate = terminalTransactions.readLine();
+		Date toDate = Date.valueOf(stringToDate);
+		System.out.println("Enter to time");
+		String toTime = terminalTransactions.readLine();
+		// determine if customer already exists, if not add customer to database to avoid errors
+		if (!customerExists(driverLicense)) {
+			System.out.println("Enter cellNum of customer");
+			String cellNum = terminalTransactions.readLine();
+			System.out.println("Enter name of customer");
+			String name = terminalTransactions.readLine();
+			System.out.println("Enter address of customer");
+			String address = terminalTransactions.readLine();
+			Customer customer = new Customer(cellNum, name, address, driverLicense);
+			insertCustomer(customer);
+		}
+		TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
+		insertTimePeriod(timePeriod);
+		Reservations reservations = new Reservations(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
+		insertReservation(reservations);
+
+		rentVehicleWithReservation(terminalTransactions, confNo);
+	}
+
+	public boolean customerExists(String driversLicense) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
+			ps.setString(1, driversLicense);
+			ps.executeQuery();
+			return true; // didn't crash so customer exists
+
+		} catch (SQLException e) {
+			return false;
+
+		}
+	}
+	/**
+	 * Insert rental model into database
+	 * @param model:
+	 */
 	public void insertIntoRental(Rental model) {
         try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO RENTAL VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -153,6 +230,109 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 
+    }
+
+    public void insertTimePeriod(TimePeriod model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO TIMEPERIOD VALUES (?,?,?,?)");
+			ps.setDate(1, model.getFromDate());
+			ps.setString(2, model.getFromTime());
+			ps.setDate(3, model.getToDate());
+			ps.setString(4, model.getToTime());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+	}
+
+	public void insertCustomer(Customer model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO CUSTOMER VALUES (?,?,?,?)");
+			ps.setString(1, model.getCellNum());
+			ps.setString(2, model.getName());
+			ps.setString(3, model.getAddress());
+			ps.setString(4, model.getDriversLicense());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+	}
+
+	public void insertReservation(Reservations model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+			ps.setInt(1, model.getConfNo());
+			ps.setString(2, model.getVtName());
+			ps.setString(3, model.getdLicense());
+			ps.setDate(4, model.getFromDate());
+			ps.setString(5, model.getFromTime());
+			ps.setDate(6, model.getToDate());
+			ps.setString(7, model.getToTime());
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+
+	}
+//	public void deleteBranch(int branchId) {
+//		try {
+//			PreparedStatement ps = connection.prepareStatement("DELETE FROM branch WHERE branch_id = ?");
+//			ps.setInt(1, branchId);
+//
+//			int rowCount = ps.executeUpdate();
+//			if (rowCount == 0) {
+//				System.out.println(WARNING_TAG + " Branch " + branchId + " does not exist!");
+//			}
+//
+//			connection.commit();
+//
+//			ps.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
+//	}
+	
+//	public void insertBranch(BranchModel model) {
+//		try {
+//			PreparedStatement ps = connection.prepareStatement("INSERT INTO branch VALUES (?,?,?,?,?)");
+//			ps.setInt(1, model.getId());
+//			ps.setString(2, model.getName());
+//			ps.setString(3, model.getAddress());
+//			ps.setString(4, model.getCity());
+//			if (model.getPhoneNumber() == 0) {
+//				ps.setNull(5, java.sql.Types.INTEGER);
+//			} else {
+//				ps.setInt(5, model.getPhoneNumber());
+//			}
+//
+//			ps.executeUpdate();
+//			connection.commit();
+//
+//			ps.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
+//	}
+	
     }
 
 	public String[] getAllTables() {
@@ -183,6 +363,7 @@ public class DatabaseConnectionHandler {
 	
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
+
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
