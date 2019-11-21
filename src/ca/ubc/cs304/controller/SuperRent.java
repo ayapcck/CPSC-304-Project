@@ -3,7 +3,6 @@ package ca.ubc.cs304.controller;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.model.BranchModel;
 import ca.ubc.cs304.ui.LoginWindow;
 import ca.ubc.cs304.ui.TerminalTransactions;
 
@@ -68,6 +67,11 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		for (String table : tables) {
 			System.out.println(table);
 		}
+	}
+
+	@Override
+	public void rentAVehicle(TerminalTransactions terminalTransactions) {
+		dbHandler.rentVehicleWithReservation(terminalTransactions);
 	}
 
 	/**

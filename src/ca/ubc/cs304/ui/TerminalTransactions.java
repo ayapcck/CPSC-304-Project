@@ -1,13 +1,10 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
-import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.model.BranchModel;
 
 /**
  * The class is only responsible for handling terminal text inputs. 
@@ -73,7 +70,44 @@ public class TerminalTransactions {
 		}
 	}
 
-	private void handleClerkInteractions() {}
+	public void handleClerkInteractions() {
+		int choice = INVALID_INPUT;
+		while (choice != 6) {
+			System.out.println("1: Rent a Vehicle");
+			System.out.println("5: Main Menu");
+			System.out.println("6. Quit");
+			choice = readInteger(false);
+			System.out.println(" ");
+
+			if (choice != INVALID_INPUT) {
+				switch (choice) {
+					case 1:
+                        System.out.println("1: Customer already has reservation");
+                        System.out.println("2: Customer has no reservation");
+                        System.out.println("5: Main Menu");
+                        choice = readInteger(false);
+                        System.out.println(" ");
+                        switch (choice) {
+                            case 1:
+                                delegate.rentAVehicle(this);
+                                break;
+                            case 2:
+                                // handle no reservation in different method
+                                break;
+                            case 5:
+                                handleMainInteractions();
+                                break;
+                        }
+						break;
+					case 5:
+						handleMainInteractions();
+					case 6:
+						handleQuitOption();
+						break;
+				}
+			}
+		}
+	}
 
 	private void handleCustomerInteracions() {}
 
@@ -138,7 +172,7 @@ public class TerminalTransactions {
 		delegate.terminalTransactionsFinished();
 	}
 	
-	private int readInteger(boolean allowEmpty) {
+	public int readInteger(boolean allowEmpty) {
 		String line = null;
 		int input = INVALID_INPUT;
 		try {

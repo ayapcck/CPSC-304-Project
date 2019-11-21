@@ -1,5 +1,7 @@
 package ca.ubc.cs304.delegates;
 
+import ca.ubc.cs304.ui.TerminalTransactions;
+
 /**
  * This interface uses the delegation design pattern where instead of having
  * the TerminalTransactions class try to do everything, it will only
@@ -14,6 +16,6 @@ public interface TerminalTransactionsDelegate {
 	public void dropRequiredTables();
 	public void setupDatabase();
 	public void viewAllTables();
-
+	public void rentAVehicle(TerminalTransactions terminalTransactions);
 	public void terminalTransactionsFinished();
 }

@@ -2,23 +2,24 @@ package ca.ubc.cs304.model;
 
 public class Rental {
     private Integer rID;
-    private Integer vID;
-    private String cellNum;
-    private String fromDate;
+    private String vLicense;
+    private String driversLicense;
+    private java.sql.Date fromDate;
     private String fromTime;
-    private String toDate;
+    private java.sql.Date toDate;
+    private String toTime;
     private Integer odometer;
     private String cardName;
-    private String cardNo;
+    private Integer cardNo;
     private String expDate;
     private Integer confNo;
 
-    public Rental (Integer rID, Integer vID, String cellNum, String fromDate, String fromTime, String toDate,
-                   Integer odometer, String cardName, String cardNo, String expDate, Integer confNo) {
+    public Rental (Integer rID, String vLicense, String driversLicense, java.sql.Date fromDate, String fromTime, java.sql.Date toDate,
+                   String toTime, Integer odometer, String cardName, Integer cardNo, String expDate, Integer confNo) {
         // TODO: ENFORCE PRIMARY KEY AND FOREIGN KEY
         this.rID = rID;
-        this.vID = vID;
-        this.cellNum = cellNum;
+        this.vLicense = vLicense;
+        this.driversLicense = driversLicense;
         this.fromDate = fromDate;
         this.fromTime = fromTime;
         this.toDate = toDate;
@@ -27,21 +28,14 @@ public class Rental {
         this.cardNo = cardNo;
         this.expDate = expDate;
         this.confNo = confNo;
+        this.toTime = toTime;
     }
 
     public Integer getrID() {
         return rID;
     }
 
-    public Integer getvID() {
-        return vID;
-    }
-
-    public String getCellNum() {
-        return cellNum;
-    }
-
-    public String getFromDate() {
+    public java.sql.Date getFromDate() {
         return fromDate;
     }
 
@@ -49,7 +43,7 @@ public class Rental {
         return fromTime;
     }
 
-    public String getToDate() {
+    public java.sql.Date getToDate() {
         return toDate;
     }
 
@@ -61,7 +55,7 @@ public class Rental {
         return cardName;
     }
 
-    public String getCardNo() {
+    public Integer getCardNo() {
         return cardNo;
     }
 
@@ -71,5 +65,17 @@ public class Rental {
 
     public Integer getConfNo() {
         return confNo;
+    }
+
+    public String getvLicense() {
+        return vLicense;
+    }
+
+    public String getDriversLicense() {
+        return driversLicense;
+    }
+
+    public String getToTime() {
+        return toTime;
     }
 }
