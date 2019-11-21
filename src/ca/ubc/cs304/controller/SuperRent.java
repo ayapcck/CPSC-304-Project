@@ -20,7 +20,7 @@ public class SuperRent implements LoginWindowDelegate {
 	private MainController mainController = null;
 
 	public SuperRent() {
-		dbHandler = new DatabaseConnectionHandler();
+		dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
 	}
 	
 	private void start() {

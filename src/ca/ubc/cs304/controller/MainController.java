@@ -1,6 +1,5 @@
 package ca.ubc.cs304.controller;
 
-import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.MainOperationsDelegate;
 import ca.ubc.cs304.ui.ClerkWindow;
 import ca.ubc.cs304.ui.CustomerWindow;
@@ -41,6 +40,7 @@ public class MainController implements MainOperationsDelegate {
     public void showDatabaseWindow() {
         currentWindow.dispose();
         databaseManipulationWindow = new DatabaseManipulationWindow();
+        databaseController = new DatabaseController(databaseManipulationWindow);
         databaseManipulationWindow.showMenu(databaseController);
         this.currentWindow = databaseManipulationWindow;
     }

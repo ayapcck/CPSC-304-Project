@@ -6,6 +6,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
@@ -18,10 +19,18 @@ public class DatabaseConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
-	
+	private static DatabaseConnectionHandler DBHandlerInstance = null;
+
 	private Connection connection = null;
-	
-	public DatabaseConnectionHandler() {
+
+	public static DatabaseConnectionHandler getDBHandlerInstance() {
+		if (DBHandlerInstance == null) {
+			DBHandlerInstance = new DatabaseConnectionHandler();
+		}
+		return DBHandlerInstance;
+	}
+
+	private DatabaseConnectionHandler() {
 		try {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
