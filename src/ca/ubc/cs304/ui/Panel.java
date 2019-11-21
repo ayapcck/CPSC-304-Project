@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.lang.invoke.SerializedLambda;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,18 +13,29 @@ public class Panel {
     private List<JButton> buttons = new ArrayList<>();
     private JPanel contentPane;
 
-    public Panel(List<JButton> buttonLabels, JFrame frame, ActionListener al) {
+    public Panel(List<JButton> buttons, JFrame frame, ActionListener al) {
         contentPane = new JPanel();
-        frame.setContentPane(contentPane);
-
-        // layout components using the GridBag layout manager
         FlowLayout flowLayout = new FlowLayout();
+        new Panel(buttons, frame, al, contentPane, flowLayout, null);
+    }
 
-        contentPane.setLayout(flowLayout);
-        for (JButton button : buttonLabels) {
+    public Panel(List<JButton> buttons, JFrame frame, ActionListener al,
+                 JPanel contentPane, LayoutManager layout, PanelConstraints c) {
+        frame.setContentPane(contentPane);
+        contentPane.setLayout(layout);
+
+        for (JButton button : buttons) {
+            if (c != null) {
+                c.setConstraints(button);
+            }
             contentPane.add(button);
             button.addActionListener(al);
         }
+
+        finishInitializing(frame);
+    }
+
+    private void finishInitializing(JFrame frame) {
         // anonymous inner class for closing the window
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -40,5 +52,12 @@ public class Panel {
 
         // make the window visible
         frame.setVisible(true);
+    }
+
+    private void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        gb.setConstraints(button, c);
     }
 }

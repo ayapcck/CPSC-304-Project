@@ -1,7 +1,9 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.ui.Panel;
 import ca.ubc.cs304.delegates.ProcessViewDelegate;
 import ca.ubc.cs304.util.DateLabelFormatter;
+
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -11,6 +13,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.swing.*;
@@ -30,11 +34,13 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
     private JButton mainMenu;
     public ViewAvailableVehiclesWindow() {
         super("Please vehicle information:");
+
+        mainMenu = new JButton("Back");
+        submit = new JButton("Submit");
     }
 
     public void showMenu(ProcessViewDelegate processViewDelegate) {
         this.processViewDelegate = processViewDelegate;
-        submit = new JButton("Submit");
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -73,39 +79,38 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
         placeLabel(toDate, contentPane, gb, c, 0, 10);
         datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place submit button
+        List<JButton> buttons = new ArrayList<>();
+        buttons.add(submit);
+        buttons.add(mainMenu);
+        PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
+        new Panel(buttons, this, this, contentPane, gb, setConstraints);
+
+//        // register login button with action event handler
+//        submit.addActionListener(this);
+//        mainMenu.addActionListener(this);
+//        // anonymous inner class for closing the window
+//        this.addWindowListener(new WindowAdapter() {
+//            public void windowClosing(WindowEvent e) {
+//                System.exit(0);
+//            }
+//        });
+//
+//        // size the window to obtain a best fit for the components
+//        this.pack();
+//
+//        // center the frame
+//        Dimension d = this.getToolkit().getScreenSize();
+//        Rectangle r = this.getBounds();
+//        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+//        // make the window visible
+//        this.setVisible(true);
+    }
+
+    private void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(submit, c);
-        contentPane.add(submit);
-        // place main menu button
-        mainMenu = new JButton("Back");
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(mainMenu, c);
-        contentPane.add(mainMenu);
-
-        // register login button with action event handler
-        submit.addActionListener(this);
-        mainMenu.addActionListener(this);
-        // anonymous inner class for closing the window
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // size the window to obtain a best fit for the components
-        this.pack();
-
-        // center the frame
-        Dimension d = this.getToolkit().getScreenSize();
-        Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-        // make the window visible
-        this.setVisible(true);
+        gb.setConstraints(button, c);
     }
 
     private JDatePickerImpl placeDateField(JPanel contentPane, GridBagLayout gb, GridBagConstraints c,
