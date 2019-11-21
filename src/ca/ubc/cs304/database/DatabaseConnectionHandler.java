@@ -86,7 +86,7 @@ public class DatabaseConnectionHandler {
 	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions) {
 		// TODO: Main fucntion that handles clerk. Delete when clerk has own class that is called appropriately
 		System.out.println("\nEnter confirmation number");
-		int confNo = -99999;
+		int confNo;
 		try {
 			// TODO Potential bug drivers license and other limited CHARs must be <= specified amount
 			confNo = terminalTransactions.readInteger(false);

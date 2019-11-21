@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, LoginWindowDelegate, TerminalTransactionsDelegate, CustomerTransactionDelegate {
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
-	private TransactionWindow transaction = null;
+	private MainOperations mainOperations = null;
 	private CustomerWindow customerWindow = null;
 	private CustomerViewWindow customerViewWindow = null;
 	private CustomerViewResultWindow customerViewResultWindow = null;
@@ -42,8 +42,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 			// Once connected, remove login window and start text transaction flow
 			loginWindow.dispose();
 
-			transaction = new TransactionWindow();
-			transaction.showMenu(this);
+			mainOperations = new MainOperations();
+			mainOperations.showMenu(this);
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -65,8 +65,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
 	@Override
 	public void setupDatabase() {
-	    // TODO
-//    	dbHandler.dropAllRequiredTables();
+    	dbHandler.dropAllRequiredTables();
 		dbHandler.addRequiredTables();
 	}
 
@@ -107,21 +106,21 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
 	@Override
 	public void customerTransaction() {
-		transaction.dispose();
+		mainOperations.dispose();
 		customerWindow = new CustomerWindow();
 		customerWindow.showMenu(this);
 	}
 
 	@Override
 	public void clerkTransaction() {
-		transaction.dispose();
+		mainOperations.dispose();
 		customerWindow = new CustomerWindow();
 		customerWindow.showMenu(this);
 	}
 
     @Override
     public void databaseManipulation() {
-        transaction.dispose();
+		mainOperations.dispose();
         databaseManipulationWindow = new DatabaseManipulationWindow();
         databaseManipulationWindow.showMenu(this);
     }
@@ -136,7 +135,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     @Override
     public void back() {
         customerWindow.dispose();
-        transaction.showMenu(this);
+		mainOperations.showMenu(this);
     }
 
 
@@ -163,7 +162,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     @Override
     public void backToMain() {
         databaseManipulationWindow.dispose();
-        transaction.showMenu(this);
+		mainOperations.showMenu(this);
     }
 
 }
