@@ -1,19 +1,15 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
-import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
+import ca.ubc.cs304.delegates.LoginWindowDelegate;
 
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
@@ -23,8 +19,7 @@ public class MainOperations extends JFrame implements ActionListener {
     private JButton customer;
     private JButton clerk;
     private JButton database;
-    private CustomerTransactionDelegate customerDelegate = null;
-    private ClerkTransactionDelegate clerkDelegate = null;
+    private LoginWindowDelegate loginWindowDelegate = null;
 
     public MainOperations() {
         super("Choose an option");
@@ -33,9 +28,8 @@ public class MainOperations extends JFrame implements ActionListener {
         database = new JButton("Database Manipulations");
     }
 
-    public void showMenu(CustomerTransactionDelegate customerDelegate) {
-        this.customerDelegate = customerDelegate;
-//        this.clerkDelegate = clerkDelegate;
+    public void showMenu(LoginWindowDelegate delegate) {
+        this.loginWindowDelegate = delegate;
         List<JButton> buttons = new ArrayList<>();
         buttons.add(customer);
         buttons.add(clerk);
@@ -47,11 +41,11 @@ public class MainOperations extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == customer) {
-            customerDelegate.customerTransaction();
+            loginWindowDelegate.showCustomerWindow();
         } else if (actionEvent.getSource() == clerk) {
-            customerDelegate.customerTransaction();
+            loginWindowDelegate.showClerkWindow();
         } else if (actionEvent.getSource() == database) {
-            customerDelegate.databaseManipulation();
+            loginWindowDelegate.showDatabaseWindow();
         }
     }
 }

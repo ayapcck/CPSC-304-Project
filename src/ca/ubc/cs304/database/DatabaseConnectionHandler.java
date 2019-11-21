@@ -124,7 +124,6 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException s) {
 			System.out.println("No reservation with that confirmation is found. Please make a new reservation or enter" +
                     "a new confirmation number");
-			terminalTransactions.handleClerkInteractions();
 		}
 	}
 

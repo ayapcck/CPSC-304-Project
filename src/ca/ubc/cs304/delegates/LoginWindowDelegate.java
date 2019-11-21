@@ -12,11 +12,8 @@ import ca.ubc.cs304.ui.TerminalTransactions;
  * Bank is the actual class that will implement the methods.
  */
 public interface LoginWindowDelegate {
-    void login(String username, String password);
-     void addRequiredTablesAndData();
-     void dropRequiredTables();
-     void setupDatabase();
-     void viewAllTables();
-     void backToMain();
-
+     void login(String username, String password);
+     void showCustomerWindow();
+     void showClerkWindow();
+     void showDatabaseWindow();
 }

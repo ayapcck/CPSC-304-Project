@@ -53,11 +53,4 @@ public class Panel {
         // make the window visible
         frame.setVisible(true);
     }
-
-    private void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(button, c);
-    }
 }
