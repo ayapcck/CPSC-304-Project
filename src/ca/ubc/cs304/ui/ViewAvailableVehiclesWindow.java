@@ -84,26 +84,6 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
         buttons.add(mainMenu);
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
         new Panel(buttons, this, this, contentPane, gb, setConstraints);
-
-//        // register login button with action event handler
-//        submit.addActionListener(this);
-//        mainMenu.addActionListener(this);
-//        // anonymous inner class for closing the window
-//        this.addWindowListener(new WindowAdapter() {
-//            public void windowClosing(WindowEvent e) {
-//                System.exit(0);
-//            }
-//        });
-//
-//        // size the window to obtain a best fit for the components
-//        this.pack();
-//
-//        // center the frame
-//        Dimension d = this.getToolkit().getScreenSize();
-//        Rectangle r = this.getBounds();
-//        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-//        // make the window visible
-//        this.setVisible(true);
     }
 
     private void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
