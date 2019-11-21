@@ -13,7 +13,4 @@ import ca.ubc.cs304.ui.TerminalTransactions;
  */
 public interface LoginWindowDelegate {
      void login(String username, String password);
-     void showCustomerWindow();
-     void showClerkWindow();
-     void showDatabaseWindow();
 }

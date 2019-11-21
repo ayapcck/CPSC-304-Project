@@ -35,7 +35,7 @@ public class DatabaseController implements DatabaseManipulationsDelegate {
     }
 
     @Override
-    public void backToMain() {
+    public void mainMenu() {
 
     }
 }

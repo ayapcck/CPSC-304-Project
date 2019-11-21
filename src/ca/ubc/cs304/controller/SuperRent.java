@@ -11,22 +11,16 @@ import java.sql.ResultSet;
 /**
  * This is the main controller class that will orchestrate everything.
  */
-public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, LoginWindowDelegate,
-		CustomerTransactionDelegate {
+public class SuperRent implements LoginWindowDelegate {
 
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
 	private MainOperations mainOperations = null;
-	private CustomerWindow customerWindow = null;
-	private ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = null;
-	private ViewAvailableVehicleResultWindow viewAvailableVehicleResultWindow = null;
-	private DatabaseManipulationWindow databaseManipulationWindow = null;
 
-	private DatabaseController databaseController = null;
+	private MainController mainController = null;
 
 	public SuperRent() {
 		dbHandler = new DatabaseConnectionHandler();
-		databaseController = new DatabaseController(dbHandler);
 	}
 	
 	private void start() {
@@ -38,7 +32,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	 * LoginWindowDelegate Implementation
 	 * 
      * connects to Oracle database with supplied username and password
-     */ 
+     */
+	@Override
 	public void login(String username, String password) {
 		boolean didConnect = dbHandler.login(username, password);
 
@@ -47,7 +42,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 			loginWindow.dispose();
 
 			mainOperations = new MainOperations();
-			mainOperations.showMenu(this);
+			mainController = new MainController(mainOperations);
+			mainOperations.showMenu(mainController);
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -57,24 +53,6 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 				System.exit(-1);
 			}
 		}
-	}
-
-	@Override
-	public void showCustomerWindow() {
-		mainOperations.dispose();
-		customerWindow = new CustomerWindow();
-		customerWindow.showMenu(this);
-	}
-
-	@Override
-	public void showClerkWindow() {
-	}
-
-	@Override
-	public void showDatabaseWindow() {
-		mainOperations.dispose();
-		databaseManipulationWindow = new DatabaseManipulationWindow();
-		databaseManipulationWindow.showMenu(databaseController);
 	}
 
 	/**
@@ -97,40 +75,6 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
-	}
-
-    @Override
-	public void submitView() {
-		customerWindow.dispose();
-		viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
-		viewAvailableVehiclesWindow.showMenu(this);
-	}
-
-    @Override
-    public void back() {
-        customerWindow.dispose();
-		mainOperations.showMenu(this);
-    }
-
-
-    @Override
-	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		viewAvailableVehiclesWindow.dispose();
-		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
-        viewAvailableVehicleResultWindow = new ViewAvailableVehicleResultWindow();
-        viewAvailableVehicleResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
-	}
-
-    @Override
-    public void backToPrevious() {
-        viewAvailableVehicleResultWindow.dispose();
-        customerWindow.showMenu(this);
-    }
-
-    @Override
-	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
-        viewAvailableVehicleResultWindow.showMoreDetail(resultTable);
 	}
 
 }

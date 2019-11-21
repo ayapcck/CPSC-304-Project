@@ -53,7 +53,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
         } else if (actionEvent.getSource() == drop) {
             databaseManipulationsDelegate.dropRequiredTables();
         } else if (actionEvent.getSource() == mainMenu) {
-            databaseManipulationsDelegate.backToMain();
+            databaseManipulationsDelegate.mainMenu();
         } else if (actionEvent.getSource() == setup) {
             databaseManipulationsDelegate.setupDatabase();
         } else if (actionEvent.getSource() == viewTables) {

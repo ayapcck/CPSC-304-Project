@@ -1,6 +1,7 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
+import ca.ubc.cs304.delegates.MainOperationsDelegate;
 
 import java.awt.event.ActionEvent;
 
@@ -19,7 +20,7 @@ public class MainOperations extends JFrame implements ActionListener {
     private JButton customer;
     private JButton clerk;
     private JButton database;
-    private LoginWindowDelegate loginWindowDelegate = null;
+    private MainOperationsDelegate mainOperationsDelegate = null;
 
     public MainOperations() {
         super("Choose an option");
@@ -28,8 +29,8 @@ public class MainOperations extends JFrame implements ActionListener {
         database = new JButton("Database Manipulations");
     }
 
-    public void showMenu(LoginWindowDelegate delegate) {
-        this.loginWindowDelegate = delegate;
+    public void showMenu(MainOperationsDelegate mainOperationsDelegate) {
+        this.mainOperationsDelegate = mainOperationsDelegate;
         List<JButton> buttons = new ArrayList<>();
         buttons.add(customer);
         buttons.add(clerk);
@@ -41,11 +42,11 @@ public class MainOperations extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == customer) {
-            loginWindowDelegate.showCustomerWindow();
+            mainOperationsDelegate.showCustomerWindow();
         } else if (actionEvent.getSource() == clerk) {
-            loginWindowDelegate.showClerkWindow();
+            mainOperationsDelegate.showClerkWindow();
         } else if (actionEvent.getSource() == database) {
-            loginWindowDelegate.showDatabaseWindow();
+            mainOperationsDelegate.showDatabaseWindow();
         }
     }
 }

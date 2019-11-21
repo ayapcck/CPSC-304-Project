@@ -1,7 +1,6 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
-import ca.ubc.cs304.delegates.CusEnterViewDelegate;
+import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +17,7 @@ public class CustomerWindow extends JFrame implements ActionListener {
     private JButton view;
     private JButton reserve;
     private JButton back;
-    private CusEnterViewDelegate cusEnterViewDelegate = null;
+    private CustomerTransactionDelegate customerTransactionDelegate = null;
 
     public CustomerWindow() {
         super("Choose a transaction:");
@@ -28,8 +27,8 @@ public class CustomerWindow extends JFrame implements ActionListener {
         back = new JButton("Back");
     }
 
-    public void showMenu(CusEnterViewDelegate cusEnterViewDelegate) {
-        this.cusEnterViewDelegate = cusEnterViewDelegate;
+    public void showMenu(CustomerTransactionDelegate customerTransactionDelegate) {
+        this.customerTransactionDelegate = customerTransactionDelegate;
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(view);
@@ -42,9 +41,9 @@ public class CustomerWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == view) {
-            cusEnterViewDelegate.submitView();
+//            customerTransactionDelegate.submitView();
         } else if (actionEvent.getSource() == back) {
-            cusEnterViewDelegate.back();
+            customerTransactionDelegate.mainMenu();
         } else if (actionEvent.getSource() == reserve) {
             // TODO
         }
