@@ -1,6 +1,6 @@
 package ca.ubc.cs304.model;
 
-public class Vehicle {
+public class ForRent {
     private Integer vid;
     private String vLicense;
     private String make;
@@ -13,9 +13,8 @@ public class Vehicle {
     private String location;
     private String city;
 
-    public Vehicle(Integer vid, String vLicense, String make, String model, Integer year, String color, Integer odometer
+    public ForRent(Integer vid, String vLicense, String make, String model, Integer year, String color, Integer odometer
     , String status, String vtName, String location, String city) {
-        // TODO: enforce that vid cannot be null
         this.vid = vid;
         this.vLicense = vLicense;
         this.make = make;
@@ -23,7 +22,7 @@ public class Vehicle {
         this.year = year;
         this.color = color;
         this.odometer = odometer;
-        this.status = status;
+        this.status = status; // can be available or notavaiable
         this.vtName = vtName;
         this.location = location;
         this.city = city;

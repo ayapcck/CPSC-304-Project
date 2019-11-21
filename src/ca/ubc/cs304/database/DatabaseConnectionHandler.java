@@ -1,9 +1,6 @@
 package ca.ubc.cs304.database;
 
-import ca.ubc.cs304.model.Customer;
-import ca.ubc.cs304.model.Rental;
-import ca.ubc.cs304.model.Reservations;
-import ca.ubc.cs304.model.TimePeriod;
+import ca.ubc.cs304.model.*;
 import ca.ubc.cs304.ui.TerminalTransactions;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -67,11 +64,7 @@ public class DatabaseConnectionHandler {
 	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions, int confNo) {
 		// TODO: Main fucntion that handles clerk. Delete when clerk has own class that is called appropriately
 		try {
-			// TODO Potential bug drivers license and other limited CHARs must be <= specified amount
-			String for_rent = "for_rent";
 			Statement stmt = connection.createStatement();
-            Statement stmt1 = connection.createStatement();
-            Statement stmt2 = connection.createStatement();
 		    ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVATIONS WHERE CONFNO = " + confNo);
 		    String vtName = null;
 		    String driversLicense = null;
@@ -89,16 +82,10 @@ public class DatabaseConnectionHandler {
                 toDate = rs.getDate(6);
                 toTime = rs.getString(7);
             }
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM VEHICLE WHERE VTNAME = ? AND STATUS = 'for_rent'");
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ForRent WHERE VTNAME = ? AND STATUS = 'available'");
             ps.setString(1, vtName);
             ResultSet vehicle = ps.executeQuery();
-            String vLicense = null;
-            int odometer = 0;
-            while (vehicle.next()) {
-                vLicense = vehicle.getString(2);
-                odometer = vehicle.getInt(7);
-                break;
-            }
+           ForRent forRent = createForRentModel(vehicle);
 //		    ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = " + vtName
 //                    + " AND STATUS = " + for_rent);
             // ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = 'truck' AND STATUS = 'for_rent' ");
@@ -111,13 +98,14 @@ public class DatabaseConnectionHandler {
             while (customer.next()) {
                 cardName = customer.getString(2);
             }
-            int cardNo = odometer % 2 + 564979545;
+            int cardNo = forRent.getOdometer() % 2 + 564979545;
 		    // have the reservation made at this confNo. Should be unique because confNo is a primary key
             int rID = confNo / 2;
-            Rental rental = new Rental(rID, vLicense, driversLicense, fromDate, fromTime, toDate, toTime, odometer, cardName, cardNo, "02/21",
-                    confNo);
+            Rental rental = new Rental(rID, forRent.getvLicense(), driversLicense, fromDate, fromTime, toDate, toTime,
+					forRent.getOdometer(), cardName, cardNo, "02/21", confNo);
             // inserts into database
             insertIntoRental(rental);
+            updateStatus( "notavailable", forRent.getvLicense());
             // TODO: display receipt in new UI
             // TODO: remove car from available?
             stmt.close();
@@ -177,6 +165,36 @@ public class DatabaseConnectionHandler {
 			return false;
 
 		}
+	}
+
+	public ForRent createForRentModel(ResultSet rs) throws SQLException {
+		int vId = -99;
+		String vLicense = null;
+		String make = null;
+		String model = null;
+		int year = -99;
+		String color = null;
+		int odometer = -99;
+		String status = null;
+		String vtName = null;
+		String location = null;
+		String city = null;
+		while (rs.next()) {
+			vId = rs.getInt(1);
+			vLicense = rs.getString(2);
+			make = rs.getString(3);
+			model = rs.getString(4);
+			year = rs.getInt(5);
+			color = rs.getString(6);
+			odometer = rs.getInt(7);
+			status = rs.getString(8);
+			vtName = rs.getString(9);
+			location = rs.getString(10);
+			city = rs.getString(11);
+			break;
+		}
+		ForRent forRent = new ForRent(vId, vLicense, make, model, year, color, odometer, status, vtName, location, city);
+		return forRent;
 	}
 	/**
 	 * Insert rental model into database
@@ -267,6 +285,22 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 
+	}
+
+	public void updateStatus(String value, String vLicense) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("UPDATE FORRENT SET STATUS = ? WHERE VLICENSE = ?");
+			ps.setString(1, value);
+			ps.setString(2, vLicense);
+
+			ps.executeUpdate();
+			connection.commit();
+
+			ps.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
 	}
 //	public void deleteBranch(int branchId) {
 //		try {
