@@ -16,6 +16,7 @@ public interface TerminalTransactionsDelegate {
 	public void dropRequiredTables();
 	public void setupDatabase();
 	public void viewAllTables();
+	public void getDataFromTable(String[] columns, String tableName);
 
 	public void terminalTransactionsFinished();
 }

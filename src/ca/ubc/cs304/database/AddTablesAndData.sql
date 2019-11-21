@@ -67,9 +67,12 @@ CREATE TABLE Reservations(
     fromTime VARCHAR(255),
     toDate DATE,
     toTime VARCHAR(255),
+    location VARCHAR(255),
+    city VARCHAR(255),
     PRIMARY KEY (confNo),
     FOREIGN KEY (VTName) REFERENCES VehicleType,
     FOREIGN KEY (cellNum) REFERENCES Customer,
+    FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES TimePeriod
 );
 

@@ -70,6 +70,14 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
+	@Override
+	public void getDataFromTable(String[] columns, String tableName) {
+		String[] data = dbHandler.getDataFromTable(columns, tableName);
+		for (String s : data) {
+			System.out.println(s);
+		}
+	}
+
 	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 

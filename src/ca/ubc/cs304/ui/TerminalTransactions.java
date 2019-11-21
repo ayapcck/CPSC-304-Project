@@ -88,9 +88,10 @@ public class TerminalTransactions {
 			System.out.println("2. Drop Required Tables");
 			System.out.println("3. Add Required Tables and Data");
 			System.out.println("4. View all tables");
-			System.out.println("5. Main Menu");
-			System.out.println("6. Quit");
-			System.out.print("Please choose one of the above 6 options: ");
+			System.out.println("5. View data from table");
+			System.out.println("6. Main Menu");
+			System.out.println("7. Quit");
+			System.out.print("Please choose one of the above 7 options: ");
 
 			choice = readInteger(false);
 
@@ -111,9 +112,12 @@ public class TerminalTransactions {
 						delegate.viewAllTables();
 						break;
 					case 5:
-						handleMainInteractions();
+						handleGetDataFromTableOption();
 						break;
 					case 6:
+						handleMainInteractions();
+						break;
+					case 7:
 						handleQuitOption();
 						break;
 					default:
@@ -122,6 +126,15 @@ public class TerminalTransactions {
 				}
 			}
 		}
+	}
+
+	private void handleGetDataFromTableOption() {
+		System.out.println("Please enter the desired table name: ");
+		String tableName = readLine();
+		System.out.println("Please enter the desired column names, delimited with commas: ");
+		String columnsLine = readLine();
+		String[] columns = columnsLine.split(",");
+		delegate.getDataFromTable(columns, tableName);
 	}
 	
 	private void handleQuitOption() {

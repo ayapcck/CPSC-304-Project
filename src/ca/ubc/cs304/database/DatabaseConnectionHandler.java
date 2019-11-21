@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
@@ -107,6 +108,35 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
+
+//	public String[] getDataFromTable(String[] columns, String tableName) {
+//		ArrayList<String> result = new ArrayList<String>();
+//
+//		try {
+//			String query = "SELECT ";
+//			for (int i = 0; i < columns.length; i++) {
+//				query = query.concat("?, ");
+//			}
+//			query = query.substring(0, query.length() - 2);
+//			query = query.concat(" FROM " + tableName);
+//			PreparedStatement stmt = connection.prepareStatement(query);
+//			for (int i = 0; i < columns.length; i++) {
+//				stmt.setString(i+1, columns[i]);
+//			}
+//			ResultSet rs = stmt.executeQuery();
+//			while (rs.next()) {
+//				for (int i = 1; i <= columns.length; i++) {
+//					System.out.println(rs.getString(i));
+//				}
+//			}
+//			rs.close();
+//			stmt.close();
+//		} catch (SQLException e) {
+//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//			rollbackConnection();
+//		}
+//		return result.toArray(new String[result.size()]);
+//	}
 	
 	public String[] getAllTables() {
 		ArrayList<String> result = new ArrayList<String>();
