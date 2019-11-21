@@ -53,12 +53,11 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 		}
 	}
 
-
-	public void addTablesAndData() {
+	public void addRequiredTablesAndData() {
 		dbHandler.addRequiredTablesAndData();
 	}
 
-	public void dropTables() {
+	public void dropRequiredTables() {
 		dbHandler.dropAllRequiredTables();
 	}
 
@@ -67,8 +66,21 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     	dbHandler.dropAllRequiredTables();
 		dbHandler.addRequiredTablesAndData();
 	}
-	
-    /**
+
+	@Override
+	public void viewAllTables() {
+		String[] tables = dbHandler.getAllTables();
+		for (String table : tables) {
+			System.out.println(table);
+		}
+	}
+
+	@Override
+	public void rentAVehicle(TerminalTransactions terminalTransactions) {
+		dbHandler.rentVehicleWithReservation(terminalTransactions);
+	}
+
+	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
      * The TerminalTransaction instance tells us that it is done with what it's 

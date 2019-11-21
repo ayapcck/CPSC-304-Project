@@ -1,6 +1,6 @@
 package ca.ubc.cs304.delegates;
 
-import ca.ubc.cs304.model.BranchModel;
+import ca.ubc.cs304.ui.TerminalTransactions;
 
 /**
  * This interface uses the delegation design pattern where instead of having
@@ -12,9 +12,10 @@ import ca.ubc.cs304.model.BranchModel;
  * Bank is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-	public void addTablesAndData();
-	public void dropTables();
+	public void addRequiredTablesAndData();
+	public void dropRequiredTables();
 	public void setupDatabase();
-
+	public void viewAllTables();
+	public void rentAVehicle(TerminalTransactions terminalTransactions);
 	public void terminalTransactionsFinished();
 }

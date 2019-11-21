@@ -1,30 +1,25 @@
 package ca.ubc.cs304.model;
 
-import java.util.Calendar;
-
 public class Reservations {
     private Integer confNo;
     private String vtName;
-    private String cellNum;
-    private Calendar fromDate; // DATE in SQL
-    private Calendar toDate; // DATE in SQL
-    private Calendar fromTime;
-    private Calendar toTime;
-    private String location;
-    private String city;
+    private String dLicense;
+    private String fromDate; // DATE in SQL
+    private String toDate; // DATE in SQL
+    private String fromTime;
+    private String toTime;
 
-    public Reservations(Integer confNo, String vtName, String cellNum, Calendar fromDate, Calendar fromTime, Calendar toDate,
-                        Calendar toTime, String  location, String city) {
+    public Reservations(Integer confNo, String vtName, String dLicense, String fromDate, String fromTime, String toDate,
+                        String toTime) {
         // TODO: ENFORCE PRIMARY KEY AND REFERENCES
         this.confNo = confNo;
         this.vtName = vtName;
-        this.cellNum = cellNum;
+        this.dLicense = dLicense;
         this.fromDate = fromDate;
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
-        this.location = location;
-        this.city = city;
+
     }
 
     public Integer getConfNo() {
@@ -35,27 +30,23 @@ public class Reservations {
         return vtName;
     }
 
-    public String getCellNum() {
-        return cellNum;
+    public String getdLicense() {
+        return dLicense;
     }
 
-    public Calendar getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public Calendar getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
-    public Calendar getFromTime() {
+    public String getFromTime() {
         return fromTime;
     }
 
-    public Calendar getToTime() {
+    public String getToTime() {
         return toTime;
     }
-
-    public String getLocation() { return location; }
-
-    public String getCity() { return city; }
 }
