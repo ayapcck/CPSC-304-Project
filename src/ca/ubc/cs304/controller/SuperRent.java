@@ -17,7 +17,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	private MainOperations mainOperations = null;
 	private CustomerWindow customerWindow = null;
 	private ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = null;
-	private CustomerViewResultWindow customerViewResultWindow = null;
+	private ViewAvailableVehicleResultWindow viewAvailableVehicleResultWindow = null;
 	private DatabaseConnectionHandler handler = null;
 	private DatabaseManipulationWindow databaseManipulationWindow = null;
 
@@ -143,20 +143,20 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		viewAvailableVehiclesWindow.dispose();
 		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
-		customerViewResultWindow = new CustomerViewResultWindow();
-		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
+        viewAvailableVehicleResultWindow = new ViewAvailableVehicleResultWindow();
+        viewAvailableVehicleResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
 	}
 
     @Override
     public void backToPrevious() {
-        customerViewResultWindow.dispose();
+        viewAvailableVehicleResultWindow.dispose();
         customerWindow.showMenu(this);
     }
 
     @Override
 	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
-		customerViewResultWindow.showMoreDetail(resultTable);
+        viewAvailableVehicleResultWindow.showMoreDetail(resultTable);
 	}
 
     @Override
