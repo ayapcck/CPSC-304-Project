@@ -94,6 +94,11 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 //		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
 	}
 
+	@Override
+	public void returnVehicle(TerminalTransactions terminalTransactions) {
+		System.out.println(dbHandler.returnVehicle(terminalTransactions)); // prints error returned from returnVehicle
+	}
+
 	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 

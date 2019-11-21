@@ -33,7 +33,7 @@ CREATE TABLE VehicleType(
     PRIMARY KEY (VTName)
 );
 
-CREATE TABLE Vehicle(
+CREATE TABLE ForRent(
     vID INTEGER,
     vLicense VARCHAR(255),
     make VARCHAR(255),
@@ -48,16 +48,26 @@ CREATE TABLE Vehicle(
     PRIMARY KEY (vLicense),
     FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (VTName) REFERENCES VehicleType,
-    CHECK (status = 'for_rent' OR status = 'for_sale')
+    CHECK (status = 'available' OR status = 'notavailable')
 );
 
-CREATE VIEW ForRent AS
-SELECT * FROM Vehicle
-WHERE status = 'for_rent';
-
-CREATE VIEW ForSale AS
-SELECT * FROM Vehicle
-WHERE status = 'for_sale';
+CREATE TABLE ForSale(
+    vID      INTEGER,
+    vFSLicense VARCHAR(255),
+    make     VARCHAR(255),
+    model    VARCHAR(255),
+    year     INTEGER,
+    color    VARCHAR(255),
+    odometer INTEGER,
+    status   VARCHAR(255),
+    VTName   VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    city     VARCHAR(255) NOT NULL,
+    PRIMARY KEY (vFSLicense),
+    FOREIGN KEY (location, city) REFERENCES Branch,
+    FOREIGN KEY (VTName) REFERENCES VehicleType,
+    CHECK (status = 'available' OR status = 'notavailable')
+);
 
 CREATE TABLE Reservations(
     confNo INTEGER,
@@ -87,7 +97,7 @@ CREATE TABLE Rental(
     expDate VARCHAR(255),
     confNo INTEGER,
     PRIMARY KEY (rID),
-    FOREIGN KEY (vLicense) REFERENCES Vehicle,
+    FOREIGN KEY (vLicense) REFERENCES ForRent,
     FOREIGN KEY (driversLicense) REFERENCES Customer,
     FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES TimePeriod,
     FOREIGN KEY (confNo) REFERENCES Reservations
@@ -128,16 +138,16 @@ INSERT INTO VehicleType (VTName, features) VALUES ('mid-size', 'car seat');
 INSERT INTO VehicleType (VTName, features) VALUES ('standard', 'car seat');
 INSERT INTO VehicleType (VTName, features) VALUES ('full-size', 'car seat');
 
-INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
-    VALUES (1,'A10111', 'red', 'for_rent', 'SUV', 'shop_1', 'Vancouver');
-INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
-    VALUES (2, 'B10111', 'blue', 'for_rent', 'truck', 'shop_2', 'Vancouver');
-INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
-    VALUES (3, 'C10111', 'green', 'for_rent', 'standard', 'shop_1', 'Vancouver');
-INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
-    VALUES (4, 'D10111', 'red', 'for_rent', 'full-size', 'shop_1', 'Burnaby');
-INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
-    VALUES (5, 'E10111', 'blue', 'for_sale', 'economy', 'shop_1', 'Burnaby');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+    VALUES (1,'A10111', 'red', 'available', 'SUV', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+    VALUES (2, 'B10111', 'blue', 'available', 'truck', 'shop_2', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+    VALUES (3, 'C10111', 'green', 'available', 'standard', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+    VALUES (4, 'D10111', 'red', 'available', 'full-size', 'shop_1', 'Burnaby');
+INSERT INTO ForSale (vID, vFSLicense, color, status, VTName, location, city)
+    VALUES (5, 'E10111', 'blue', 'available', 'economy', 'shop_1', 'Burnaby');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');

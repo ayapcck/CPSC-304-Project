@@ -1,13 +1,15 @@
 package ca.ubc.cs304.model;
 
+import java.sql.Date;
+
 public class Return {
     private Integer rID;
-    private String returnDate; // DATE in SQL
+    private Date returnDate; // DATE in SQL
     private Integer odometer;
     private Integer fullTank; // NUMBER(1) in SQL
     private Integer value;
 
-    public Return(Integer rID, String returnDate, Integer odometer, Integer fullTank, Integer value) {
+    public Return(Integer rID, Date returnDate, Integer odometer, Integer fullTank, Integer value) {
         // TODO: FIND A WAY TO ENFORE FOREIGN KEY IF WE CAN
         this.rID = rID;
         this.returnDate = returnDate;
@@ -20,7 +22,7 @@ public class Return {
         return rID;
     }
 
-    public String getReturnDate() {
+    public Date getReturnDate() {
         return returnDate;
     }
 
