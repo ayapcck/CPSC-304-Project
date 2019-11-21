@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Date;
-import java.sql.ResultSet;
 
 import javax.swing.*;
 
@@ -25,12 +24,15 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
     private String city;
     private Date fromDate;
     private Date toDate;
+    private JButton mainMenu;
+    private JButton moreDetail;
     private GridBagLayout gb = new GridBagLayout();
     public CustomerViewResultWindow() {
         super("show number of vehicles available");
     }
 
     public void showMenu(ProcessViewDelegate processViewDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
+
         this.carType = carType;
         this.location = location;
         this.city = city;
@@ -42,9 +44,6 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
         contentPane = new JPanel();
         this.setContentPane(contentPane);
 
-//        GridBagLayout gb = new GridBagLayout();
-//        c = new GridBagConstraints();
-
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -54,8 +53,16 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
         gb.setConstraints(countResult, c);
         contentPane.add(countResult);
 
+        // place back button
+        mainMenu = new JButton("Back");
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        gb.setConstraints(mainMenu, c);
+        contentPane.add(mainMenu);
+
         // place moreDetail button
-        JButton moreDetail = new JButton("More detail");
+        moreDetail = new JButton("More detail");
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
@@ -64,6 +71,7 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
 
         // register login button with action event handler
         moreDetail.addActionListener(this);
+        mainMenu.addActionListener(this);
 
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
@@ -106,6 +114,10 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
+        if (actionEvent.getSource() == moreDetail) {
+            processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
+        } else if (actionEvent.getSource() == mainMenu) {
+            processViewDelegate.backToPrevious();
+        }
     }
 }

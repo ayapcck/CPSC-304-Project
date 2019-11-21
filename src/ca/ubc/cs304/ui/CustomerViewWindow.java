@@ -25,6 +25,8 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
     private String cityData = "";
     private JDatePickerImpl datePicker;
     private JDatePickerImpl datePickerTo;
+    private JButton submit;
+    private JButton mainMenu;
     public CustomerViewWindow() {
         super("what do you want to see?");
     }
@@ -33,7 +35,7 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
         this.processViewDelegate = processViewDelegate;
         JLabel carType = new JLabel("Car Type:");
         JLabel location = new JLabel("Location:");
-        JButton submit = new JButton("Submit");
+        submit = new JButton("Submit");
         JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
         JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
 
@@ -131,10 +133,17 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
         c.anchor = GridBagConstraints.CENTER;
         gb.setConstraints(submit, c);
         contentPane.add(submit);
+        // place main menu button
+        mainMenu = new JButton("Back");
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        gb.setConstraints(mainMenu, c);
+        contentPane.add(mainMenu);
 
         // register login button with action event handler
         submit.addActionListener(this);
-
+        mainMenu.addActionListener(this);
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -156,10 +165,14 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
-        java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
-        java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
-        java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
-        processViewDelegate.processView(carTypeData, locationData, cityData, fromDateField, toDateField);
+        if (actionEvent.getSource() == submit) {
+            java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
+            java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
+            java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
+            java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
+            processViewDelegate.processView(carTypeData, locationData, cityData, fromDateField, toDateField);
+        } else if (actionEvent.getSource() == mainMenu) {
+            processViewDelegate.backToPrevious();
+        }
     }
 }

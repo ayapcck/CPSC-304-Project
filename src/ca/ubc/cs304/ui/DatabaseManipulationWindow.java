@@ -1,7 +1,8 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
-import ca.ubc.cs304.delegates.CusEnterViewDelegate;
+import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
+import ca.ubc.cs304.delegates.LoginWindowDelegate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,25 +17,25 @@ import javax.swing.JPanel;
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class CustomerWindow extends JFrame implements ActionListener {
+public class DatabaseManipulationWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
-    private static final int MAX_LOGIN_ATTEMPTS = 3;
-    private JButton view;
-    private JButton reserve;
-    private JButton back;
-    private CusEnterViewDelegate cusEnterViewDelegate = null;
-    private ClerkTransactionDelegate clerkDelegate = null;
+    private JButton setup;
+    private JButton drop;
+    private JButton add;
+    private JButton mainMenu;
+    private LoginWindowDelegate loginWindowDelegate = null;
 
-    public CustomerWindow() {
-        super("What customer transaction?");
+    public DatabaseManipulationWindow() {
+        super("database manipulation");
     }
 
-    public void showMenu(CusEnterViewDelegate cusEnterViewDelegate) {
-        this.cusEnterViewDelegate = cusEnterViewDelegate;
-//        this.clerkDelegate = clerkDelegate;
-        view = new JButton("View Available Vehicles");
-        reserve = new JButton("Reserve");
-        back = new JButton("Back");
+    public void showMenu(LoginWindowDelegate loginWindowDelegate) {
+        this.loginWindowDelegate = loginWindowDelegate;
+
+        setup = new JButton("Setup Database(drop required tables and add required tables and data)");
+        drop = new JButton("Drop required tables");
+        add = new JButton("Add required tables");
+        mainMenu = new JButton("Main menu");
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
 
@@ -42,15 +43,17 @@ public class CustomerWindow extends JFrame implements ActionListener {
         FlowLayout flowLayout = new FlowLayout();
 
         contentPane.setLayout(flowLayout);
-        contentPane.add(view);
-        contentPane.add(reserve);
-        contentPane.add(back);
+        contentPane.add(add);
+        contentPane.add(setup);
+        contentPane.add(drop);
+        contentPane.add(mainMenu);
         contentPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
         // register login button with action event handler
-        view.addActionListener(this);
-        reserve.addActionListener(this);
-        back.addActionListener(this);
+        setup.addActionListener(this);
+        drop.addActionListener(this);
+        add.addActionListener(this);
+        mainMenu.addActionListener(this);
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -73,12 +76,14 @@ public class CustomerWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == view) {
-            cusEnterViewDelegate.submitView();
-        } else if (actionEvent.getSource() == back) {
-            cusEnterViewDelegate.back();
-        } else if (actionEvent.getSource() == reserve) {
-            // TODO
+        if (actionEvent.getSource() == setup) {
+            loginWindowDelegate.setupDatabase();
+        } else if (actionEvent.getSource() == drop) {
+            loginWindowDelegate.dropRequiredTables();
+        } else if (actionEvent.getSource() == add) {
+            loginWindowDelegate.addRequiredTablesAndData();
+        } else if (actionEvent.getSource() == mainMenu) {
+            loginWindowDelegate.backToMain();
         }
     }
 }

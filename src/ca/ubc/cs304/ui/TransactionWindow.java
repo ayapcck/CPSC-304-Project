@@ -18,9 +18,9 @@ import javax.swing.JPanel;
  */
 public class TransactionWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
-    private static final int MAX_LOGIN_ATTEMPTS = 3;
     private JButton customer;
     private JButton clerk;
+    private JButton database;
     private CustomerTransactionDelegate customerDelegate = null;
     private ClerkTransactionDelegate clerkDelegate = null;
 
@@ -31,9 +31,10 @@ public class TransactionWindow extends JFrame implements ActionListener {
     public void showMenu(CustomerTransactionDelegate customerDelegate) {
         this.customerDelegate = customerDelegate;
 //        this.clerkDelegate = clerkDelegate;
+
         customer = new JButton("customer");
         clerk = new JButton("clerk");
-
+        database = new JButton("database manipulation");
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
 
@@ -41,6 +42,7 @@ public class TransactionWindow extends JFrame implements ActionListener {
         FlowLayout flowLayout = new FlowLayout();
 
         contentPane.setLayout(flowLayout);
+        contentPane.add(database);
         contentPane.add(customer);
         contentPane.add(clerk);
         contentPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
@@ -48,7 +50,7 @@ public class TransactionWindow extends JFrame implements ActionListener {
         // register login button with action event handler
         customer.addActionListener(this);
         clerk.addActionListener(this);
-
+        database.addActionListener(this);
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -75,6 +77,8 @@ public class TransactionWindow extends JFrame implements ActionListener {
             customerDelegate.customerTransaction();
         } else if (actionEvent.getSource() == clerk) {
             customerDelegate.customerTransaction();
+        } else if (actionEvent.getSource() == database) {
+            customerDelegate.databaseManipulation();
         }
     }
 }

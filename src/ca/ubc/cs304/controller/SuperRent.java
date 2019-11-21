@@ -19,6 +19,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	private CustomerViewWindow customerViewWindow = null;
 	private CustomerViewResultWindow customerViewResultWindow = null;
 	private DatabaseConnectionHandler handler = null;
+	private DatabaseManipulationWindow databaseManipulationWindow = null;
+
 	public SuperRent() {
 		dbHandler = new DatabaseConnectionHandler();
 	}
@@ -63,8 +65,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
 	@Override
 	public void setupDatabase() {
-    	dbHandler.dropAllRequiredTables();
-		dbHandler.addRequiredTablesAndData();
+//    	dbHandler.dropAllRequiredTables();
+		dbHandler.addRequiredTables();
 	}
 
 	@Override
@@ -92,8 +94,9 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     	
     	System.exit(0);
     }
-    
-	/**
+
+
+    /**
 	 * Main method called at launch time
 	 */
 	public static void main(String args[]) {
@@ -115,15 +118,28 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 		customerWindow.showMenu(this);
 	}
 
-	@Override
+    @Override
+    public void databaseManipulation() {
+        transaction.dispose();
+        databaseManipulationWindow = new DatabaseManipulationWindow();
+        databaseManipulationWindow.showMenu(this);
+    }
+
+    @Override
 	public void submitView() {
 		customerWindow.dispose();
 		customerViewWindow = new CustomerViewWindow();
 		customerViewWindow.showMenu(this);
 	}
 
+    @Override
+    public void back() {
+        customerWindow.dispose();
+        transaction.showMenu(this);
+    }
 
-	@Override
+
+    @Override
 	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		customerViewWindow.dispose();
 		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
@@ -131,11 +147,22 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
 	}
 
-	@Override
+    @Override
+    public void backToPrevious() {
+        customerViewResultWindow.dispose();
+        customerWindow.showMenu(this);
+    }
+
+    @Override
 	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
 		customerViewResultWindow.showMoreDetail(resultTable);
 	}
 
+    @Override
+    public void backToMain() {
+        databaseManipulationWindow.dispose();
+        transaction.showMenu(this);
+    }
 
 }

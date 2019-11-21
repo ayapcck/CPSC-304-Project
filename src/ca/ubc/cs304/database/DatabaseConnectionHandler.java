@@ -1,9 +1,7 @@
 package ca.ubc.cs304.database;
 
-import ca.ubc.cs304.model.Branch;
-import ca.ubc.cs304.model.BranchModel;
-import ca.ubc.cs304.model.TimePeriod;
-import ca.ubc.cs304.model.VehicleType;
+import ca.ubc.cs304.model.*;
+import ca.ubc.cs304.ui.TerminalTransactions;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
@@ -43,25 +41,25 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-<<<<<<<<< Temporary merge branch 1
 	public void addRequiredTables() {
-	    // ScriptRunner sr = new ScriptRunner(connection);
-        String pathRoot = new File("").getAbsolutePath();
-        String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
-        path = pathRoot + path;
-        File tableDir = new File(path);
-        File[] tables = tableDir.listFiles();
-        if (tables != null) {
-            for (File file : tables) {
-                try {
-                    Reader reader = new BufferedReader(new FileReader(file));
-                    // sr.runScript(reader);
-                } catch (IOException e) {
-                    System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-                }
-            }
-        }
-=========
+		// ScriptRunner sr = new ScriptRunner(connection);
+		String pathRoot = new File("").getAbsolutePath();
+		String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
+		path = pathRoot + path;
+		File tableDir = new File(path);
+		File[] tables = tableDir.listFiles();
+		if (tables != null) {
+			for (File file : tables) {
+				try {
+					Reader reader = new BufferedReader(new FileReader(file));
+					// sr.runScript(reader);
+				} catch (IOException e) {
+					System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+				}
+			}
+		}
+	}
+
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
 		String pathRoot = new File("").getAbsolutePath();
@@ -78,7 +76,6 @@ public class DatabaseConnectionHandler {
 	public void addRequiredTablesAndData() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
 		executeSQLFile(path);
->>>>>>>>> Temporary merge branch 2
     }
 
 	public void dropAllRequiredTables() {
@@ -157,74 +154,24 @@ public class DatabaseConnectionHandler {
 		}
 
     }
-//	public void deleteBranch(int branchId) {
-//		try {
-//			PreparedStatement ps = connection.prepareStatement("DELETE FROM branch WHERE branch_id = ?");
-//			ps.setInt(1, branchId);
-//
-//			int rowCount = ps.executeUpdate();
-//			if (rowCount == 0) {
-//				System.out.println(WARNING_TAG + " Branch " + branchId + " does not exist!");
-//			}
-//
-//			connection.commit();
-//
-//			ps.close();
-//		} catch (SQLException e) {
-//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//			rollbackConnection();
-//		}
-//	}
-	
-//	public void insertBranch(BranchModel model) {
-//		try {
-//			PreparedStatement ps = connection.prepareStatement("INSERT INTO branch VALUES (?,?,?,?,?)");
-//			ps.setInt(1, model.getId());
-//			ps.setString(2, model.getName());
-//			ps.setString(3, model.getAddress());
-//			ps.setString(4, model.getCity());
-//			if (model.getPhoneNumber() == 0) {
-//				ps.setNull(5, java.sql.Types.INTEGER);
-//			} else {
-//				ps.setInt(5, model.getPhoneNumber());
-//			}
-//
-//			ps.executeUpdate();
-//			connection.commit();
-//
-//			ps.close();
-//		} catch (SQLException e) {
-//			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//			rollbackConnection();
-//		}
-//	}
 
 	public String[] getAllTables() {
 		ArrayList<String> result = new ArrayList<String>();
-		
+
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT table_name FROM user_tables");
 
 			while (rs.next()) {
 				result.add(rs.getString("table_name"));
-			ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
-
-			while(rs.next()) {
-				BranchModel model = new BranchModel(rs.getString("branch_addr"),
-													rs.getString("branch_city"),
-													rs.getInt("branch_id"),
-													rs.getString("branch_name"),
-													rs.getInt("branch_phone"));
-				result.add(model);
 			}
 
 			rs.close();
 			stmt.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-		}	
-		
+		}
+
 		return result.toArray(new String[result.size()]);
 	}
 	
@@ -319,9 +266,6 @@ public class DatabaseConnectionHandler {
 			}
 			data.add(vector);
 		}
-
 		return new DefaultTableModel(data, columnNames);
-
 	}
-
 }
