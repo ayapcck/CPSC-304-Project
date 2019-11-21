@@ -20,9 +20,9 @@ import javax.swing.*;
 public class CustomerViewWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private ProcessViewDelegate processViewDelegate = null;
-    private String locationData;
-    private String carTypeData;
-    private String cityData;
+    private String locationData = "";
+    private String carTypeData = "";
+    private String cityData = "";
     private JDatePickerImpl datePicker;
     private JDatePickerImpl datePickerTo;
     public CustomerViewWindow() {

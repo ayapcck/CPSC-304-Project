@@ -4,7 +4,9 @@ import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.*;
 import ca.ubc.cs304.ui.*;
 
+import javax.swing.*;
 import java.sql.Date;
+import java.sql.ResultSet;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -112,8 +114,16 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	@Override
 	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		customerViewWindow.dispose();
-		handler = new DatabaseConnectionHandler();
-		int ret = handler.checkVehicleNum(carType, location, city, fromDate, toDate);
-		System.out.println(ret);
+		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
+		customerViewResultWindow = new CustomerViewResultWindow();
+		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
 	}
+
+	@Override
+	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
+		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
+		customerViewResultWindow.showMoreDetail(resultTable);
+	}
+
+
 }

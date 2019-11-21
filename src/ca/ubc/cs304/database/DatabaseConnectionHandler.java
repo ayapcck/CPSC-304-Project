@@ -6,9 +6,12 @@ import ca.ubc.cs304.model.TimePeriod;
 import ca.ubc.cs304.model.VehicleType;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * This class handles all database related transactions
@@ -155,10 +158,8 @@ public class DatabaseConnectionHandler {
 			if (connection != null) {
 				connection.close();
 			}
-	
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
-
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
@@ -169,6 +170,7 @@ public class DatabaseConnectionHandler {
 
 	private void rollbackConnection() {
 		try  {
+			System.out.println("roll back");
 			connection.rollback();	
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
@@ -178,10 +180,8 @@ public class DatabaseConnectionHandler {
 	public int checkVehicleNum(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate ) {
 		try {
 			// TODO: do we still need the timePeriod parameter?
-			if (connection == null) System.out.println("con null");
 			PreparedStatement ps = connection.prepareStatement
 					("SELECT COUNT(*) AS num FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
-			System.out.println("c");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
@@ -202,19 +202,49 @@ public class DatabaseConnectionHandler {
 		return 0;
 	}
 
-	public void showVehicleDetails(TimePeriod timePeriod, VehicleType vehicleType, Branch branch) {
+	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
-			ps.setString(1, vehicleType.getVtName());
-			ps.setString(2, branch.getLocation());
-			ps.setString(3, branch.getCity());
-			ps.executeUpdate();
+			ps.setString(1, carType);
+			ps.setString(2, location);
+			ps.setString(3, city);
+			ResultSet rs = ps.executeQuery();
 			connection.commit();
 			ps.close();
+			JTable table = new JTable(buildTableModel(rs));
+			return table;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
+		return null;
 	}
+
+	public static DefaultTableModel buildTableModel(ResultSet rs)
+			throws SQLException {
+
+		ResultSetMetaData metaData = rs.getMetaData();
+
+		// names of columns
+		Vector<String> columnNames = new Vector<String>();
+		int columnCount = metaData.getColumnCount();
+		for (int column = 1; column <= columnCount; column++) {
+			columnNames.add(metaData.getColumnName(column));
+		}
+
+		// data of the table
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		while (rs.next()) {
+			Vector<Object> vector = new Vector<Object>();
+			for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+				vector.add(rs.getObject(columnIndex));
+			}
+			data.add(vector);
+		}
+
+		return new DefaultTableModel(data, columnNames);
+
+	}
+
 }
