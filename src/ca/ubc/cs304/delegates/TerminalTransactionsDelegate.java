@@ -17,5 +17,6 @@ public interface TerminalTransactionsDelegate {
 	public void setupDatabase();
 	public void viewAllTables();
 	public void rentAVehicle(TerminalTransactions terminalTransactions);
+	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions);
 	public void terminalTransactionsFinished();
 }

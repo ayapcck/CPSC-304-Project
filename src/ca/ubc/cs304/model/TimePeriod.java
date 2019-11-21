@@ -1,12 +1,14 @@
 package ca.ubc.cs304.model;
 
+import java.sql.Date;
+
 public class TimePeriod {
-    private String fromDate;
+    private Date fromDate;
     private String fromTime;
-    private String toDate;
+    private Date toDate;
     private String toTime;
 
-    public TimePeriod(String fromDate, String fromTime, String toDate, String toTime) {
+    public TimePeriod(Date fromDate, String fromTime, Date toDate, String toTime) {
         // TODO: make sure storing DATES is fine as a string (MAY CAUSE BUGS)
         this.fromDate = fromDate;
         this.fromTime =fromTime;
@@ -18,11 +20,11 @@ public class TimePeriod {
         return fromTime;
     }
 
-    public String getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public String getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 

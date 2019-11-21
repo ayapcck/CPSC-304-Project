@@ -71,7 +71,15 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 
 	@Override
 	public void rentAVehicle(TerminalTransactions terminalTransactions) {
-		dbHandler.rentVehicleWithReservation(terminalTransactions);
+		int confNo = -9999;
+		System.out.println("Enter confirmation number");
+		confNo = terminalTransactions.readInteger(false);
+		dbHandler.rentVehicleWithReservation(terminalTransactions, confNo);
+	}
+
+	@Override
+	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
+		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
 	}
 
 	/**

@@ -92,7 +92,7 @@ public class TerminalTransactions {
                                 delegate.rentAVehicle(this);
                                 break;
                             case 2:
-                                // handle no reservation in different method
+                                delegate.rentAVehicleNoRes(this);
                                 break;
                             case 5:
                                 handleMainInteractions();
@@ -190,7 +190,7 @@ public class TerminalTransactions {
 		return input;
 	}
 	
-	private String readLine() {
+	public String readLine() {
 		String result = null;
 		try {
 			result = bufferedReader.readLine();

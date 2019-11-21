@@ -1,15 +1,17 @@
 package ca.ubc.cs304.model;
 
+import java.sql.Date;
+
 public class Reservations {
     private Integer confNo;
     private String vtName;
     private String dLicense;
-    private String fromDate; // DATE in SQL
-    private String toDate; // DATE in SQL
+    private Date fromDate; // DATE in SQL
+    private Date toDate; // DATE in SQL
     private String fromTime;
     private String toTime;
 
-    public Reservations(Integer confNo, String vtName, String dLicense, String fromDate, String fromTime, String toDate,
+    public Reservations(Integer confNo, String vtName, String dLicense, Date fromDate, String fromTime, Date toDate,
                         String toTime) {
         // TODO: ENFORCE PRIMARY KEY AND REFERENCES
         this.confNo = confNo;
@@ -34,11 +36,11 @@ public class Reservations {
         return dLicense;
     }
 
-    public String getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public String getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
