@@ -65,6 +65,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
 	@Override
 	public void setupDatabase() {
+	    // TODO
 //    	dbHandler.dropAllRequiredTables();
 		dbHandler.addRequiredTables();
 	}

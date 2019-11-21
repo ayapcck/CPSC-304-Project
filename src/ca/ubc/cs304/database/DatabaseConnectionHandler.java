@@ -183,7 +183,6 @@ public class DatabaseConnectionHandler {
 	
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
-
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
@@ -268,4 +267,5 @@ public class DatabaseConnectionHandler {
 		}
 		return new DefaultTableModel(data, columnNames);
 	}
+
 }
