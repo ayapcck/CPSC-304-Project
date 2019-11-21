@@ -1,4 +1,4 @@
-package ca.ubc.cs304.ui;
+package ca.ubc.cs304.util;
 
 import javax.swing.*;
 import java.text.ParseException;

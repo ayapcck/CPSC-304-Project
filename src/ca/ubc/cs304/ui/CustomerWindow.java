@@ -15,16 +15,13 @@ import javax.swing.JFrame;
  * The class is only responsible for displaying and handling the login GUI.
  */
 public class CustomerWindow extends JFrame implements ActionListener {
-    private static final int TEXT_FIELD_WIDTH = 10;
-    private static final int MAX_LOGIN_ATTEMPTS = 3;
     private JButton view;
     private JButton reserve;
     private JButton back;
     private CusEnterViewDelegate cusEnterViewDelegate = null;
-    private ClerkTransactionDelegate clerkDelegate = null;
 
     public CustomerWindow() {
-        super("What customer transaction?");
+        super("Choose a transaction:");
 
         view = new JButton("View Available Vehicles");
         reserve = new JButton("Reserve");

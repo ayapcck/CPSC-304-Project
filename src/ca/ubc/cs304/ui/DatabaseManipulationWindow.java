@@ -22,7 +22,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
     private LoginWindowDelegate loginWindowDelegate = null;
 
     public DatabaseManipulationWindow() {
-        super("database manipulation");
+        super("Database Manipulations");
 
         setup = new JButton("Setup Database(drop required tables and add required tables and data)");
         drop = new JButton("Drop required tables");

@@ -16,7 +16,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	private LoginWindow loginWindow = null;
 	private MainOperations mainOperations = null;
 	private CustomerWindow customerWindow = null;
-	private CustomerViewWindow customerViewWindow = null;
+	private ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = null;
 	private CustomerViewResultWindow customerViewResultWindow = null;
 	private DatabaseConnectionHandler handler = null;
 	private DatabaseManipulationWindow databaseManipulationWindow = null;
@@ -128,8 +128,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     @Override
 	public void submitView() {
 		customerWindow.dispose();
-		customerViewWindow = new CustomerViewWindow();
-		customerViewWindow.showMenu(this);
+		viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
+		viewAvailableVehiclesWindow.showMenu(this);
 	}
 
     @Override
@@ -141,7 +141,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
     @Override
 	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		customerViewWindow.dispose();
+		viewAvailableVehiclesWindow.dispose();
 		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
 		customerViewResultWindow = new CustomerViewResultWindow();
 		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);

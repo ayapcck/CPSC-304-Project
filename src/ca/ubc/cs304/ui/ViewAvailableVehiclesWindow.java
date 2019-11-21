@@ -1,6 +1,7 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.ProcessViewDelegate;
+import ca.ubc.cs304.util.DateLabelFormatter;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -17,7 +18,7 @@ import javax.swing.*;
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class CustomerViewWindow extends JFrame implements ActionListener {
+public class ViewAvailableVehiclesWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private ProcessViewDelegate processViewDelegate = null;
     private String locationData = "";
@@ -27,17 +28,13 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
     private JDatePickerImpl datePickerTo;
     private JButton submit;
     private JButton mainMenu;
-    public CustomerViewWindow() {
-        super("what do you want to see?");
+    public ViewAvailableVehiclesWindow() {
+        super("Please vehicle information:");
     }
 
     public void showMenu(ProcessViewDelegate processViewDelegate) {
         this.processViewDelegate = processViewDelegate;
-        JLabel carType = new JLabel("Car Type:");
-        JLabel location = new JLabel("Location:");
         submit = new JButton("Submit");
-        JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
-        JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -48,84 +45,33 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // place car type label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(carType, c);
-        contentPane.add(carType);
+        // place car type label and field
+        JLabel carType = new JLabel("Car Type:");
+        JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
+        placeLabel(carType, contentPane, gb, c, 10, 5);
+        carTypeData = placeTextField(carTypeField, contentPane, gb, c, new Insets(10, 0, 5, 10));
 
-        // place the car type field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(carTypeField, c);
-        contentPane.add(carTypeField);
-        carTypeData = carTypeField.getText();
+        // place location label and field
+        JLabel location = new JLabel("Location:");
+        JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
+        placeLabel(location, contentPane, gb, c, 0, 10);
+        locationData = placeTextField(locationField, contentPane, gb, c, new Insets(10, 0, 5, 10));
 
-        // place location label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(location, c);
-        contentPane.add(location);
-
-        // place the location field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(locationField, c);
-        contentPane.add(locationField);
-        locationData = locationField.getText();
-
-        // place city label
+        // place city label and field
         JLabel cityLabel = new JLabel("City:");
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(cityLabel, c);
-        contentPane.add(cityLabel);
-
-        // place the city field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
         JTextField cityField = new JTextField(TEXT_FIELD_WIDTH);
-        gb.setConstraints(cityField, c);
-        contentPane.add(cityField);
-        cityData = cityField.getText();
+        placeLabel(cityLabel, contentPane, gb, c, 0, 10);
+        cityData = placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place fromDate label
+        // place fromDate label and field
         JLabel fromDate = new JLabel("from Date:");
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(fromDate, c);
-        contentPane.add(fromDate);
+        placeLabel(fromDate, contentPane, gb, c, 0, 10);
+        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place fromDate field
-        UtilDateModel model = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-         datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(datePicker, c);
-        contentPane.add(datePicker);
-        // place toDate label
+        // place toDate label and field
         JLabel toDate = new JLabel("to Date:");
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(toDate, c);
-        contentPane.add(toDate);
-        // place toDate field
-        UtilDateModel model2 = new UtilDateModel();
-        Properties p2 = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanelTo = new JDatePanelImpl(model2, p2);
-        datePickerTo = new JDatePickerImpl(datePanelTo, new DateLabelFormatter());
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(datePickerTo, c);
-        contentPane.add(datePickerTo);
+        placeLabel(toDate, contentPane, gb, c, 0, 10);
+        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
         // place submit button
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -160,6 +106,38 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
         this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
         // make the window visible
         this.setVisible(true);
+    }
+
+    private JDatePickerImpl placeDateField(JPanel contentPane, GridBagLayout gb, GridBagConstraints c,
+                                Insets insets) {
+        UtilDateModel model2 = new UtilDateModel();
+        Properties p = new Properties();
+        p.put("text.today", "Today");
+        p.put("text.month", "Month");
+        p.put("text.year", "Year");
+        JDatePanelImpl datePanelTo = new JDatePanelImpl(model2, p);
+        JDatePickerImpl picker = new JDatePickerImpl(datePanelTo, new DateLabelFormatter());
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = insets;
+        gb.setConstraints(picker, c);
+        contentPane.add(picker);
+        return picker;
+    }
+
+    private String placeTextField(JTextField field, JPanel contentPane, GridBagLayout gb,
+                                  GridBagConstraints c, Insets insets) {
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = insets;
+        gb.setConstraints(field, c);
+        contentPane.add(field);
+        return field.getText();
+    }
+
+    private void placeLabel(JLabel label, JPanel contentPane, GridBagLayout gb, GridBagConstraints c, int i, int i2) {
+        c.gridwidth = GridBagConstraints.RELATIVE;
+        c.insets = new Insets(i, 10, i2, 0);
+        gb.setConstraints(label, c);
+        contentPane.add(label);
     }
 
 
