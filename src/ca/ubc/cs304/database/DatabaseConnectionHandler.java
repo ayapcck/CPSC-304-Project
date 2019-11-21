@@ -22,7 +22,6 @@ public class DatabaseConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
-	
 	private Connection connection = null;
 	
 	public DatabaseConnectionHandler() {
@@ -153,54 +152,67 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
-		// create new reservation;
-		int confNo = (int) (Math.random() * 1000);
-		System.out.println("Enter type of vehicle");
-		String VtName = terminalTransactions.readLine();
-		System.out.println("Enter customer's driver license");
-		String driverLicense = terminalTransactions.readLine();
-		System.out.println("Enter fromDate");
-		String stringDate = terminalTransactions.readLine();
-		Date fromDate = Date.valueOf(stringDate);
-		System.out.println("Enter from Time");
-		String fromTime = terminalTransactions.readLine();
-		System.out.println("Enter end date (toDate)");
-		String stringToDate = terminalTransactions.readLine();
-		Date toDate = Date.valueOf(stringToDate);
-		System.out.println("Enter to time");
-		String toTime = terminalTransactions.readLine();
-		// determine if customer already exists, if not add customer to database to avoid errors
-		if (!customerExists(driverLicense)) {
-			System.out.println("Enter cellNum of customer");
-			String cellNum = terminalTransactions.readLine();
-			System.out.println("Enter name of customer");
-			String name = terminalTransactions.readLine();
-			System.out.println("Enter address of customer");
-			String address = terminalTransactions.readLine();
-			Customer customer = new Customer(cellNum, name, address, driverLicense);
-			insertCustomer(customer);
-		}
-		TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
-		insertTimePeriod(timePeriod);
-		Reservations reservations = new Reservations(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
-		insertReservation(reservations);
+//	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
+//		// create new reservation;
+//		int confNo = (int) (Math.random() * 1000);
+//		System.out.println("Enter type of vehicle");
+//		String VtName = terminalTransactions.readLine();
+//		System.out.println("Enter customer's driver license");
+//		String driverLicense = terminalTransactions.readLine();
+//		System.out.println("Enter fromDate");
+//		String stringDate = terminalTransactions.readLine();
+//		Date fromDate = Date.valueOf(stringDate);
+//		System.out.println("Enter from Time");
+//		String fromTime = terminalTransactions.readLine();
+//		System.out.println("Enter end date (toDate)");
+//		String stringToDate = terminalTransactions.readLine();
+//		Date toDate = Date.valueOf(stringToDate);
+//		System.out.println("Enter to time");
+//		String toTime = terminalTransactions.readLine();
+//		// determine if customer already exists, if not add customer to database to avoid errors
+//		if (!customerExists(driverLicense)) {
+//			System.out.println("Enter cellNum of customer");
+//			String cellNum = terminalTransactions.readLine();
+//			System.out.println("Enter name of customer");
+//			String name = terminalTransactions.readLine();
+//			System.out.println("Enter address of customer");
+//			String address = terminalTransactions.readLine();
+//			Customer customer = new Customer(cellNum, name, address, driverLicense);
+//			insertCustomer(name, cellNum, driverLicense, address);
+//		}
+//		TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
+//		insertTimePeriod(timePeriod);
+//		Reservations reservations = new Reservations(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
+//		insertReservation(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
+//
+//		rentVehicleWithReservation(terminalTransactions, confNo);
+//	}
 
-		rentVehicleWithReservation(terminalTransactions, confNo);
-	}
-
+//	public boolean customerExists(String driversLicense) {
+//		try {
+//			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
+//			ps.setString(1, driversLicense);
+//			ps.executeQuery();
+//			return true; // didn't crash so customer exists
+//
+//		} catch (SQLException e) {
+//			return false;
+//
+//		}
+//	}
 	public boolean customerExists(String driversLicense) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
-			ps.setString(1, driversLicense);
-			ps.executeQuery();
-			return true; // didn't crash so customer exists
-
+			// TODO: changed customer exists
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(DISTINCT cellNum) AS num FROM CUSTOMER");
+			int cusNum = rs.getInt("num");
+			if (cusNum > 0) return true;
+			else return false;
 		} catch (SQLException e) {
 			return false;
-
 		}
 	}
+
 	/**
 	 * Insert rental model into database
 	 * @param model:
@@ -251,13 +263,13 @@ public class DatabaseConnectionHandler {
 
 	}
 
-	public void insertCustomer(Customer model) {
+	public void insertCustomer(String name, String phone, String license, String addr) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO CUSTOMER VALUES (?,?,?,?)");
-			ps.setString(1, model.getCellNum());
-			ps.setString(2, model.getName());
-			ps.setString(3, model.getAddress());
-			ps.setString(4, model.getDriversLicense());
+			ps.setString(1, phone);
+			ps.setString(2, name);
+			ps.setString(3, addr);
+			ps.setString(4, license);
 
 			ps.executeUpdate();
 			connection.commit();
@@ -270,27 +282,42 @@ public class DatabaseConnectionHandler {
 
 	}
 
-	public void insertReservation(Reservations model) {
+	public boolean vehicleExist(String vtName, String location, String city) {
+		// TODO
+		try{
+			PreparedStatement ps = connection.prepareStatement("SELECT FROM VEHICLE WHERE vtName = ? AND location = ? AND city = ?");
+			ps.setString(1, vtName);
+			ps.setString(2, location);
+			ps.setString(3, city);
+		} catch (SQLException e) {
+			return false;
+		}
+		return false;
+	}
+
+	public void insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
-			ps.setInt(1, model.getConfNo());
-			ps.setString(2, model.getVtName());
-			ps.setString(3, model.getdLicense());
-			ps.setDate(4, model.getFromDate());
-			ps.setString(5, model.getFromTime());
-			ps.setDate(6, model.getToDate());
-			ps.setString(7, model.getToTime());
-
-			ps.executeUpdate();
-			connection.commit();
-
-			ps.close();
+			if (vehicleExist(vtName, location, city)) {
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+				ps.setInt(1, reservationNum);
+				ps.setString(2, vtName);
+				ps.setString(3, license);
+				ps.setString(4, fromDate);
+				ps.setString(5, fromTime);
+				ps.setString(6, toDate);
+				ps.setString(7, toTime);
+				ps.executeQuery();
+				connection.commit();
+				ps.close();
+			}
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
 
 	}
+
+
 //	public void deleteBranch(int branchId) {
 //		try {
 //			PreparedStatement ps = connection.prepareStatement("DELETE FROM branch WHERE branch_id = ?");
@@ -333,7 +360,7 @@ public class DatabaseConnectionHandler {
 //		}
 //	}
 	
-    }
+//    }
 
 	public String[] getAllTables() {
 		ArrayList<String> result = new ArrayList<String>();
@@ -389,12 +416,6 @@ public class DatabaseConnectionHandler {
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
-//			Date fromDate = new Date(timePeriod.getFromDate().getTimeInMillis());
-//			ps.setDate(5, fromDate);
-//			Date toDate = new Date(timePeriod.getToDate().getTimeInMillis());
-//			ps.setDate(6, toDate);
-//			ps.setString(7, branch.getLocation());
-//			ps.setString(8, branch.getCity());
 			int rs = ps.executeQuery().getInt("num");
 			connection.commit();
 			ps.close();

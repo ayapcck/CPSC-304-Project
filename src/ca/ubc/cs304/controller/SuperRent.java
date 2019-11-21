@@ -7,6 +7,7 @@ import ca.ubc.cs304.ui.*;
 import javax.swing.*;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Time;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -18,7 +19,9 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	private CustomerWindow customerWindow = null;
 	private CustomerViewWindow customerViewWindow = null;
 	private CustomerViewResultWindow customerViewResultWindow = null;
-	private DatabaseConnectionHandler handler = null;
+	private CustomerReserveWindow customerReserveWindow = null;
+	private NewCusRegWindow newCusRegWindow = null;
+	private ActualReserveWindow actualReserveWindow = null;
 	private DatabaseManipulationWindow databaseManipulationWindow = null;
 
 	public SuperRent() {
@@ -88,7 +91,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 
 	@Override
 	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
-		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
+//		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
 	}
 
 	/**
@@ -147,8 +150,15 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
         transaction.showMenu(this);
     }
 
+	@Override
+	public void reserve() {
+		customerWindow.dispose();
+		customerReserveWindow = new CustomerReserveWindow();
+		customerReserveWindow.showMenu(this);
+	}
 
-    @Override
+
+	@Override
 	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		customerViewWindow.dispose();
 		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
@@ -173,5 +183,44 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
         databaseManipulationWindow.dispose();
         transaction.showMenu(this);
     }
+
+	@Override
+	public void newCusReserve() {
+		customerReserveWindow.dispose();
+		newCusRegWindow = new NewCusRegWindow();
+		newCusRegWindow.showMenu(this);
+	}
+
+	@Override
+	public void newCusRigDone(String name, String phone, String licence, String addr) {
+		dbHandler.insertCustomer(name, phone, licence, addr);
+		newCusRegWindow.dispose();
+		actualReserveWindow = new ActualReserveWindow();
+		actualReserveWindow.showMenu(this, licence);
+	}
+
+
+	@Override
+	public void oldCusReserve() {
+
+	}
+
+	@Override
+	public void backToNewCus() {
+		actualReserveWindow.dispose();;
+		customerWindow.showMenu(this);
+	}
+
+	@Override
+	public void backToCus() {
+		newCusRegWindow.dispose();
+		customerWindow.showMenu(this);
+	}
+
+	@Override
+	public void makeActualReserve(String license, String location, String city, String vtname, String fromDate, String fromTime, String toDate, String toTime, int ReservationNum) {
+		dbHandler.insertReservation(license, location, city, vtname, fromDate, fromTime, toDate, toTime, ReservationNum);
+	}
+
 
 }

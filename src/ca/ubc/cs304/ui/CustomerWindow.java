@@ -78,7 +78,7 @@ public class CustomerWindow extends JFrame implements ActionListener {
         } else if (actionEvent.getSource() == back) {
             cusEnterViewDelegate.back();
         } else if (actionEvent.getSource() == reserve) {
-            // TODO
+            cusEnterViewDelegate.reserve();
         }
     }
 }

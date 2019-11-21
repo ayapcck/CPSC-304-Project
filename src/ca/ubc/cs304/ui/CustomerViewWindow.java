@@ -117,9 +117,9 @@ public class CustomerViewWindow extends JFrame implements ActionListener {
         // place toDate field
         UtilDateModel model2 = new UtilDateModel();
         Properties p2 = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
+        p2.put("text.today", "Today");
+        p2.put("text.month", "Month");
+        p2.put("text.year", "Year");
         JDatePanelImpl datePanelTo = new JDatePanelImpl(model2, p2);
         datePickerTo = new JDatePickerImpl(datePanelTo, new DateLabelFormatter());
         c.gridwidth = GridBagConstraints.REMAINDER;
