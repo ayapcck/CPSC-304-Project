@@ -107,7 +107,6 @@ public class DatabaseConnectionHandler {
             insertIntoRental(rental);
             updateStatus( "notavailable", forRent.getvLicense());
             // TODO: display receipt in new UI
-            // TODO: remove car from available?
             stmt.close();
             ps.close();
             ps1.close();
@@ -154,6 +153,121 @@ public class DatabaseConnectionHandler {
 		rentVehicleWithReservation(terminalTransactions, confNo);
 	}
 
+	public String returnVehicle(TerminalTransactions terminalTransactions) {
+	    int rid = -99;
+        System.out.println("Enter rental id");
+        rid = terminalTransactions.readInteger(false);
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
+            ps.setInt(1, rid);
+            ResultSet rental = ps.executeQuery();
+            String vLicense = null;
+            Date toDate = null;
+            Date fromDate = null;
+            String toTime = null;
+            while (rental.next()) {
+                vLicense = rental.getString(2);
+                toDate = rental.getDate(6);
+                toTime = rental.getString(7);
+                fromDate = rental.getDate(4);
+
+            }
+            if (!rentedVehicle(vLicense)) {
+                return "Vehicle is not rented";
+            }
+
+            PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
+            ps1.setString(1, vLicense);
+            ResultSet forRent = ps1.executeQuery();
+            int odometer = -99;
+            String vtName = null;
+            while (forRent.next()) {
+                odometer = forRent.getInt(7);
+                vtName = forRent.getString(9);
+            }
+
+            PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM VEHICLETYPE WHERE  VTNAME = ?");
+            ps2.setString(1, vtName);
+            ResultSet vType = ps2.executeQuery();
+            VehicleType vehicleType = createVehicleTypeModel(vType);
+
+            // get value
+            assert fromDate != null;
+            int value = returnValue(vehicleType, fromDate);
+            Return ret = new Return(rid, toDate, odometer, 1, value);
+            insertIntoReturn(ret);
+            //TODO: display receipt
+            System.out.println(value);
+
+
+        } catch (SQLException e) {
+            System.out.println("No rental with that id exists");
+        }
+        return "";
+
+    }
+
+    public int returnValue(VehicleType vehicleType, Date fromDate) {
+	    long currTime  = System.currentTimeMillis();
+	    long startTime = fromDate.getTime();
+        long diff = currTime - startTime;
+        long hours = diff * 1000 * 3600;
+
+        long days = Math.floorDiv(hours, 24);
+
+        long weeks = Math.floorDiv(days, 7);
+        long daysLeft = (weeks * 7) - days;
+        long hoursLeft = hours - (days * 24);
+
+        long weekValue = vehicleType.getWeeklyRate() * weeks;
+        long dayValue = vehicleType.getDailyRate() * daysLeft;
+        long hourValue = vehicleType.getHourlyRate() * hoursLeft;
+
+        long weekInsValue = vehicleType.getWeeklyInsuranceRate() * weeks;
+        long dayInsValue = vehicleType.getDailyInsuranceRate() * daysLeft;
+        long hourInsValue = vehicleType.getHourlyInsuranceRate() * hoursLeft;
+        return (int) (weekValue + dayValue + hourValue + weekInsValue + dayInsValue + hourInsValue);
+
+    }
+    public VehicleType createVehicleTypeModel(ResultSet rs) throws SQLException {
+	    String vtName = null;
+        String features = null;
+        int weeklyRate = -99;
+        int dailyRate = -99;
+        int hourlyRate = -99;
+        int weeklyInsuranceRate = -99;
+        int dailyInsuranceRate = -99;
+        int hourlyInsuranceRate = -99;
+        int kmRate = -99;
+	    while (rs.next()) {
+	        vtName = rs.getString(1);
+	        features = rs.getString(2);
+	        weeklyRate = rs.getInt(3);
+	        dailyRate = rs.getInt(4);
+	        hourlyRate = rs.getInt(5);
+	        weeklyInsuranceRate = rs.getInt(6);
+	        dailyInsuranceRate = rs.getInt(7);
+	        hourlyInsuranceRate = rs.getInt(8);
+	        kmRate = rs.getInt(9);
+        }
+        return new VehicleType(vtName, features, weeklyRate, dailyRate, hourlyRate, weeklyInsuranceRate,
+                              dailyInsuranceRate, hourlyInsuranceRate, kmRate);
+    }
+
+
+    public boolean rentedVehicle(String vLicense) {
+        try {
+            PreparedStatement ps = connection.prepareStatement
+                    ("SELECT * FROM FORRENT WHERE VLICENSE = ? AND STATUS = 'notavailable'");
+            ps.setString(1, vLicense);
+            ps.executeQuery();
+            return true; // didn't crash so vehicle with vLicense that is rented exists
+
+        } catch (SQLException e) {
+            return false;
+
+        }
+    }
 	public boolean customerExists(String driversLicense) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
@@ -193,8 +307,7 @@ public class DatabaseConnectionHandler {
 			city = rs.getString(11);
 			break;
 		}
-		ForRent forRent = new ForRent(vId, vLicense, make, model, year, color, odometer, status, vtName, location, city);
-		return forRent;
+        return new ForRent(vId, vLicense, make, model, year, color, odometer, status, vtName, location, city);
 	}
 	/**
 	 * Insert rental model into database
@@ -227,6 +340,24 @@ public class DatabaseConnectionHandler {
 
     }
 
+    public void insertIntoReturn(Return model) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO RETURN VALUES (?,?,?,?,?)");
+            ps.setInt(1, model.getrID());
+            ps.setDate(2, model.getReturnDate());
+            ps.setInt(3, model.getOdometer());
+            ps.setInt(4, model.getFullTank());
+            ps.setInt(5, model.getValue());
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
     public void insertTimePeriod(TimePeriod model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO TIMEPERIOD VALUES (?,?,?,?)");

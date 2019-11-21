@@ -74,6 +74,7 @@ public class TerminalTransactions {
 		int choice = INVALID_INPUT;
 		while (choice != 6) {
 			System.out.println("1: Rent a Vehicle");
+			System.out.println("2: Return vehicle");
 			System.out.println("5: Main Menu");
 			System.out.println("6. Quit");
 			choice = readInteger(false);
@@ -98,6 +99,8 @@ public class TerminalTransactions {
                                 handleMainInteractions();
                                 break;
                         }
+						break;
+					case 2:
 						break;
 					case 5:
 						handleMainInteractions();
