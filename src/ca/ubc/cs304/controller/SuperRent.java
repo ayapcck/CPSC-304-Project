@@ -7,6 +7,7 @@ import ca.ubc.cs304.ui.*;
 import javax.swing.*;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Time;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -92,5 +93,12 @@ public class SuperRent implements LoginWindowDelegate {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
 	}
+
+//    @Override
+//	public void submitView() {
+//		customerWindow.dispose();
+//		customerViewWindow = new CustomerViewWindow();
+//		customerViewWindow.showMenu(this);
+//	}
 
 }

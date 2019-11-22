@@ -1,6 +1,6 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ProcessViewDelegate;
+import ca.ubc.cs304.delegates.ViewVehiclesResultDelegate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,17 +8,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class ViewAvailableVehicleResultWindow extends JFrame implements ActionListener {
+public class ViewAvailableVehicleResultWindow extends Window implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
-    private ProcessViewDelegate processViewDelegate = null;
+    private int count;
+    private ViewVehiclesResultDelegate viewVehiclesResultDelegate = null;
     private JPanel contentPane;
+    private GridBagLayout gb = new GridBagLayout();
     private GridBagConstraints c = new GridBagConstraints();
+
     private String carType;
     private String location;
     private String city;
@@ -26,20 +31,22 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
     private Date toDate;
     private JButton mainMenu;
     private JButton moreDetail;
-    private GridBagLayout gb = new GridBagLayout();
+
     public ViewAvailableVehicleResultWindow() {
         super("show number of vehicles available");
+
+        mainMenu = new JButton("Back");
+        moreDetail = new JButton("More detail");
     }
 
-    public void showMenu(ProcessViewDelegate processViewDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
-
+    public void showMenu(ViewVehiclesResultDelegate viewVehiclesResultDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
+        this.viewVehiclesResultDelegate = viewVehiclesResultDelegate;
+        this.count = count;
         this.carType = carType;
         this.location = location;
         this.city = city;
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.processViewDelegate = processViewDelegate;
-        JLabel countResult = new JLabel("There are " + count + " vehicles of this type.");
 
         contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -48,47 +55,16 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // show count of vehicles
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(countResult, c);
-        contentPane.add(countResult);
+        JLabel countResult = new JLabel("There are " + count + " vehicles of this type.");
+        placeLabel(countResult, contentPane, gb, c, 10, 5);
+        // TODO: need to fix positioning on this label
+        //  should set to REMAINDER instead of RELATIVE
 
-        // place back button
-        mainMenu = new JButton("Back");
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(mainMenu, c);
-        contentPane.add(mainMenu);
-
-        // place moreDetail button
-        moreDetail = new JButton("More detail");
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(moreDetail, c);
-        contentPane.add(moreDetail);
-
-        // register login button with action event handler
-        moreDetail.addActionListener(this);
-        mainMenu.addActionListener(this);
-
-        // anonymous inner class for closing the window
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // size the window to obtain a best fit for the components
-        this.pack();
-
-        // center the frame
-        Dimension d = this.getToolkit().getScreenSize();
-        Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-        // make the window visible
-        this.setVisible(true);
+        List<JButton> buttons = new ArrayList<>();
+        buttons.add(moreDetail);
+        buttons.add(mainMenu);
+        PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
+        new Panel(buttons, this, this, contentPane, gb, setConstraints);
     }
 
     public void showMoreDetail(JTable rs) {
@@ -115,9 +91,9 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
-            processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
+            viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
-            processViewDelegate.backToPrevious();
+            viewVehiclesResultDelegate.backToCustomer();
         }
     }
 }

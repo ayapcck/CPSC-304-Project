@@ -1,6 +1,9 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.*;
+import ca.ubc.cs304.model.Customer;
+import ca.ubc.cs304.model.Rental;
+import ca.ubc.cs304.model.TimePeriod;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
@@ -49,25 +52,6 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void addRequiredTables() {
-		// ScriptRunner sr = new ScriptRunner(connection);
-		String pathRoot = new File("").getAbsolutePath();
-		String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
-		path = pathRoot + path;
-		File tableDir = new File(path);
-		File[] tables = tableDir.listFiles();
-		if (tables != null) {
-			for (File file : tables) {
-				try {
-					Reader reader = new BufferedReader(new FileReader(file));
-					// sr.runScript(reader);
-				} catch (IOException e) {
-					System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-				}
-			}
-		}
-	}
-
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
 		String pathRoot = new File("").getAbsolutePath();
@@ -84,7 +68,7 @@ public class DatabaseConnectionHandler {
 	public void addRequiredTablesAndData() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
 		executeSQLFile(path);
-    }
+	}
 
 	public void dropAllRequiredTables() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
@@ -317,17 +301,45 @@ public class DatabaseConnectionHandler {
     }
 	public boolean customerExists(String driversLicense) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
-			ps.setString(1, driversLicense);
-			ps.executeQuery();
-			return true; // didn't crash so customer exists
-
+			// TODO: changed customer exists
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT COUNT(DISTINCT cellNum) AS num FROM CUSTOMER");
+			int cusNum = rs.getInt("num");
+			if (cusNum > 0) return true;
+			else return false;
 		} catch (SQLException e) {
 			return false;
-
 		}
 	}
 
+	public ForRent createForRentModel(ResultSet rs) throws SQLException {
+		int vId = -99;
+		String vLicense = null;
+		String make = null;
+		String model = null;
+		int year = -99;
+		String color = null;
+		int odometer = -99;
+		String status = null;
+		String vtName = null;
+		String location = null;
+		String city = null;
+		while (rs.next()) {
+			vId = rs.getInt(1);
+			vLicense = rs.getString(2);
+			make = rs.getString(3);
+			model = rs.getString(4);
+			year = rs.getInt(5);
+			color = rs.getString(6);
+			odometer = rs.getInt(7);
+			status = rs.getString(8);
+			vtName = rs.getString(9);
+			location = rs.getString(10);
+			city = rs.getString(11);
+			break;
+		}
+        return new ForRent(vId, vLicense, make, model, year, color, odometer, status, vtName, location, city);
+	}
 
 	/**
 	 * Insert rental model into database
@@ -397,13 +409,13 @@ public class DatabaseConnectionHandler {
 
 	}
 
-	public void insertCustomer(Customer model) {
+	public void insertCustomer(String name, String phone, String license, String addr) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO CUSTOMER VALUES (?,?,?,?)");
-			ps.setString(1, model.getCellNum());
-			ps.setString(2, model.getName());
-			ps.setString(3, model.getAddress());
-			ps.setString(4, model.getDriversLicense());
+			ps.setString(1, phone);
+			ps.setString(2, name);
+			ps.setString(3, addr);
+			ps.setString(4, license);
 
 			ps.executeUpdate();
 			connection.commit();
@@ -416,21 +428,34 @@ public class DatabaseConnectionHandler {
 
 	}
 
-	public void insertReservation(Reservations model) {
+	public boolean vehicleExist(String vtName, String location, String city) {
+		// TODO
+		try{
+			PreparedStatement ps = connection.prepareStatement("SELECT FROM VEHICLE WHERE vtName = ? AND location = ? AND city = ?");
+			ps.setString(1, vtName);
+			ps.setString(2, location);
+			ps.setString(3, city);
+		} catch (SQLException e) {
+			return false;
+		}
+		return false;
+	}
+
+	public void insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
-			ps.setInt(1, model.getConfNo());
-			ps.setString(2, model.getVtName());
-			ps.setString(3, model.getdLicense());
-			ps.setDate(4, model.getFromDate());
-			ps.setString(5, model.getFromTime());
-			ps.setDate(6, model.getToDate());
-			ps.setString(7, model.getToTime());
-
-			ps.executeUpdate();
-			connection.commit();
-
-			ps.close();
+			if (vehicleExist(vtName, location, city)) {
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+				ps.setInt(1, reservationNum);
+				ps.setString(2, vtName);
+				ps.setString(3, license);
+				ps.setString(4, fromDate);
+				ps.setString(5, fromTime);
+				ps.setString(6, toDate);
+				ps.setString(7, toTime);
+				ps.executeQuery();
+				connection.commit();
+				ps.close();
+			}
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
@@ -456,7 +481,7 @@ public class DatabaseConnectionHandler {
 
 	public String[] getAllTables() {
 		ArrayList<String> result = new ArrayList<String>();
-
+		
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT table_name FROM user_tables");
@@ -469,8 +494,8 @@ public class DatabaseConnectionHandler {
 			stmt.close();
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-		}
-
+		}	
+		
 		return result.toArray(new String[result.size()]);
 	}
 	
@@ -482,6 +507,7 @@ public class DatabaseConnectionHandler {
 	
 			connection = DriverManager.getConnection(ORACLE_URL, username, password);
 			connection.setAutoCommit(false);
+
 			System.out.println("\nConnected to Oracle!");
 			return true;
 		} catch (SQLException e) {
@@ -501,18 +527,11 @@ public class DatabaseConnectionHandler {
 
 	public int checkVehicleNum(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate ) {
 		try {
-			// TODO: do we still need the timePeriod parameter?
 			PreparedStatement ps = connection.prepareStatement
-					("SELECT COUNT(*) AS num FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+					("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
-//			Date fromDate = new Date(timePeriod.getFromDate().getTimeInMillis());
-//			ps.setDate(5, fromDate);
-//			Date toDate = new Date(timePeriod.getToDate().getTimeInMillis());
-//			ps.setDate(6, toDate);
-//			ps.setString(7, branch.getLocation());
-//			ps.setString(8, branch.getCity());
 			int rs = ps.executeQuery().getInt("num");
 			connection.commit();
 			ps.close();
@@ -527,10 +546,15 @@ public class DatabaseConnectionHandler {
 	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
-					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+					("SELECT * FROM ForRent R, ForSale S WHERE R.vtName = ? AND R.location = ? AND R.city = ? " +
+							"AND S.vtName = ? AND S.location = ? AND S.city = ? AND S.status = 'available' AND R.status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
+			ps.setString(4, carType);
+			ps.setString(5, location);
+			ps.setString(6, city);
+
 			ResultSet rs = ps.executeQuery();
 			connection.commit();
 			ps.close();

@@ -1,5 +1,7 @@
 package ca.ubc.cs304.model;
 
+import java.sql.ResultSet;
+
 public class ForSale {
     private Integer vid;
     private String vLicense;
