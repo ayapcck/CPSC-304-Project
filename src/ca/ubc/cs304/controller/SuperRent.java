@@ -57,21 +57,19 @@ public class SuperRent implements LoginWindowDelegate {
 	}
 
 //	@Override
-//	public void rentAVehicle(TerminalTransactions terminalTransactions) {
+//	public void rentAVehicle() {
 //		int confNo = -9999;
-//		System.out.println("Enter confirmation number");
-//		confNo = terminalTransactions.readInteger(false);
-//		dbHandler.rentVehicleWithReservation(terminalTransactions, confNo);
+//		dbHandler.rentVehicleWithReservation(confNo);
 //	}
 //
 //	@Override
-//	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
-////		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
+//	public void rentAVehicleNoRes() {
+//		dbHandler.rentVehicleWithNoReservation();
 //	}
 //
 //	@Override
-//	public void returnVehicle(TerminalTransactions terminalTransactions) {
-//		System.out.println(dbHandler.returnVehicle(terminalTransactions)); // prints error returned from returnVehicle
+//	public void returnVehicle() {
+//		System.out.println(dbHandler.returnVehicle()); // prints error returned from returnVehicle
 //	}
 
 	/**

@@ -30,11 +30,6 @@ public class ForSale {
         this.city = city;
     }
 
-    public static ForSale parseVehicleFromResultSet(ResultSet resultSet) {
-        // TODO: finish
-        return null;
-    }
-
     public Integer getVid() {
         return vid;
     }

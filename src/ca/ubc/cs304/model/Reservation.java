@@ -26,7 +26,7 @@ public class Reservation {
 
     }
 
-    public static Reservation parseReservationFromResultSet(ResultSet resultSet) {
+    public static Reservation createReservationModel(ResultSet resultSet) {
         try {
             int confNo = resultSet.getInt(1);
             String vtName = resultSet.getString(2);
