@@ -12,6 +12,8 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -46,30 +48,11 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void addRequiredTables() {
-		// ScriptRunner sr = new ScriptRunner(connection);
-		String pathRoot = new File("").getAbsolutePath();
-		String path = "\\src\\ca\\ubc\\cs304\\database\\tables";
-		path = pathRoot + path;
-		File tableDir = new File(path);
-		File[] tables = tableDir.listFiles();
-		if (tables != null) {
-			for (File file : tables) {
-				try {
-					Reader reader = new BufferedReader(new FileReader(file));
-					// sr.runScript(reader);
-				} catch (IOException e) {
-					System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-				}
-			}
-		}
-	}
-
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
-		String pathRoot = new File("").getAbsolutePath();
-		path = pathRoot + path;
-		File file = new File(path);
+//		String pathRoot = new File("").getAbsolutePath();
+//		path = pathRoot + path;
+		File file = new File("/Users/monicaliu/Desktop/CPSC-304-Project/AddTablesAndData.sql");
 		try {
 			Reader reader = new BufferedReader(new FileReader(file));
 			sr.runScript(reader);
@@ -81,7 +64,7 @@ public class DatabaseConnectionHandler {
 	public void addRequiredTablesAndData() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
 		executeSQLFile(path);
-    }
+	}
 
 	public void dropAllRequiredTables() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
@@ -142,42 +125,6 @@ public class DatabaseConnectionHandler {
                     "a new confirmation number");
 			terminalTransactions.handleClerkInteractions();
 		}
-	}
-
-	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
-		// create new reservation;
-		int confNo = (int) (Math.random() * 1000);
-		System.out.println("Enter type of vehicle");
-		String VtName = terminalTransactions.readLine();
-		System.out.println("Enter customer's driver license");
-		String driverLicense = terminalTransactions.readLine();
-		System.out.println("Enter fromDate");
-		String stringDate = terminalTransactions.readLine();
-		Date fromDate = Date.valueOf(stringDate);
-		System.out.println("Enter from Time");
-		String fromTime = terminalTransactions.readLine();
-		System.out.println("Enter end date (toDate)");
-		String stringToDate = terminalTransactions.readLine();
-		Date toDate = Date.valueOf(stringToDate);
-		System.out.println("Enter to time");
-		String toTime = terminalTransactions.readLine();
-		// determine if customer already exists, if not add customer to database to avoid errors
-		if (!customerExists(driverLicense)) {
-			System.out.println("Enter cellNum of customer");
-			String cellNum = terminalTransactions.readLine();
-			System.out.println("Enter name of customer");
-			String name = terminalTransactions.readLine();
-			System.out.println("Enter address of customer");
-			String address = terminalTransactions.readLine();
-			Customer customer = new Customer(cellNum, name, address, driverLicense);
-			insertCustomer(customer);
-		}
-		TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
-		insertTimePeriod(timePeriod);
-		Reservations reservations = new Reservations(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
-		insertReservation(reservations);
-
-		rentVehicleWithReservation(terminalTransactions, confNo);
 	}
 
 	public String returnVehicle(TerminalTransactions terminalTransactions) {
@@ -568,9 +515,8 @@ public class DatabaseConnectionHandler {
 
 	public int checkVehicleNum(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate ) {
 		try {
-			// TODO: do we still need the timePeriod parameter?
 			PreparedStatement ps = connection.prepareStatement
-					("SELECT COUNT(*) AS num FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+					("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
@@ -588,10 +534,15 @@ public class DatabaseConnectionHandler {
 	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
-					("SELECT * FROM VEHICLE V WHERE V.vtName = ? AND V.location = ? AND V.city = ? ");
+					("SELECT * FROM ForRent R, ForSale S WHERE R.vtName = ? AND R.location = ? AND R.city = ? " +
+							"AND S.vtName = ? AND S.location = ? AND S.city = ? AND S.status = 'available' AND R.status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
+			ps.setString(4, carType);
+			ps.setString(5, location);
+			ps.setString(6, city);
+
 			ResultSet rs = ps.executeQuery();
 			connection.commit();
 			ps.close();

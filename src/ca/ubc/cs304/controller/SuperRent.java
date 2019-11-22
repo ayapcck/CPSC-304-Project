@@ -69,8 +69,10 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	@Override
 	public void setupDatabase() {
 	    // TODO
-//    	dbHandler.dropAllRequiredTables();
-		dbHandler.addRequiredTables();
+    	dbHandler.dropAllRequiredTables();
+		dbHandler.addRequiredTablesAndData();
+
+
 	}
 
 	@Override
@@ -178,9 +180,15 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
     }
 
     @Override
-	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
-		customerViewResultWindow.showMoreDetail(resultTable);
+	public void showDetailCountResult(int count, String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
+		if (count == 0) {
+			customerViewResultWindow.dispose();
+//			JOptionPane.showMessageDialog(null, "There is no cars to be shown!", "Error: " + "no such info", JOptionPane.INFORMATION_MESSAGE);
+			ErrorWindow.infoBox("No cars to be shown!", "no info");
+		} else {
+			JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
+			customerViewResultWindow.showMoreDetail(resultTable);
+		}
 	}
 
     @Override

@@ -16,6 +16,7 @@ import javax.swing.*;
  */
 public class CustomerViewResultWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
+    private int count;
     private ProcessViewDelegate processViewDelegate = null;
     private JPanel contentPane;
     private GridBagConstraints c = new GridBagConstraints();
@@ -32,7 +33,7 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
     }
 
     public void showMenu(ProcessViewDelegate processViewDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
-
+        this.count = count;
         this.carType = carType;
         this.location = location;
         this.city = city;
@@ -115,7 +116,7 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
-            processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
+            processViewDelegate.showDetailCountResult(count, carType, location, city, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
             processViewDelegate.backToPrevious();
         }
