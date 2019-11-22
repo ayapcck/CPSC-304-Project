@@ -8,8 +8,6 @@ import javax.swing.*;
 
 public class CustomerController implements CustomerTransactionDelegate {
     private JFrame currentWindow = null;
-    private MainController mainController = null;
-    private MainOperations mainOperations = null;
 
     public CustomerController(JFrame currentWindow) {
         this.currentWindow = currentWindow;
@@ -18,8 +16,8 @@ public class CustomerController implements CustomerTransactionDelegate {
     @Override
     public void mainMenu() {
         currentWindow.dispose();
-        mainOperations = new MainOperations();
-        mainController = new MainController(mainOperations);
+        MainOperations mainOperations = new MainOperations();
+        MainController mainController = new MainController(mainOperations);
         mainOperations.showMenu(mainController);
     }
 }

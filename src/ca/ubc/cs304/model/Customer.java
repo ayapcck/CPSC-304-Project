@@ -1,5 +1,7 @@
 package ca.ubc.cs304.model;
 
+import java.sql.ResultSet;
+
 public class Customer {
     private String cellNum;
     private String name;
@@ -11,6 +13,12 @@ public class Customer {
         this.address = address;
         this.driversLicense = driversLicense;
         this.name = name;
+    }
+
+    public static Customer parseCustomerFromResultSet(ResultSet resultSet) {
+        // TODO: finish
+//        return new Customer();
+        return null;
     }
 
     public String getCellNum() {

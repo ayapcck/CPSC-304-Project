@@ -33,7 +33,9 @@ public class MainController implements MainOperationsDelegate {
     public void showClerkWindow() {
         currentWindow.dispose();
         clerkWindow = new ClerkWindow();
-        // TODO:
+        clerkController = new ClerkController(clerkWindow);
+        clerkWindow.showMenu(clerkController);
+        this.currentWindow = clerkWindow;
     }
 
     @Override

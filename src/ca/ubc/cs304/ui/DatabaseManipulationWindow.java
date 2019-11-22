@@ -45,7 +45,6 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
         new Panel(buttons, this, this);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == add) {

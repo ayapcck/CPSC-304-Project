@@ -140,13 +140,13 @@ INSERT INTO Vehicle (vID, vLicense, color, status, VTName, location, city)
     VALUES (5, 'E10111', 'blue', 'for_sale', 'economy', 'shop_1', 'Burnaby');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
-VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+    VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2018-11-24', '12:05', '2019-01-20', '1:00');
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (124, 'compact', '9282019', '2018-11-24', '12:05', '2019-01-20', '1:00');
+    VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+    VALUES (124, 'compact', '9282019', '2018-11-24', '12:05', '2019-01-20', '1:00');

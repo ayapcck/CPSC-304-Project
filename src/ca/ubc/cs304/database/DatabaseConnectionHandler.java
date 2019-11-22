@@ -1,15 +1,14 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.*;
-import ca.ubc.cs304.ui.TerminalTransactions;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -92,44 +91,90 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions) {
-		// TODO: Main fucntion that handles clerk. Delete when clerk has own class that is called appropriately
-		System.out.println("\nEnter confirmation number");
-		int confNo;
+	private Reservation getReservation(int confNo) {
 		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM RESERVATIONS WHERE CONFNO = ?");
+			ps.setInt(1, confNo);
+			ResultSet reservations = ps.executeQuery();
+			Reservation reservation = Reservation.parseReservationFromResultSet(reservations);
+			ps.close();
+			return reservation;
+		} catch (SQLException e) {
+			System.out.println("No reservation found with supplied confNo: " + confNo + "\n" + e.getMessage());
+			return null;
+		}
+	}
+
+	private List<Vehicle> getVehiclesByVTName(String vtName) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM VEHICLE WHERE VTNAME = ?");
+			ps.setString(1, vtName);
+			ResultSet rs = ps.executeQuery();
+			List<Vehicle> vehicles = null; // TODO;
+			ps.close();
+			return vehicles;
+		} catch (SQLException e) {
+			System.out.println("No vehicles found with vehicle type: " + vtName + "\n" + e.getMessage());
+			return null;
+		}
+	}
+
+	private Customer getCustomerByDriversLicense(String driversLicense) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
+			ps.setString(1, driversLicense);
+			ResultSet rs = ps.executeQuery();
+			Customer customer = Customer.parseCustomerFromResultSet(rs);
+			ps.close();
+			return customer;
+		} catch (SQLException e) {
+			System.out.println("No customer found with drivers license: " + driversLicense + "\n" + e.getMessage());
+			return null;
+		}
+	}
+
+	public void rentVehicleWithReservation() {
+		try {
+			int confNo = 200; // TODO: change
 			// TODO Potential bug drivers license and other limited CHARs must be <= specified amount
-			confNo = terminalTransactions.readInteger(false);
-			String for_rent = "for_rent";
-			ArrayList<String> result = new ArrayList<String>();
-			Statement stmt = connection.createStatement();
-            Statement stmt1 = connection.createStatement();
-            Statement stmt2 = connection.createStatement();
-            System.out.println("1");
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVATIONS WHERE CONFNO = " + confNo);
-            while (rs.next()) {
-                int conf = rs.getInt(1);
-                String vtName = rs.getString(2);
-                System.out.println(conf + "\t" + vtName);
-            }
-		    ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTNAME = " + rs.getString(2)
-                    + " AND STATUS = " + for_rent);
-            System.out.println("3");
-		    ResultSet customer = stmt2.executeQuery("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = " + rs.getString(3));
-            System.out.println("4");
+
+            Statement selectCustomers = connection.createStatement();
+
+            Reservation reservation = getReservation(confNo);
+			assert reservation != null;
+			String vtName = reservation.getVtName();
+
+			Customer customer = getCustomerByDriversLicense(reservation.getdLicense());
+
+			List<Vehicle> vehicles = getVehiclesByVTName(vtName);
+
 		    // arbitrarily choose the first car of the make since we don't know availability
-            String vLicense = vehicle.getString(2);
-            int odometer = vehicle.getInt(7);
-            String cardName = customer.getString(2);
-            int cardNo = odometer % 2 + 564979545;
-		    // have the reservation made at this confNo. Should be unique because confNo is a primary key
-            int rID = confNo / 2;
-            Rental rental = new Rental(rID, vLicense, rs.getString(3), rs.getDate(4), rs.getString(5),
-                    rs.getDate(6), rs.getString(7), odometer, cardName, cardNo, "02/21",
-                    rs.getInt(1));
+			// TODO: actually need to choose a vehicle from vehicles list
+
+//            int odometer = vehicle.getInt(7);
+//            int cardNo = odometer % 2 + 564979545;
+
+			// have the reservation made at this point
+			// confNo Should be unique because confNo is a primary key
+//            int rID = confNo / 2;
+
+
+//            Rental rental = new Rental(rID,
+//					vehicle.getString(2),
+//					reservation.getdLicense(),
+//					reservation.getFromDate(),
+//					reservation.getFromTime(),
+//					reservation.getToDate(),
+//					reservation.getToTime(),
+//					odometer,
+//					customer.getString(2),
+//					cardNo,
+//					"02/21",
+//					reservation.getConfNo());
+
             // inserts into database
-            insertIntoRental(rental);
+//            insertIntoRental(rental);
             // TODO: remove car from available?
-            stmt.close();
 		} catch (SQLException s) {
 			System.out.println("No reservation with that confirmation is found. Please make a new reservation or enter" +
                     "a new confirmation number");
