@@ -12,7 +12,8 @@ import java.sql.Time;
 /**
  * This is the main controller class that will orchestrate everything.
  */
-public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, LoginWindowDelegate, TerminalTransactionsDelegate, CustomerTransactionDelegate {
+public class SuperRent implements LoginWindowDelegate {
+
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
 	private TransactionWindow transaction = null;
@@ -23,9 +24,12 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	private NewCusRegWindow newCusRegWindow = null;
 	private ActualReserveWindow actualReserveWindow = null;
 	private DatabaseManipulationWindow databaseManipulationWindow = null;
+	private MainOperations mainOperations = null;
+
+	private MainController mainController = null;
 
 	public SuperRent() {
-		dbHandler = new DatabaseConnectionHandler();
+		dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
 	}
 	
 	private void start() {
@@ -37,7 +41,8 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	 * LoginWindowDelegate Implementation
 	 * 
      * connects to Oracle database with supplied username and password
-     */ 
+     */
+	@Override
 	public void login(String username, String password) {
 		boolean didConnect = dbHandler.login(username, password);
 
@@ -45,8 +50,9 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 			// Once connected, remove login window and start text transaction flow
 			loginWindow.dispose();
 
-			transaction = new TransactionWindow();
-			transaction.showMenu(this);
+			mainOperations = new MainOperations();
+			mainController = new MainController(mainOperations);
+			mainOperations.showMenu(mainController);
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -93,7 +99,6 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
 //		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
 	}
-
 	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
@@ -116,6 +121,7 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 		superRent.start();
 	}
 
+<<<<<<< HEAD
 	@Override
 	public void customerTransaction() {
 		transaction.dispose();
@@ -221,6 +227,4 @@ public class SuperRent implements ProcessViewDelegate, CusEnterViewDelegate, Log
 	public void makeActualReserve(String license, String location, String city, String vtname, String fromDate, String fromTime, String toDate, String toTime, int ReservationNum) {
 		dbHandler.insertReservation(license, location, city, vtname, fromDate, fromTime, toDate, toTime, ReservationNum);
 	}
-
-
 }

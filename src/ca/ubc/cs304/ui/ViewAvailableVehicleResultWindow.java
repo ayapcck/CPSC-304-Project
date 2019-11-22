@@ -14,7 +14,7 @@ import javax.swing.*;
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class CustomerViewResultWindow extends JFrame implements ActionListener {
+public class ViewAvailableVehicleResultWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private ProcessViewDelegate processViewDelegate = null;
     private JPanel contentPane;
@@ -27,7 +27,7 @@ public class CustomerViewResultWindow extends JFrame implements ActionListener {
     private JButton mainMenu;
     private JButton moreDetail;
     private GridBagLayout gb = new GridBagLayout();
-    public CustomerViewResultWindow() {
+    public ViewAvailableVehicleResultWindow() {
         super("show number of vehicles available");
     }
 

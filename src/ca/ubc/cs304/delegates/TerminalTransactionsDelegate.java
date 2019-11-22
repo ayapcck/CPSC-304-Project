@@ -14,7 +14,6 @@ import ca.ubc.cs304.ui.TerminalTransactions;
 public interface TerminalTransactionsDelegate {
 	public void addRequiredTablesAndData();
 	public void dropRequiredTables();
-	public void setupDatabase();
 	public void viewAllTables();
 	public void rentAVehicle(TerminalTransactions terminalTransactions);
 	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions);

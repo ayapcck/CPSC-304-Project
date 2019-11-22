@@ -42,10 +42,10 @@ public class TerminalTransactions {
 		this.delegate = delegate;
 		
 	    bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-	    handleMainInteractions();
 
 	}
 
+<<<<<<< HEAD
 	private void handleMainInteractions() {
 		int choice = INVALID_INPUT;
 
@@ -172,6 +172,8 @@ public class TerminalTransactions {
 		}
 	}
 
+=======
+>>>>>>> b7e0613422a233e53b9a703c1843be3bde297d1b
 	private void handleQuitOption() {
 		System.out.println("Good Bye!");
 		

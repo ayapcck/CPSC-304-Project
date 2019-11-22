@@ -1,18 +1,16 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
-import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
+import ca.ubc.cs304.delegates.DatabaseManipulationsDelegate;
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.xml.crypto.Data;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
@@ -22,68 +20,44 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
     private JButton setup;
     private JButton drop;
     private JButton add;
+    private JButton viewTables;
     private JButton mainMenu;
-    private LoginWindowDelegate loginWindowDelegate = null;
+    private DatabaseManipulationsDelegate databaseManipulationsDelegate;
 
     public DatabaseManipulationWindow() {
-        super("database manipulation");
+        super("Database Manipulations");
+
+        add = new JButton("Add required tables");
+        drop = new JButton("Drop required tables");
+        mainMenu = new JButton("Main menu");
+        setup = new JButton("Setup Database(drop required tables and add required tables and data)");
+        viewTables = new JButton("View all tables");
     }
 
-    public void showMenu(LoginWindowDelegate loginWindowDelegate) {
-        this.loginWindowDelegate = loginWindowDelegate;
-
-        setup = new JButton("Setup Database(drop required tables and add required tables and data)");
-        drop = new JButton("Drop required tables");
-        add = new JButton("Add required tables");
-        mainMenu = new JButton("Main menu");
-        JPanel contentPane = new JPanel();
-        this.setContentPane(contentPane);
-
-        // layout components using the GridBag layout manager
-        FlowLayout flowLayout = new FlowLayout();
-
-        contentPane.setLayout(flowLayout);
-        contentPane.add(add);
-        contentPane.add(setup);
-        contentPane.add(drop);
-        contentPane.add(mainMenu);
-        contentPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
-
-        // register login button with action event handler
-        setup.addActionListener(this);
-        drop.addActionListener(this);
-        add.addActionListener(this);
-        mainMenu.addActionListener(this);
-        // anonymous inner class for closing the window
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // size the window to obtain a best fit for the components
-        this.pack();
-
-        // center the frame
-        Dimension d = this.getToolkit().getScreenSize();
-        Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-
-        // make the window visible
-        this.setVisible(true);
+    public void showMenu(DatabaseManipulationsDelegate databaseManipulationsDelegate) {
+        this.databaseManipulationsDelegate = databaseManipulationsDelegate;
+        List<JButton> buttons = new ArrayList<>();
+        buttons.add(setup);
+        buttons.add(drop);
+        buttons.add(add);
+        buttons.add(viewTables);
+        buttons.add(mainMenu);
+        new Panel(buttons, this, this);
     }
 
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        if (actionEvent.getSource() == setup) {
-            loginWindowDelegate.setupDatabase();
+        if (actionEvent.getSource() == add) {
+            databaseManipulationsDelegate.addRequiredTablesAndData();
         } else if (actionEvent.getSource() == drop) {
-            loginWindowDelegate.dropRequiredTables();
-        } else if (actionEvent.getSource() == add) {
-            loginWindowDelegate.addRequiredTablesAndData();
+            databaseManipulationsDelegate.dropRequiredTables();
         } else if (actionEvent.getSource() == mainMenu) {
-            loginWindowDelegate.backToMain();
+            databaseManipulationsDelegate.mainMenu();
+        } else if (actionEvent.getSource() == setup) {
+            databaseManipulationsDelegate.setupDatabase();
+        } else if (actionEvent.getSource() == viewTables) {
+            databaseManipulationsDelegate.viewAllTables();
         }
     }
 }

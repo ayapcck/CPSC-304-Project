@@ -15,6 +15,7 @@ import java.sql.Time;
  * Bank is the actual class that will implement the methods.
  */
 public interface LoginWindowDelegate {
+<<<<<<< HEAD
     void login(String username, String password);
      void addRequiredTablesAndData();
      void dropRequiredTables();
@@ -28,4 +29,7 @@ public interface LoginWindowDelegate {
     void backToCus();
     void makeActualReserve(String license, String location, String city, String vtname, String fromDate, String fromTime,
                            String toDate, String toTime, int ReservationNum);
+=======
+     void login(String username, String password);
+>>>>>>> b7e0613422a233e53b9a703c1843be3bde297d1b
 }
