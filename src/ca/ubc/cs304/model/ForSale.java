@@ -2,7 +2,7 @@ package ca.ubc.cs304.model;
 
 import java.sql.ResultSet;
 
-public class Vehicle {
+public class ForSale {
     private Integer vid;
     private String vLicense;
     private String make;
@@ -15,9 +15,8 @@ public class Vehicle {
     private String location;
     private String city;
 
-    public Vehicle(Integer vid, String vLicense, String make, String model, Integer year, String color, Integer odometer
+    public ForSale(Integer vid, String vLicense, String make, String model, Integer year, String color, Integer odometer
     , String status, String vtName, String location, String city) {
-        // TODO: enforce that vid cannot be null
         this.vid = vid;
         this.vLicense = vLicense;
         this.make = make;
@@ -31,7 +30,7 @@ public class Vehicle {
         this.city = city;
     }
 
-    public static Vehicle parseVehicleFromResultSet(ResultSet resultSet) {
+    public static ForSale parseVehicleFromResultSet(ResultSet resultSet) {
         // TODO: finish
         return null;
     }

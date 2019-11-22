@@ -1,14 +1,14 @@
 package ca.ubc.cs304.model;
 
-import java.util.Calendar;
+import java.sql.Date;
 
 public class TimePeriod {
-    private Calendar fromDate;
-    private Calendar fromTime;
-    private Calendar toDate;
-    private Calendar toTime;
+    private Date fromDate;
+    private String fromTime;
+    private Date toDate;
+    private String toTime;
 
-    public TimePeriod(Calendar fromDate, Calendar fromTime, Calendar toDate, Calendar toTime) {
+    public TimePeriod(Date fromDate, String fromTime, Date toDate, String toTime) {
         // TODO: make sure storing DATES is fine as a string (MAY CAUSE BUGS)
         this.fromDate = fromDate;
         this.fromTime =fromTime;
@@ -16,19 +16,19 @@ public class TimePeriod {
         this.toTime = toTime;
     }
 
-    public Calendar getFromTime() {
+    public String getFromTime() {
         return fromTime;
     }
 
-    public Calendar getFromDate() {
+    public Date getFromDate() {
         return fromDate;
     }
 
-    public Calendar getToDate() {
+    public Date getToDate() {
         return toDate;
     }
 
-    public Calendar getToTime() {
+    public String getToTime() {
         return toTime;
     }
 }

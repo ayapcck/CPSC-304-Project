@@ -10,8 +10,6 @@ import javax.swing.*;
 public class DatabaseController implements DatabaseManipulationsDelegate {
     private DatabaseConnectionHandler dbHandler = null;
     private JFrame currentWindow = null;
-    private MainController mainController = null;
-    private MainOperations mainOperations = null;
 
     DatabaseController(JFrame currentWindow) {
         this.dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
@@ -21,7 +19,7 @@ public class DatabaseController implements DatabaseManipulationsDelegate {
     @Override
     public void setupDatabase() {
         dbHandler.dropAllRequiredTables();
-        dbHandler.addRequiredTables();
+        dbHandler.addRequiredTablesAndData();
     }
 
     @Override
@@ -45,8 +43,8 @@ public class DatabaseController implements DatabaseManipulationsDelegate {
     @Override
     public void mainMenu() {
         currentWindow.dispose();
-        mainOperations = new MainOperations();
-        mainController = new MainController(mainOperations);
+        MainOperations mainOperations = new MainOperations();
+        MainController mainController = new MainController(mainOperations);
         mainOperations.showMenu(mainController);
     }
 }

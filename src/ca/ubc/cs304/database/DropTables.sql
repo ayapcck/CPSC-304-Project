@@ -1,8 +1,7 @@
-DROP VIEW ForRent;
-DROP VIEW ForSale;
 DROP TABLE Return;
 DROP TABLE Rental;
-DROP TABLE Vehicle;
+DROP TABLE ForRent;
+DROP TABLE ForSale;
 DROP TABLE Branch;
 DROP TABLE Reservations;
 DROP TABLE Customer;

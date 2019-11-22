@@ -7,6 +7,7 @@ import ca.ubc.cs304.ui.*;
 import javax.swing.*;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.Time;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -55,6 +56,24 @@ public class SuperRent implements LoginWindowDelegate {
 		}
 	}
 
+//	@Override
+//	public void rentAVehicle(TerminalTransactions terminalTransactions) {
+//		int confNo = -9999;
+//		System.out.println("Enter confirmation number");
+//		confNo = terminalTransactions.readInteger(false);
+//		dbHandler.rentVehicleWithReservation(terminalTransactions, confNo);
+//	}
+//
+//	@Override
+//	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
+////		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
+//	}
+//
+//	@Override
+//	public void returnVehicle(TerminalTransactions terminalTransactions) {
+//		System.out.println(dbHandler.returnVehicle(terminalTransactions)); // prints error returned from returnVehicle
+//	}
+
 	/**
 	 * TerminalTransactionsDelegate Implementation
 	 * 
@@ -76,5 +95,12 @@ public class SuperRent implements LoginWindowDelegate {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
 	}
+
+//    @Override
+//	public void submitView() {
+//		customerWindow.dispose();
+//		customerViewWindow = new CustomerViewWindow();
+//		customerViewWindow.showMenu(this);
+//	}
 
 }
