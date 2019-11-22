@@ -1,5 +1,10 @@
 package ca.ubc.cs304.model;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ForRent {
     private Integer vid;
     private String vLicense;
@@ -26,6 +31,35 @@ public class ForRent {
         this.vtName = vtName;
         this.location = location;
         this.city = city;
+    }
+
+    public static List<ForRent> createForRentModel(ResultSet resultSet){
+        int vId = -99;
+        int year = -99;
+        int odometer = -99;
+        List<ForRent> vehicles = new ArrayList<>();
+        try {
+            while (resultSet.next()) {
+                vId = resultSet.getInt(1);
+                String vLicense = resultSet.getString(2);
+                String make = resultSet.getString(3);
+                String model = resultSet.getString(4);
+                year = resultSet.getInt(5);
+                String color = resultSet.getString(6);
+                odometer = resultSet.getInt(7);
+                String status = resultSet.getString(8);
+                String vtName = resultSet.getString(9);
+                String location = resultSet.getString(10);
+                String city = resultSet.getString(11);
+                ForRent forRent = new ForRent(vId, vLicense, make, model, year, color,
+                        odometer, status, vtName, location, city);
+                vehicles.add(forRent);
+            }
+            return vehicles;
+        } catch (SQLException e) {
+            System.out.println("Exception when parsing for rent vehicle from database\n" + e.getMessage());
+            return null;
+        }
     }
 
     public Integer getVid() {

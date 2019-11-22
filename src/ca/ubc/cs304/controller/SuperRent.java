@@ -1,20 +1,26 @@
 package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
-import ca.ubc.cs304.delegates.LoginWindowDelegate;
-import ca.ubc.cs304.delegates.TerminalTransactionsDelegate;
-import ca.ubc.cs304.ui.LoginWindow;
-import ca.ubc.cs304.ui.TerminalTransactions;
+import ca.ubc.cs304.delegates.*;
+import ca.ubc.cs304.ui.*;
+
+import javax.swing.*;
+import java.sql.Date;
+import java.sql.ResultSet;
 
 /**
  * This is the main controller class that will orchestrate everything.
  */
-public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDelegate {
+public class SuperRent implements LoginWindowDelegate {
+
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
+	private MainOperations mainOperations = null;
+
+	private MainController mainController = null;
 
 	public SuperRent() {
-		dbHandler = new DatabaseConnectionHandler();
+		dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
 	}
 	
 	private void start() {
@@ -26,7 +32,8 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 	 * LoginWindowDelegate Implementation
 	 * 
      * connects to Oracle database with supplied username and password
-     */ 
+     */
+	@Override
 	public void login(String username, String password) {
 		boolean didConnect = dbHandler.login(username, password);
 
@@ -34,8 +41,9 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 			// Once connected, remove login window and start text transaction flow
 			loginWindow.dispose();
 
-			TerminalTransactions transaction = new TerminalTransactions();
-			transaction.showMainMenu(this);
+			mainOperations = new MainOperations();
+			mainController = new MainController(mainOperations);
+			mainOperations.showMenu(mainController);
 		} else {
 			loginWindow.handleLoginFailed();
 
@@ -47,45 +55,21 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
 		}
 	}
 
-	public void addRequiredTablesAndData() {
-		dbHandler.addRequiredTablesAndData();
-	}
-
-	public void dropRequiredTables() {
-		dbHandler.dropAllRequiredTables();
-	}
-
-	@Override
-	public void setupDatabase() {
-    	dbHandler.dropAllRequiredTables();
-		dbHandler.addRequiredTablesAndData();
-	}
-
-	@Override
-	public void viewAllTables() {
-		String[] tables = dbHandler.getAllTables();
-		for (String table : tables) {
-			System.out.println(table);
-		}
-	}
-
-	@Override
-	public void rentAVehicle(TerminalTransactions terminalTransactions) {
-		int confNo = -9999;
-		System.out.println("Enter confirmation number");
-		confNo = terminalTransactions.readInteger(false);
-		dbHandler.rentVehicleWithReservation(terminalTransactions, confNo);
-	}
-
-	@Override
-	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
-		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
-	}
-
-	@Override
-	public void returnVehicle(TerminalTransactions terminalTransactions) {
-		System.out.println(dbHandler.returnVehicle(terminalTransactions)); // prints error returned from returnVehicle
-	}
+//	@Override
+//	public void rentAVehicle() {
+//		int confNo = -9999;
+//		dbHandler.rentVehicleWithReservation(confNo);
+//	}
+//
+//	@Override
+//	public void rentAVehicleNoRes() {
+//		dbHandler.rentVehicleWithNoReservation();
+//	}
+//
+//	@Override
+//	public void returnVehicle() {
+//		System.out.println(dbHandler.returnVehicle()); // prints error returned from returnVehicle
+//	}
 
 	/**
 	 * TerminalTransactionsDelegate Implementation
@@ -99,12 +83,14 @@ public class SuperRent implements LoginWindowDelegate, TerminalTransactionsDeleg
     	
     	System.exit(0);
     }
-    
-	/**
+
+
+    /**
 	 * Main method called at launch time
 	 */
 	public static void main(String args[]) {
 		SuperRent superRent = new SuperRent();
 		superRent.start();
 	}
+
 }
