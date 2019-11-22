@@ -7,7 +7,6 @@ import ca.ubc.cs304.ui.*;
 import javax.swing.*;
 import java.sql.Date;
 import java.sql.ResultSet;
-import java.sql.Time;
 
 /**
  * This is the main controller class that will orchestrate everything.
@@ -16,14 +15,6 @@ public class SuperRent implements LoginWindowDelegate {
 
 	private DatabaseConnectionHandler dbHandler = null;
 	private LoginWindow loginWindow = null;
-	private TransactionWindow transaction = null;
-	private CustomerWindow customerWindow = null;
-	private CustomerViewWindow customerViewWindow = null;
-	private CustomerViewResultWindow customerViewResultWindow = null;
-	private CustomerReserveWindow customerReserveWindow = null;
-	private NewCusRegWindow newCusRegWindow = null;
-	private ActualReserveWindow actualReserveWindow = null;
-	private DatabaseManipulationWindow databaseManipulationWindow = null;
 	private MainOperations mainOperations = null;
 
 	private MainController mainController = null;
@@ -31,17 +22,17 @@ public class SuperRent implements LoginWindowDelegate {
 	public SuperRent() {
 		dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
 	}
-	
+
 	private void start() {
 		loginWindow = new LoginWindow();
 		loginWindow.showFrame(this);
 	}
-	
+
 	/**
 	 * LoginWindowDelegate Implementation
-	 * 
-     * connects to Oracle database with supplied username and password
-     */
+	 * <p>
+	 * connects to Oracle database with supplied username and password
+	 */
 	@Override
 	public void login(String username, String password) {
 		boolean didConnect = dbHandler.login(username, password);
@@ -64,56 +55,21 @@ public class SuperRent implements LoginWindowDelegate {
 		}
 	}
 
-	public void addRequiredTablesAndData() {
-		dbHandler.addRequiredTablesAndData();
-	}
-
-	public void dropRequiredTables() {
-		dbHandler.dropAllRequiredTables();
-	}
-
-	@Override
-	public void setupDatabase() {
-	    // TODO
-//    	dbHandler.dropAllRequiredTables();
-		dbHandler.addRequiredTables();
-	}
-
-	@Override
-	public void viewAllTables() {
-		String[] tables = dbHandler.getAllTables();
-		for (String table : tables) {
-			System.out.println(table);
-		}
-	}
-
-	@Override
-	public void rentAVehicle(TerminalTransactions terminalTransactions) {
-		int confNo = -9999;
-		System.out.println("Enter confirmation number");
-		confNo = terminalTransactions.readInteger(false);
-		dbHandler.rentVehicleWithReservation(terminalTransactions, confNo);
-	}
-
-	@Override
-	public void rentAVehicleNoRes(TerminalTransactions terminalTransactions) {
-//		dbHandler.rentVehicleWithNoReservation(terminalTransactions);
-	}
 	/**
 	 * TerminalTransactionsDelegate Implementation
-	 * 
-     * The TerminalTransaction instance tells us that it is done with what it's 
-     * doing so we are cleaning up the connection since it's no longer needed.
-     */ 
-    public void terminalTransactionsFinished() {
-    	dbHandler.close();
-    	dbHandler = null;
-    	
-    	System.exit(0);
-    }
+	 * <p>
+	 * The TerminalTransaction instance tells us that it is done with what it's
+	 * doing so we are cleaning up the connection since it's no longer needed.
+	 */
+	public void terminalTransactionsFinished() {
+		dbHandler.close();
+		dbHandler = null;
+
+		System.exit(0);
+	}
 
 
-    /**
+	/**
 	 * Main method called at launch time
 	 */
 	public static void main(String args[]) {
@@ -121,110 +77,4 @@ public class SuperRent implements LoginWindowDelegate {
 		superRent.start();
 	}
 
-<<<<<<< HEAD
-	@Override
-	public void customerTransaction() {
-		transaction.dispose();
-		customerWindow = new CustomerWindow();
-		customerWindow.showMenu(this);
-	}
-
-	@Override
-	public void clerkTransaction() {
-		transaction.dispose();
-		customerWindow = new CustomerWindow();
-		customerWindow.showMenu(this);
-	}
-
-    @Override
-    public void databaseManipulation() {
-        transaction.dispose();
-        databaseManipulationWindow = new DatabaseManipulationWindow();
-        databaseManipulationWindow.showMenu(this);
-    }
-
-    @Override
-	public void submitView() {
-		customerWindow.dispose();
-		customerViewWindow = new CustomerViewWindow();
-		customerViewWindow.showMenu(this);
-	}
-
-    @Override
-    public void back() {
-        customerWindow.dispose();
-        transaction.showMenu(this);
-    }
-
-	@Override
-	public void reserve() {
-		customerWindow.dispose();
-		customerReserveWindow = new CustomerReserveWindow();
-		customerReserveWindow.showMenu(this);
-	}
-
-
-	@Override
-	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		customerViewWindow.dispose();
-		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
-		customerViewResultWindow = new CustomerViewResultWindow();
-		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
-	}
-
-    @Override
-    public void backToPrevious() {
-        customerViewResultWindow.dispose();
-        customerWindow.showMenu(this);
-    }
-
-    @Override
-	public void showDetailCountResult(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-		JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
-		customerViewResultWindow.showMoreDetail(resultTable);
-	}
-
-    @Override
-    public void backToMain() {
-        databaseManipulationWindow.dispose();
-        transaction.showMenu(this);
-    }
-
-	@Override
-	public void newCusReserve() {
-		customerReserveWindow.dispose();
-		newCusRegWindow = new NewCusRegWindow();
-		newCusRegWindow.showMenu(this);
-	}
-
-	@Override
-	public void newCusRigDone(String name, String phone, String licence, String addr) {
-		dbHandler.insertCustomer(name, phone, licence, addr);
-		newCusRegWindow.dispose();
-		actualReserveWindow = new ActualReserveWindow();
-		actualReserveWindow.showMenu(this, licence);
-	}
-
-
-	@Override
-	public void oldCusReserve() {
-
-	}
-
-	@Override
-	public void backToNewCus() {
-		actualReserveWindow.dispose();;
-		customerWindow.showMenu(this);
-	}
-
-	@Override
-	public void backToCus() {
-		newCusRegWindow.dispose();
-		customerWindow.showMenu(this);
-	}
-
-	@Override
-	public void makeActualReserve(String license, String location, String city, String vtname, String fromDate, String fromTime, String toDate, String toTime, int ReservationNum) {
-		dbHandler.insertReservation(license, location, city, vtname, fromDate, fromTime, toDate, toTime, ReservationNum);
-	}
 }

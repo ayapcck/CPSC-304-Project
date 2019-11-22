@@ -41,11 +41,11 @@ public class CustomerWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == view) {
-//            customerTransactionDelegate.submitView();
+            // TODO: finish
         } else if (actionEvent.getSource() == back) {
             customerTransactionDelegate.mainMenu();
         } else if (actionEvent.getSource() == reserve) {
-            cusEnterViewDelegate.reserve();
+            // TODO: finish
         }
     }
 }
