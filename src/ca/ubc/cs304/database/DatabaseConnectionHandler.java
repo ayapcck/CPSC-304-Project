@@ -498,6 +498,29 @@ public class DatabaseConnectionHandler {
 		
 		return result.toArray(new String[result.size()]);
 	}
+
+	public String[] getDataFromTable(String tableName, String columns) {
+		ArrayList<String> result = new ArrayList<String>();
+
+		try {
+			String query = "SELECT ".concat(columns);
+			query = query.concat(" FROM " + tableName);
+			PreparedStatement stmt = connection.prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			String[] listCols = columns.split(",");
+			while (rs.next()) {
+				for (int i = 1; i <= columns.length(); i++) {
+					System.out.println(rs.getString(i));
+				}
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+		return result.toArray(new String[result.size()]);
+	}
 	
 	public boolean login(String username, String password) {
 		try {

@@ -29,18 +29,18 @@ public class NewCustomerWindow extends JFrame implements ActionListener {
     public void showMenu(NewCustomerDelegate newCustomerDelegate) {
         this.newCustomerDelegate = newCustomerDelegate;
 
-        JLabel nameLabel = new JLabel("Name:");
-        JLabel phoneLabel = new JLabel("Phone number:");
-        JLabel addrLabel = new JLabel("Address:");
-        JLabel dLicenseLabel = new JLabel("Driver's license:");
+        JLabel nameLabel = new JLabel("Name: ");
+        JLabel phoneLabel = new JLabel("Phone number: ");
+        JLabel addrLabel = new JLabel("Address: ");
+        JLabel dLicenseLabel = new JLabel("Driver's license: ");
 
         nameField = new JTextField(TEXT_FIELD_WIDTH);
         phoneField = new JTextField(TEXT_FIELD_WIDTH);
         addrField = new JTextField(TEXT_FIELD_WIDTH);
         licenseField = new JTextField(TEXT_FIELD_WIDTH);
 
-        ok = new JButton("submit");
-        back = new JButton("back");
+        ok = new JButton("Submit");
+        back = new JButton("Back");
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);

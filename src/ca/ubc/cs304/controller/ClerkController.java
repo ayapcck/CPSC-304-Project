@@ -13,6 +13,21 @@ public class ClerkController implements ClerkTransactionDelegate {
     }
 
     @Override
+    public void rentAVehicle() {
+
+    }
+
+    @Override
+    public void rentAVehicleNoRes() {
+
+    }
+
+    @Override
+    public void returnVehicle() {
+
+    }
+
+    @Override
     public void mainMenu() {
         currentWindow.dispose();
         MainOperations mainOperations = new MainOperations();
