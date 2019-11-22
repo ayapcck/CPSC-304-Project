@@ -19,7 +19,7 @@ import javax.swing.*;
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class ViewAvailableVehiclesWindow extends JFrame implements ActionListener {
+public class ViewAvailableVehiclesWindow extends Window implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private ViewVehiclesDelegate viewVehiclesDelegate = null;
     private String locationData = "";
@@ -29,6 +29,7 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
     private JDatePickerImpl datePickerTo;
     private JButton submit;
     private JButton mainMenu;
+
     public ViewAvailableVehiclesWindow() {
         super("Please vehicle information:");
 
@@ -82,46 +83,6 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
         new Panel(buttons, this, this, contentPane, gb, setConstraints);
     }
-
-    private void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(button, c);
-    }
-
-    private JDatePickerImpl placeDateField(JPanel contentPane, GridBagLayout gb, GridBagConstraints c,
-                                Insets insets) {
-        UtilDateModel model2 = new UtilDateModel();
-        Properties p = new Properties();
-        p.put("text.today", "Today");
-        p.put("text.month", "Month");
-        p.put("text.year", "Year");
-        JDatePanelImpl datePanelTo = new JDatePanelImpl(model2, p);
-        JDatePickerImpl picker = new JDatePickerImpl(datePanelTo, new DateLabelFormatter());
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = insets;
-        gb.setConstraints(picker, c);
-        contentPane.add(picker);
-        return picker;
-    }
-
-    private String placeTextField(JTextField field, JPanel contentPane, GridBagLayout gb,
-                                  GridBagConstraints c, Insets insets) {
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = insets;
-        gb.setConstraints(field, c);
-        contentPane.add(field);
-        return field.getText();
-    }
-
-    private void placeLabel(JLabel label, JPanel contentPane, GridBagLayout gb, GridBagConstraints c, int i, int i2) {
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(i, 10, i2, 0);
-        gb.setConstraints(label, c);
-        contentPane.add(label);
-    }
-
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
