@@ -30,7 +30,7 @@ public class SuperRent implements LoginWindowDelegate {
 
 	/**
 	 * LoginWindowDelegate Implementation
-	 * <p>
+	 *
 	 * connects to Oracle database with supplied username and password
 	 */
 	@Override
@@ -57,7 +57,7 @@ public class SuperRent implements LoginWindowDelegate {
 
 	/**
 	 * TerminalTransactionsDelegate Implementation
-	 * <p>
+	 *
 	 * The TerminalTransaction instance tells us that it is done with what it's
 	 * doing so we are cleaning up the connection since it's no longer needed.
 	 */

@@ -109,13 +109,12 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
         this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
         // make the window visible
         this.setVisible(true);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
-            processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
+//            processViewDelegate.showDetailCountResult(carType, location, city, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
             processViewDelegate.backToPrevious();
         }

@@ -10,9 +10,4 @@ package ca.ubc.cs304.delegates;
  * Bank is the actual class that will implement the methods.
  */
 public interface TerminalTransactionsDelegate {
-	public void addRequiredTablesAndData();
-	public void dropRequiredTables();
-	public void viewAllTables();
-//	public void rentAVehicle(TerminalTransactions terminalTransactions);
-	public void terminalTransactionsFinished();
 }
