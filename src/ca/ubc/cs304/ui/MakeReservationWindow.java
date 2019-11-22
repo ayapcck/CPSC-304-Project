@@ -7,38 +7,36 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Date;
-import java.util.Properties;
 
 import javax.swing.*;
 
-import ca.ubc.cs304.delegates.LoginWindowDelegate;
+import ca.ubc.cs304.delegates.MakeReservationDelegate;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
  */
-public class ActualReserveWindow extends JFrame implements ActionListener {
+public class MakeReservationWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private JButton ok;
     private JButton back;
     private JTextField locationField;
     private JTextField vtField;
     private JTextField cityField;
-    private String licence;
+    private String license;
     private JSpinner timeSpinnerFrom;
     private JSpinner timeSpinnerTo;
 
     // delegate
-    private LoginWindowDelegate delegate;
+    private MakeReservationDelegate makeReservationDelegate;
 
-    public ActualReserveWindow() {
+    public MakeReservationWindow() {
         super("reserve your dream car");
     }
 
-    public void showMenu(LoginWindowDelegate delegate, String licence) {
-        this.delegate = delegate;
-        this.licence = licence;
+    public void showMenu(MakeReservationDelegate makeReservationDelegate, String licence) {
+        this.makeReservationDelegate = makeReservationDelegate;
+        this.license = licence;
         JLabel locationLabel = new JLabel("Location:");
         JLabel cityLabel = new JLabel("City:");
         JLabel vtLabel = new JLabel("Vehicle Type:");
@@ -187,9 +185,9 @@ public class ActualReserveWindow extends JFrame implements ActionListener {
             System.out.println(toTimeString+"\n");
             int reservationNum = (int) (Math.random());
             //get time
-            delegate.makeActualReserve(licence, locationField.getText(), cityField.getText(), vtField.getText(), fromDateString, fromTimeString, toDateString, toTimeString, reservationNum);
+            makeReservationDelegate.createReservation(license, locationField.getText(), cityField.getText(), vtField.getText(), fromDateString, fromTimeString, toDateString, toTimeString, reservationNum);
         } else if (e.getSource() == back) {
-            delegate.backToNewCus();
+            makeReservationDelegate.backToCustomer();
         }
     }
 }

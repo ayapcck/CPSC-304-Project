@@ -1,7 +1,6 @@
 package ca.ubc.cs304.delegates;
 
 public interface CustomerTransactionDelegate {
-    void customerTransaction();
-    void clerkTransaction();
-    void databaseManipulation();
+    void mainMenu();
+    void makeReservation();
 }

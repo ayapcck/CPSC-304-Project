@@ -1,5 +1,7 @@
 package ca.ubc.cs304.model;
 
+import java.sql.ResultSet;
+
 public class ForSale {
     private Integer vid;
     private String vLicense;
@@ -26,6 +28,11 @@ public class ForSale {
         this.vtName = vtName;
         this.location = location;
         this.city = city;
+    }
+
+    public static ForSale parseVehicleFromResultSet(ResultSet resultSet) {
+        // TODO: finish
+        return null;
     }
 
     public Integer getVid() {

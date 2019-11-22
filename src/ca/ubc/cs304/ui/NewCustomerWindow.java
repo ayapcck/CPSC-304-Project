@@ -9,11 +9,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.*;
 
 import ca.ubc.cs304.delegates.LoginWindowDelegate;
+import ca.ubc.cs304.delegates.NewCustomerDelegate;
 
-/**
- * The class is only responsible for displaying and handling the login GUI.
- */
-public class NewCusRegWindow extends JFrame implements ActionListener {
+public class NewCustomerWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private JButton ok;
     private JButton back;
@@ -22,14 +20,16 @@ public class NewCusRegWindow extends JFrame implements ActionListener {
     private JTextField addrField;
     private JTextField licenseField;
     // delegate
-    private LoginWindowDelegate delegate;
+    private NewCustomerDelegate newCustomerDelegate;
 
-    public NewCusRegWindow() {
+    public NewCustomerWindow() {
         super("New Customer Registration");
+
+
     }
 
-    public void showMenu(LoginWindowDelegate delegate) {
-        this.delegate = delegate;
+    public void showMenu(NewCustomerDelegate newCustomerDelegate) {
+        this.newCustomerDelegate = newCustomerDelegate;
 
         JLabel nameLabel = new JLabel("Name:");
         JLabel phoneLabel = new JLabel("Phone number:");
@@ -151,9 +151,9 @@ public class NewCusRegWindow extends JFrame implements ActionListener {
             String phone = phoneField.getText();
             String licence = licenseField.getText();
             String addr = addrField.getText();
-            delegate.newCusRigDone(name, phone, licence, addr);
+            newCustomerDelegate.finishRegistration(name, phone, licence, addr);
         } else if (e.getSource() == back) {
-            delegate.backToCus();
+            newCustomerDelegate.returnToCustomer();
         }
     }
 }

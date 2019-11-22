@@ -3,19 +3,15 @@ package ca.ubc.cs304.database;
 import ca.ubc.cs304.model.*;
 import ca.ubc.cs304.model.Customer;
 import ca.ubc.cs304.model.Rental;
-import ca.ubc.cs304.model.Reservations;
 import ca.ubc.cs304.model.TimePeriod;
-import ca.ubc.cs304.model.*;
-import ca.ubc.cs304.ui.TerminalTransactions;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -25,10 +21,18 @@ public class DatabaseConnectionHandler {
 	private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
 	private static final String EXCEPTION_TAG = "[EXCEPTION]";
 	private static final String WARNING_TAG = "[WARNING]";
-	
+	private static DatabaseConnectionHandler DBHandlerInstance = null;
+
 	private Connection connection = null;
-	
-	public DatabaseConnectionHandler() {
+
+	public static DatabaseConnectionHandler getDBHandlerInstance() {
+		if (DBHandlerInstance == null) {
+			DBHandlerInstance = new DatabaseConnectionHandler();
+		}
+		return DBHandlerInstance;
+	}
+
+	private DatabaseConnectionHandler() {
 		try {
 			// Load the Oracle JDBC driver
 			// Note that the path could change for new drivers
@@ -50,9 +54,9 @@ public class DatabaseConnectionHandler {
 
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
-//		String pathRoot = new File("").getAbsolutePath();
-//		path = pathRoot + path;
-		File file = new File("/Users/monicaliu/Desktop/CPSC-304-Project/AddTablesAndData.sql");
+		String pathRoot = new File("").getAbsolutePath();
+		path = pathRoot + path;
+		File file = new File(path);
 		try {
 			Reader reader = new BufferedReader(new FileReader(file));
 			sr.runScript(reader);
@@ -71,115 +75,149 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(TerminalTransactions terminalTransactions, int confNo) {
-		// TODO: Main fucntion that handles clerk. Delete when clerk has own class that is called appropriately
+	private Reservation getReservation(int confNo) {
 		try {
-			Statement stmt = connection.createStatement();
-		    ResultSet rs = stmt.executeQuery("SELECT * FROM RESERVATIONS WHERE CONFNO = " + confNo);
-		    String vtName = null;
-		    String driversLicense = null;
-		    Date fromDate = null;
-		    String fromTime = null;
-		    Date toDate = null;
-		    String toTime = null;
-
-            while (rs.next()) {
-                confNo = rs.getInt(1);
-                vtName = rs.getString(2);
-                driversLicense = rs.getString(3);
-                fromDate = rs.getDate(4);
-                fromTime = rs.getString(5);
-                toDate = rs.getDate(6);
-                toTime = rs.getString(7);
-            }
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM ForRent WHERE VTNAME = ? AND STATUS = 'available'");
-            ps.setString(1, vtName);
-            ResultSet vehicle = ps.executeQuery();
-           ForRent forRent = createForRentModel(vehicle);
-//		    ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = " + vtName
-//                    + " AND STATUS = " + for_rent);
-            // ResultSet vehicle = stmt1.executeQuery("SELECT * FROM VEHICLE WHERE VTName = 'truck' AND STATUS = 'for_rent' ");
-		    // ResultSet customer = stmt2.executeQuery("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = " + rs.getString(3));
-            PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE  DRIVERSLICENSE = ?");
-            ps1.setString(1, driversLicense);
-            ResultSet customer = ps1.executeQuery();
-		    // arbitrarily choose the first car of the make since we don't know availability
-            String cardName = null;
-            while (customer.next()) {
-                cardName = customer.getString(2);
-            }
-            int cardNo = forRent.getOdometer() % 2 + 564979545;
-		    // have the reservation made at this confNo. Should be unique because confNo is a primary key
-            int rID = confNo / 2;
-            Rental rental = new Rental(rID, forRent.getvLicense(), driversLicense, fromDate, fromTime, toDate, toTime,
-					forRent.getOdometer(), cardName, cardNo, "02/21", confNo);
-            // inserts into database
-            insertIntoRental(rental);
-            updateStatus( "notavailable", forRent.getvLicense());
-            // TODO: display receipt in new UI
-            stmt.close();
-            ps.close();
-            ps1.close();
-		} catch (SQLException s) {
-			System.out.println("No reservation with that confirmation is found. Please make a new reservation or enter" +
-                    "a new confirmation number");
-			terminalTransactions.handleClerkInteractions();
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM RESERVATIONS WHERE CONFNO = ?");
+			ps.setInt(1, confNo);
+			ResultSet reservations = ps.executeQuery();
+			Reservation reservation = Reservation.parseReservationFromResultSet(reservations);
+			ps.close();
+			return reservation;
+		} catch (SQLException e) {
+			System.out.println("No reservation found with supplied confNo: " + confNo + "\n" + e.getMessage());
+			return null;
 		}
 	}
 
-	public String returnVehicle(TerminalTransactions terminalTransactions) {
-	    int rid = -99;
-        System.out.println("Enter rental id");
-        rid = terminalTransactions.readInteger(false);
-        try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
-            ps.setInt(1, rid);
-            ResultSet rental = ps.executeQuery();
-            String vLicense = null;
-            Date toDate = null;
-            Date fromDate = null;
-            String toTime = null;
-            while (rental.next()) {
-                vLicense = rental.getString(2);
-                toDate = rental.getDate(6);
-                toTime = rental.getString(7);
-                fromDate = rental.getDate(4);
+	private List<ForRent> getVehiclesByVTName(String vtName) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM VEHICLE WHERE VTNAME = ?");
+			ps.setString(1, vtName);
+			ResultSet rs = ps.executeQuery();
+			List<ForRent> vehicles = null; // TODO;
+			ps.close();
+			return vehicles;
+		} catch (SQLException e) {
+			System.out.println("No vehicles found with vehicle type: " + vtName + "\n" + e.getMessage());
+			return null;
+		}
+	}
 
-            }
-            if (!rentedVehicle(vLicense)) {
-                return "Vehicle is not rented";
-            }
+	private Customer getCustomerByDriversLicense(String driversLicense) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM CUSTOMER WHERE DRIVERSLICENSE = ?");
+			ps.setString(1, driversLicense);
+			ResultSet rs = ps.executeQuery();
+			Customer customer = Customer.parseCustomerFromResultSet(rs);
+			ps.close();
+			return customer;
+		} catch (SQLException e) {
+			System.out.println("No customer found with drivers license: " + driversLicense + "\n" + e.getMessage());
+			return null;
+		}
+	}
 
-            PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
-            ps1.setString(1, vLicense);
-            ResultSet forRent = ps1.executeQuery();
-            int odometer = -99;
-            String vtName = null;
-            while (forRent.next()) {
-                odometer = forRent.getInt(7);
-                vtName = forRent.getString(9);
-            }
+	public void rentVehicleWithReservation() {
+		try {
+			int confNo = 200; // TODO: change
+			// TODO Potential bug drivers license and other limited CHARs must be <= specified amount
 
-            PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM VEHICLETYPE WHERE  VTNAME = ?");
-            ps2.setString(1, vtName);
-            ResultSet vType = ps2.executeQuery();
-            VehicleType vehicleType = createVehicleTypeModel(vType);
+            Statement selectCustomers = connection.createStatement();
 
-            // get value
-            assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate);
-            Return ret = new Return(rid, toDate, odometer, 1, value);
-            insertIntoReturn(ret);
-            //TODO: display receipt
-            System.out.println(value);
+            Reservation reservation = getReservation(confNo);
+			assert reservation != null;
+			String vtName = reservation.getVtName();
+
+			Customer customer = getCustomerByDriversLicense(reservation.getdLicense());
+
+			List<ForRent> vehicles = getVehiclesByVTName(vtName);
+
+		    // arbitrarily choose the first car of the make since we don't know availability
+			// TODO: actually need to choose a vehicle from vehicles list
+
+//            int odometer = vehicle.getInt(7);
+//            int cardNo = odometer % 2 + 564979545;
+
+			// have the reservation made at this point
+			// confNo Should be unique because confNo is a primary key
+//            int rID = confNo / 2;
 
 
-        } catch (SQLException e) {
-            System.out.println("No rental with that id exists");
-        }
-        return "";
+//            Rental rental = new Rental(rID,
+//					vehicle.getString(2),
+//					reservation.getdLicense(),
+//					reservation.getFromDate(),
+//					reservation.getFromTime(),
+//					reservation.getToDate(),
+//					reservation.getToTime(),
+//					odometer,
+//					customer.getString(2),
+//					cardNo,
+//					"02/21",
+//					reservation.getConfNo());
 
-    }
+            // inserts into database
+//            insertIntoRental(rental);
+            // TODO: remove car from available?
+		} catch (SQLException s) {
+			System.out.println("No reservation with that confirmation is found. Please make a new reservation or enter" +
+                    "a new confirmation number");
+		}
+	}
+
+//	public String returnVehicle(TerminalTransactions terminalTransactions) {
+//	    int rid = -99;
+//        System.out.println("Enter rental id");
+//        rid = terminalTransactions.readInteger(false);
+//        try {
+//            PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
+//            ps.setInt(1, rid);
+//            ResultSet rental = ps.executeQuery();
+//            String vLicense = null;
+//            Date toDate = null;
+//            Date fromDate = null;
+//            String toTime = null;
+//            while (rental.next()) {
+//                vLicense = rental.getString(2);
+//                toDate = rental.getDate(6);
+//                toTime = rental.getString(7);
+//                fromDate = rental.getDate(4);
+//
+//            }
+//            if (!rentedVehicle(vLicense)) {
+//                return "Vehicle is not rented";
+//            }
+//
+//            PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
+//            ps1.setString(1, vLicense);
+//            ResultSet forRent = ps1.executeQuery();
+//            int odometer = -99;
+//            String vtName = null;
+//            while (forRent.next()) {
+//                odometer = forRent.getInt(7);
+//                vtName = forRent.getString(9);
+//            }
+//
+//            PreparedStatement ps2 = connection.prepareStatement("SELECT * FROM VEHICLETYPE WHERE  VTNAME = ?");
+//            ps2.setString(1, vtName);
+//            ResultSet vType = ps2.executeQuery();
+//            VehicleType vehicleType = createVehicleTypeModel(vType);
+//
+//            // get value
+//            assert fromDate != null;
+//            int value = returnValue(vehicleType, fromDate);
+//            Return ret = new Return(rid, toDate, odometer, 1, value);
+//            insertIntoReturn(ret);
+//            //TODO: display receipt
+//            System.out.println(value);
+//
+//
+//        } catch (SQLException e) {
+//            System.out.println("No rental with that id exists");
+//        }
+//        return "";
+//
+//    }
 
     public int returnValue(VehicleType vehicleType, Date fromDate) {
 	    long currTime  = System.currentTimeMillis();
