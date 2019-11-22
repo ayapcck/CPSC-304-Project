@@ -3,6 +3,7 @@ package ca.ubc.cs304.controller;
 import ca.ubc.cs304.delegates.CustomerTransactionDelegate;
 import ca.ubc.cs304.ui.BeginReservationWindow;
 import ca.ubc.cs304.ui.MainOperations;
+import ca.ubc.cs304.ui.ViewAvailableVehiclesWindow;
 
 import javax.swing.*;
 
@@ -27,5 +28,13 @@ public class CustomerController implements CustomerTransactionDelegate {
         BeginReservationWindow beginReservationWindow = new BeginReservationWindow();
         BeginReservationController beginReservationController = new BeginReservationController(beginReservationWindow);
         beginReservationWindow.showMenu(beginReservationController);
+    }
+
+    @Override
+    public void viewVehicles() {
+        currentWindow.dispose();
+        ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
+        ViewVehiclesController viewVehiclesController = new ViewVehiclesController(viewAvailableVehiclesWindow);
+        viewAvailableVehiclesWindow.showMenu(viewVehiclesController);
     }
 }

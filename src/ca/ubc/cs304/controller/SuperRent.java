@@ -102,32 +102,5 @@ public class SuperRent implements LoginWindowDelegate {
 //		customerViewWindow = new CustomerViewWindow();
 //		customerViewWindow.showMenu(this);
 //	}
-//
-//
-//	@Override
-//	public void processView(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-//		customerViewWindow.dispose();
-//		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
-//		customerViewResultWindow = new CustomerViewResultWindow();
-//		customerViewResultWindow.showMenu(this, count, carType, location, city, fromDate, toDate);
-//	}
-//
-//    @Override
-//    public void backToPrevious() {
-//        customerViewResultWindow.dispose();
-//        customerWindow.showMenu(this);
-//    }
-//
-//    @Override
-//	public void showDetailCountResult(int count, String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
-//		if (count == 0) {
-//			customerViewResultWindow.dispose();
-////			JOptionPane.showMessageDialog(null, "There is no cars to be shown!", "Error: " + "no such info", JOptionPane.INFORMATION_MESSAGE);
-//			ErrorWindow.infoBox("No cars to be shown!", "no info");
-//		} else {
-//			JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
-//			customerViewResultWindow.showMoreDetail(resultTable);
-//		}
-//	}
 
 }

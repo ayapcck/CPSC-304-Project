@@ -1,7 +1,6 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.ui.Panel;
-import ca.ubc.cs304.delegates.ProcessViewDelegate;
+import ca.ubc.cs304.delegates.ViewVehiclesDelegate;
 import ca.ubc.cs304.util.DateLabelFormatter;
 
 import org.jdatepicker.impl.JDatePanelImpl;
@@ -22,7 +21,7 @@ import javax.swing.*;
  */
 public class ViewAvailableVehiclesWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
-    private ProcessViewDelegate processViewDelegate = null;
+    private ViewVehiclesDelegate viewVehiclesDelegate = null;
     private String locationData = "";
     private String carTypeData = "";
     private String cityData = "";
@@ -37,8 +36,8 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
         submit = new JButton("Submit");
     }
 
-    public void showMenu(ProcessViewDelegate processViewDelegate) {
-        this.processViewDelegate = processViewDelegate;
+    public void showMenu(ViewVehiclesDelegate viewVehiclesDelegate) {
+        this.viewVehiclesDelegate = viewVehiclesDelegate;
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -131,9 +130,9 @@ public class ViewAvailableVehiclesWindow extends JFrame implements ActionListene
             java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
             java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
             java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
-            processViewDelegate.processView(carTypeData, locationData, cityData, fromDateField, toDateField);
+            viewVehiclesDelegate.submit(carTypeData, locationData, cityData, fromDateField, toDateField);
         } else if (actionEvent.getSource() == mainMenu) {
-            processViewDelegate.backToPrevious();
+            viewVehiclesDelegate.returnToCustomer();
         }
     }
 }

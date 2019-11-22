@@ -1,6 +1,6 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ProcessViewDelegate;
+import ca.ubc.cs304.delegates.ViewVehiclesResultDelegate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,7 @@ import javax.swing.*;
 public class ViewAvailableVehicleResultWindow extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private int count;
-    private ProcessViewDelegate processViewDelegate = null;
+    private ViewVehiclesResultDelegate viewVehiclesResultDelegate = null;
     private JPanel contentPane;
     private GridBagConstraints c = new GridBagConstraints();
     private String carType;
@@ -32,14 +32,14 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
         super("show number of vehicles available");
     }
 
-    public void showMenu(ProcessViewDelegate processViewDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
+    public void showMenu(ViewVehiclesResultDelegate viewVehiclesResultDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
+        this.viewVehiclesResultDelegate = viewVehiclesResultDelegate;
         this.count = count;
         this.carType = carType;
         this.location = location;
         this.city = city;
         this.fromDate = fromDate;
         this.toDate = toDate;
-        this.processViewDelegate = processViewDelegate;
         JLabel countResult = new JLabel("There are " + count + " vehicles of this type.");
 
         contentPane = new JPanel();
@@ -116,9 +116,9 @@ public class ViewAvailableVehicleResultWindow extends JFrame implements ActionLi
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
-            processViewDelegate.showDetailCountResult(count, carType, location, city, fromDate, toDate);
+            viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
-            processViewDelegate.backToPrevious();
+            viewVehiclesResultDelegate.backToCustomer();
         }
     }
 }
