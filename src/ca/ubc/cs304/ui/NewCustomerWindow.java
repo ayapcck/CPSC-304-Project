@@ -24,8 +24,6 @@ public class NewCustomerWindow extends JFrame implements ActionListener {
 
     public NewCustomerWindow() {
         super("New Customer Registration");
-
-
     }
 
     public void showMenu(NewCustomerDelegate newCustomerDelegate) {

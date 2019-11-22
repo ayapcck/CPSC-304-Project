@@ -187,7 +187,7 @@ public class MakeReservationWindow extends JFrame implements ActionListener {
             //get time
             makeReservationDelegate.createReservation(license, locationField.getText(), cityField.getText(), vtField.getText(), fromDateString, fromTimeString, toDateString, toTimeString, reservationNum);
         } else if (e.getSource() == back) {
-            makeReservationDelegate.backToCustomer();
+            makeReservationDelegate.returnToCustomer();
         }
     }
 }

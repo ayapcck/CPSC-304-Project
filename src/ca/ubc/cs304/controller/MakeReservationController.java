@@ -2,6 +2,7 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.MakeReservationDelegate;
+import ca.ubc.cs304.ui.CustomerWindow;
 
 import javax.swing.*;
 
@@ -22,7 +23,10 @@ public class MakeReservationController implements MakeReservationDelegate {
     }
 
     @Override
-    public void backToCustomer() {
-
+    public void returnToCustomer() {
+        currentWindow.dispose();
+        CustomerWindow customerWindow = new CustomerWindow();
+        CustomerController customerController = new CustomerController(customerWindow);
+        customerWindow.showMenu(customerController);
     }
 }

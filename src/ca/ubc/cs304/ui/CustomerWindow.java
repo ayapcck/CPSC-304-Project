@@ -23,7 +23,7 @@ public class CustomerWindow extends JFrame implements ActionListener {
         super("Choose a transaction:");
 
         view = new JButton("View Available Vehicles");
-        reserve = new JButton("Reserve");
+        reserve = new JButton("Reserve Vehicle");
         back = new JButton("Back");
     }
 
