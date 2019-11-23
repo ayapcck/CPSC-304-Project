@@ -28,14 +28,25 @@ public class Reservation {
 
     public static Reservation createReservationModel(ResultSet resultSet) {
         try {
-            int confNo = resultSet.getInt(1);
-            String vtName = resultSet.getString(2);
-            String dlicense = resultSet.getString(3);
-            Date fromDate = resultSet.getDate(4);
-            String fromTime = resultSet.getString(5);
-            Date toDate = resultSet.getDate(6);
-            String toTime = resultSet.getString(7);
-            return new Reservation(confNo, vtName, dlicense, fromDate, fromTime, toDate, toTime);
+            int confNo = -99;
+            String vtName = null;
+            String driversLicense = null;
+            Date fromDate = null;
+            String fromTime = null;
+            Date toDate = null;
+            String toTime = null;
+            System.out.println("CreateReservationModel");
+            while (resultSet.next()) {
+                confNo = resultSet.getInt(1);
+                vtName = resultSet.getString(2);
+                driversLicense = resultSet.getString(3);
+                fromDate = resultSet.getDate(4);
+                fromTime = resultSet.getString(5);
+                toDate = resultSet.getDate(6);
+                toTime = resultSet.getString(7);
+                break;
+            }
+            return new Reservation(confNo, vtName, driversLicense, fromDate, fromTime, toDate, toTime);
         } catch (SQLException e) {
             System.out.println("Exception when parsing reservation from database\n" + e.getMessage());
             return null;
