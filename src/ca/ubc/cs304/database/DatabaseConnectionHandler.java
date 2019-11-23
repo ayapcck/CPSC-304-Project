@@ -522,6 +522,21 @@ public class DatabaseConnectionHandler {
 		}
 		return result.toArray(new String[result.size()]);
 	}
+
+	public void deleteFromTable(String tableName, String column, String value) {
+		try {
+			String query = "DELETE FROM " + tableName + " WHERE " + column + " = ?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, value);
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Successfully deleted");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
 	
 	public boolean login(String username, String password) {
 		try {

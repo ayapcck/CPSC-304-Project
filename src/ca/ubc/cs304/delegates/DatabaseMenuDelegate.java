@@ -1,10 +1,11 @@
 package ca.ubc.cs304.delegates;
 
-public interface DatabaseManipulationsDelegate {
+public interface DatabaseMenuDelegate {
     void setupDatabase();
     void dropRequiredTables();
     void addRequiredTablesAndData();
     void viewAllTables();
-    void viewDataFromTable();
+    void navToDeleteDataWindow();
+    void navToSelectDataWindow();
     void mainMenu();
 }

@@ -1,18 +1,18 @@
 package ca.ubc.cs304.controller;
 
-import ca.ubc.cs304.delegates.DatabaseManipulationsDelegate;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
+import ca.ubc.cs304.delegates.DatabaseMenuDelegate;
 import ca.ubc.cs304.ui.DataFromTableWindow;
+import ca.ubc.cs304.ui.DeleteFromTableWindow;
 import ca.ubc.cs304.ui.MainOperations;
-import org.omg.CORBA.FREE_MEM;
 
 import javax.swing.*;
 
-public class DatabaseController implements DatabaseManipulationsDelegate {
+public class DatabaseMenuController implements DatabaseMenuDelegate {
     private DatabaseConnectionHandler dbHandler = null;
     private JFrame currentWindow = null;
 
-    DatabaseController(JFrame currentWindow) {
+    DatabaseMenuController(JFrame currentWindow) {
         this.dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
         this.currentWindow = currentWindow;
     }
@@ -42,11 +42,19 @@ public class DatabaseController implements DatabaseManipulationsDelegate {
     }
 
     @Override
-    public void viewDataFromTable() {
+    public void navToDeleteDataWindow() {
+        currentWindow.dispose();
+        DeleteFromTableWindow deleteFromTableWindow = new DeleteFromTableWindow();
+        DatabaseActionsController databaseActionsController = new DatabaseActionsController(deleteFromTableWindow);
+        deleteFromTableWindow.showMenu(databaseActionsController);
+    }
+
+    @Override
+    public void navToSelectDataWindow() {
         currentWindow.dispose();
         DataFromTableWindow dataFromTableWindow = new DataFromTableWindow();
-        DataFromTableController dataFromTableController = new DataFromTableController(dataFromTableWindow);
-        dataFromTableWindow.showMenu(dataFromTableController);
+        DatabaseActionsController databaseActionsController = new DatabaseActionsController(dataFromTableWindow);
+        dataFromTableWindow.showMenu(databaseActionsController);
     }
 
     @Override
