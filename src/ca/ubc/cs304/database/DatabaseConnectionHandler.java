@@ -152,7 +152,7 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-//	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
+	public void rentVehicleWithNoReservation() {
 //		// create new reservation;
 //		int confNo = (int) (Math.random() * 1000);
 //		System.out.println("Enter type of vehicle");
@@ -186,7 +186,7 @@ public class DatabaseConnectionHandler {
 //		insertReservation(reservations);
 //
 //		rentVehicleWithReservation(terminalTransactions, confNo);
-//	}
+	}
 
 	public String returnVehicle() {
 	    int rid = -99;
@@ -501,6 +501,7 @@ public class DatabaseConnectionHandler {
 
 	public String[] getDataFromTable(String tableName, String columns) {
 		ArrayList<String> result = new ArrayList<String>();
+		// TODO: do we want to return anything or just print information? display in a ui?
 
 		try {
 			String query = "SELECT ".concat(columns);
