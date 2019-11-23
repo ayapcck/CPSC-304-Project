@@ -193,7 +193,7 @@ public class DatabaseConnectionHandler {
 
             // get value
             assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate);
+            int value = returnValue(vehicleType, fromDate, toDate);
             Return ret = new Return(rid, toDate, odometer, 1, value);
             insertIntoReturn(ret);
             //TODO: display receipt
@@ -207,11 +207,11 @@ public class DatabaseConnectionHandler {
 
     }
 
-    public int returnValue(VehicleType vehicleType, Date fromDate) {
-	    long currTime  = System.currentTimeMillis();
+    public int returnValue(VehicleType vehicleType, Date fromDate, Date toDate) {
+	    long currTime  = toDate.getTime();
 	    long startTime = fromDate.getTime();
         long diff = currTime - startTime;
-        long hours = diff * 1000 * 3600;
+        long hours = diff / 1000 / 3600;
 
         long days = Math.floorDiv(hours, 24);
 

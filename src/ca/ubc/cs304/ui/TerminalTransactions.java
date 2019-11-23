@@ -101,6 +101,7 @@ public class TerminalTransactions {
                         }
 						break;
 					case 2:
+						delegate.returnVehicle(this);
 						break;
 					case 5:
 						handleMainInteractions();
