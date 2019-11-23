@@ -1,7 +1,6 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.DatabaseManipulationsDelegate;
-import ca.ubc.cs304.delegates.LoginWindowDelegate;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,7 +9,6 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.xml.crypto.Data;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
@@ -21,6 +19,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
     private JButton drop;
     private JButton add;
     private JButton viewTables;
+    private JButton getDataFromTable;
     private JButton mainMenu;
     private DatabaseManipulationsDelegate databaseManipulationsDelegate;
 
@@ -29,6 +28,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
 
         add = new JButton("Add required tables");
         drop = new JButton("Drop required tables");
+        getDataFromTable = new JButton("Get data from table");
         mainMenu = new JButton("Main menu");
         setup = new JButton("Setup Database(drop required tables and add required tables and data)");
         viewTables = new JButton("View all tables");
@@ -41,6 +41,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
         buttons.add(drop);
         buttons.add(add);
         buttons.add(viewTables);
+        buttons.add(getDataFromTable);
         buttons.add(mainMenu);
         new Panel(buttons, this, this);
     }
@@ -57,6 +58,8 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
             databaseManipulationsDelegate.setupDatabase();
         } else if (actionEvent.getSource() == viewTables) {
             databaseManipulationsDelegate.viewAllTables();
+        } else if (actionEvent.getSource() == getDataFromTable) {
+            databaseManipulationsDelegate.viewDataFromTable();
         }
     }
 }

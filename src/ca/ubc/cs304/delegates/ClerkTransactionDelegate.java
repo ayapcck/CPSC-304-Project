@@ -1,9 +1,7 @@
 package ca.ubc.cs304.delegates;
 
 public interface ClerkTransactionDelegate {
-
-    void rentAVehicle();
-    void rentAVehicleNoRes();
+    void rentVehicle();
     void returnVehicle();
     void mainMenu();
 }

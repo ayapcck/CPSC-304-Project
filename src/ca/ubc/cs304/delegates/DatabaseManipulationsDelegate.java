@@ -5,5 +5,6 @@ public interface DatabaseManipulationsDelegate {
     void dropRequiredTables();
     void addRequiredTablesAndData();
     void viewAllTables();
+    void viewDataFromTable();
     void mainMenu();
 }
