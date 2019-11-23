@@ -510,7 +510,7 @@ public class DatabaseConnectionHandler {
 			ResultSet rs = stmt.executeQuery();
 			String[] listCols = columns.split(",");
 			while (rs.next()) {
-				for (int i = 1; i <= columns.length(); i++) {
+				for (int i = 1; i <= listCols.length; i++) {
 					System.out.println(rs.getString(i));
 				}
 			}

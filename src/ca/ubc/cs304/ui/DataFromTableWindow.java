@@ -60,6 +60,8 @@ public class DataFromTableWindow extends Window implements ActionListener {
             String tableName = tableNameField.getText();
             String columns = columnsField.getText();
             dataFromTableDelegate.submit(tableName, columns);
+            tableNameField.setText("");
+            columnsField.setText("");
         } else if (e.getSource() == backToDatabase) {
             dataFromTableDelegate.backToDatabase();
         }
