@@ -20,7 +20,6 @@ import javax.swing.*;
  * The class is only responsible for displaying and handling the login GUI.
  */
 public class ViewAvailableVehiclesWindow extends Window implements ActionListener {
-    private static final int TEXT_FIELD_WIDTH = 10;
     private ViewVehiclesDelegate viewVehiclesDelegate = null;
     private JTextField locationData;
     private JTextField carTypeData;
@@ -53,13 +52,13 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         JLabel carType = new JLabel("Car Type:");
         JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(carType, contentPane, gb, c, 10, 5);
-        carTypeData = placeTextField(carTypeField, contentPane, gb, c, new Insets(10, 0, 5, 10));
+        carTypeData = placeTextField(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place location label and field
         JLabel location = new JLabel("Location:");
         JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(location, contentPane, gb, c, 0, 10);
-        locationData = placeTextField(locationField, contentPane, gb, c, new Insets(10, 0, 5, 10));
+        locationData = placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place city label and field
         JLabel cityLabel = new JLabel("City:");

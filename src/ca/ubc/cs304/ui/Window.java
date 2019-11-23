@@ -10,6 +10,8 @@ import java.awt.*;
 import java.util.Properties;
 
 class Window extends JFrame {
+    static final int TEXT_FIELD_WIDTH = 10;
+    static final Insets TEXT_FIELD_INSET = new Insets(10, 0, 5, 10);
     Window(String label) {
         super(label);
     }

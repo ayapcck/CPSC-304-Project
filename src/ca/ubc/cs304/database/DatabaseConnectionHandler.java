@@ -152,7 +152,7 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-//	public void rentVehicleWithNoReservation(TerminalTransactions terminalTransactions) {
+	public void rentVehicleWithNoReservation() {
 //		// create new reservation;
 //		int confNo = (int) (Math.random() * 1000);
 //		System.out.println("Enter type of vehicle");
@@ -186,7 +186,7 @@ public class DatabaseConnectionHandler {
 //		insertReservation(reservations);
 //
 //		rentVehicleWithReservation(terminalTransactions, confNo);
-//	}
+	}
 
 	public String returnVehicle() {
 	    int rid = -99;
@@ -496,6 +496,30 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}	
 		
+		return result.toArray(new String[result.size()]);
+	}
+
+	public String[] getDataFromTable(String tableName, String columns) {
+		ArrayList<String> result = new ArrayList<String>();
+		// TODO: do we want to return anything or just print information? display in a ui?
+
+		try {
+			String query = "SELECT ".concat(columns);
+			query = query.concat(" FROM " + tableName);
+			PreparedStatement stmt = connection.prepareStatement(query);
+			ResultSet rs = stmt.executeQuery();
+			String[] listCols = columns.split(",");
+			while (rs.next()) {
+				for (int i = 1; i <= columns.length(); i++) {
+					System.out.println(rs.getString(i));
+				}
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
 		return result.toArray(new String[result.size()]);
 	}
 	

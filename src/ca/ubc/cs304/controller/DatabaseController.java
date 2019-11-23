@@ -2,6 +2,7 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.delegates.DatabaseManipulationsDelegate;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
+import ca.ubc.cs304.ui.DataFromTableWindow;
 import ca.ubc.cs304.ui.MainOperations;
 
 import javax.swing.*;
@@ -37,6 +38,14 @@ public class DatabaseController implements DatabaseManipulationsDelegate {
         for (String table : tables) {
             System.out.println(table);
         }
+    }
+
+    @Override
+    public void viewDataFromTable() {
+        currentWindow.dispose();
+        DataFromTableWindow dataFromTableWindow = new DataFromTableWindow();
+        DataFromTableController dataFromTableController = new DataFromTableController(dataFromTableWindow);
+        dataFromTableWindow.showMenu(dataFromTableController);
     }
 
     @Override
