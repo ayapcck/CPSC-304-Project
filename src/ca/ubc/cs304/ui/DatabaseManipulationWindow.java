@@ -16,11 +16,12 @@ import javax.swing.*;
 public class DatabaseManipulationWindow extends Window implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private JButton setup;
-    private JButton deleteFromTable;
     private JButton drop;
     private JButton add;
     private JButton viewTables;
+    private JButton deleteFromTable;
     private JButton getDataFromTable;
+    private JButton insertDataIntoTable;
     private JButton mainMenu;
     private DatabaseMenuDelegate databaseMenuDelegate;
 
@@ -31,6 +32,7 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
         deleteFromTable = new JButton("Delete data from table");
         drop = new JButton("Drop required tables");
         getDataFromTable = new JButton("Get data from table");
+        insertDataIntoTable = new JButton("Insert data into table");
         mainMenu = new JButton("Main Menu");
         setup = new JButton("Setup Database(drop required tables and add required tables and data)");
         viewTables = new JButton("View all tables");
@@ -50,6 +52,7 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
         buttons.add(add);
         buttons.add(viewTables);
         buttons.add(getDataFromTable);
+        buttons.add(insertDataIntoTable);
         buttons.add(deleteFromTable);
         buttons.add(mainMenu);
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
@@ -72,6 +75,8 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
             databaseMenuDelegate.navToSelectDataWindow();
         } else if (e.getSource() == deleteFromTable) {
             databaseMenuDelegate.navToDeleteDataWindow();
+        } else if (e.getSource() == insertDataIntoTable) {
+            databaseMenuDelegate.navToInsertDataWindow();
         }
     }
 }

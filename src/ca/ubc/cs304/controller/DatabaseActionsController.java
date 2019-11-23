@@ -17,8 +17,8 @@ public class DatabaseActionsController implements DatabaseActionsDelegate {
     }
 
     @Override
-    public void insertIntoTable() {
-
+    public void insertIntoTable(String tableName, String columns, String values) {
+        dbHandler.insertIntoTable(tableName, columns, values);
     }
 
     @Override

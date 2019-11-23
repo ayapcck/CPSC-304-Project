@@ -537,6 +537,29 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
+
+	public void insertIntoTable(String tableName, String columns, String values) {
+		try {
+			String query = "INSERT INTO " + tableName + " (" + columns + ") VALUES (";
+			String[] valuesSplit = values.split(", ");
+			for (String value : valuesSplit) {
+				query = query.concat("?, ");
+			}
+			query = query.substring(0, query.length()-2);
+			query = query.concat(")");
+			PreparedStatement ps = connection.prepareStatement(query);
+			for (int i = 1; i <= valuesSplit.length; i++) {
+				ps.setString(i, valuesSplit[i-1]);
+			}
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Successfully inserted");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
 	
 	public boolean login(String username, String password) {
 		try {
