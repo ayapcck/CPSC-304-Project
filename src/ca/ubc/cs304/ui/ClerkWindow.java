@@ -26,9 +26,9 @@ public class ClerkWindow extends JFrame implements ActionListener {
         this.clerkTransactionDelegate = clerkTransactionDelegate;
 
         List<JButton> buttons = new ArrayList<>();
-        buttons.add(mainMenu);
         buttons.add(rentVehicle);
         buttons.add(returnVehicle);
+        buttons.add(mainMenu);
         new Panel(buttons, this, this);
     }
 

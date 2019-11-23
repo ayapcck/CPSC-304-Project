@@ -80,8 +80,6 @@ public class DatabaseConnectionHandler {
 		assert reservation != null;
 		String vtName = reservation.getVtName();
 		System.out.println(vtName);
-//		Customer customer = getCustomerByDriversLicense(reservation.getdLicense());
-//		assert customer != null;
 		List<ForRent> vehicles = getVehiclesByVTName(vtName);
 		assert vehicles != null;
 		// arbitrarily choose the first car of the make since we don't know availability
@@ -300,6 +298,7 @@ public class DatabaseConnectionHandler {
 
         }
     }
+
 	public boolean customerExists(String driversLicense) {
 		try {
 			// TODO: changed customer exists

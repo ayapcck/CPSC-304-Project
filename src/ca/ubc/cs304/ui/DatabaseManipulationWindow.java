@@ -29,7 +29,7 @@ public class DatabaseManipulationWindow extends JFrame implements ActionListener
         add = new JButton("Add required tables");
         drop = new JButton("Drop required tables");
         getDataFromTable = new JButton("Get data from table");
-        mainMenu = new JButton("Main menu");
+        mainMenu = new JButton("Main Menu");
         setup = new JButton("Setup Database(drop required tables and add required tables and data)");
         viewTables = new JButton("View all tables");
     }
