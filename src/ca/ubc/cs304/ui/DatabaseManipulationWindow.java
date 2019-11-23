@@ -22,6 +22,7 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
     private JButton deleteFromTable;
     private JButton getDataFromTable;
     private JButton insertDataIntoTable;
+    private JButton updateTable;
     private JButton mainMenu;
     private DatabaseMenuDelegate databaseMenuDelegate;
 
@@ -35,6 +36,7 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
         insertDataIntoTable = new JButton("Insert data into table");
         mainMenu = new JButton("Main Menu");
         setup = new JButton("Setup Database(drop required tables and add required tables and data)");
+        updateTable = new JButton("Update data in table");
         viewTables = new JButton("View all tables");
     }
 
@@ -53,6 +55,7 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
         buttons.add(viewTables);
         buttons.add(getDataFromTable);
         buttons.add(insertDataIntoTable);
+        buttons.add(updateTable);
         buttons.add(deleteFromTable);
         buttons.add(mainMenu);
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
@@ -77,6 +80,8 @@ public class DatabaseManipulationWindow extends Window implements ActionListener
             databaseMenuDelegate.navToDeleteDataWindow();
         } else if (e.getSource() == insertDataIntoTable) {
             databaseMenuDelegate.navToInsertDataWindow();
+        } else if (e.getSource() == updateTable) {
+            databaseMenuDelegate.navToUpdateDataWindow();
         }
     }
 }

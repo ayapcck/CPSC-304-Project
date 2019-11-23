@@ -32,8 +32,8 @@ public class DatabaseActionsController implements DatabaseActionsDelegate {
     }
 
     @Override
-    public void updateTable() {
-
+    public void updateTable(String tableName, String columns, String values, String whereColumn, String whereValue) {
+        dbHandler.updateTable(tableName, columns, values, whereColumn, whereValue);
     }
 
     @Override

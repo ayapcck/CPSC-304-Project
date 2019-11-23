@@ -8,5 +8,6 @@ public interface DatabaseMenuDelegate {
     void navToDeleteDataWindow();
     void navToSelectDataWindow();
     void navToInsertDataWindow();
+    void navToUpdateDataWindow();
     void mainMenu();
 }

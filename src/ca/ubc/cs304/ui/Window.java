@@ -56,6 +56,12 @@ class Window extends JFrame {
         contentPane.add(field);
     }
 
+    void clearFields(JTextField[] fields) {
+        for (JTextField field : fields) {
+            field.setText("");
+        }
+    }
+
     void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);

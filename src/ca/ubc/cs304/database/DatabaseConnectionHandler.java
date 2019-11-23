@@ -560,6 +560,33 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 	}
+
+	public void updateTable(String tableName, String columns, String values, String whereColumn, String whereValue) {
+		try {
+			String query = "UPDATE " + tableName + " SET ";
+			String[] columnsSplit = columns.split(", ");
+			String[] valuesSplit = values.split(", ");
+			int numValues = valuesSplit.length;
+			for (int i = 0; i < numValues; i++) {
+				query = query.concat(columnsSplit[i] + " = ?, ");
+			}
+			query = query.substring(0, query.length() - 2);
+			query = query.concat(" WHERE " + whereColumn + " = ?");
+			PreparedStatement ps = connection.prepareStatement(query);
+			int i;
+			for (i = 1; i <= numValues; i++) {
+				ps.setString(i, valuesSplit[i-1]);
+			}
+			ps.setString(i, whereValue);
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Updated successfully");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
 	
 	public boolean login(String username, String password) {
 		try {

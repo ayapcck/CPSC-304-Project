@@ -21,6 +21,10 @@ public class InsertIntoTableWindow extends Window implements ActionListener {
     public InsertIntoTableWindow() {
         super("Insert data into table");
 
+        tableNameField = new JTextField(TEXT_FIELD_WIDTH);
+        columnsField = new JTextField(TEXT_FIELD_WIDTH);
+        valuesField = new JTextField(TEXT_FIELD_WIDTH);
+
         submit = new JButton("Submit");
         backToDatabase = new JButton("Back");
     }
@@ -37,11 +41,8 @@ public class InsertIntoTableWindow extends Window implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        tableNameField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Table Name", tableNameField, contentPane, gb, c);
-        columnsField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Columns", columnsField, contentPane, gb, c);
-        valuesField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Values", valuesField, contentPane, gb, c);
 
         List<JButton> buttons = new ArrayList<>();

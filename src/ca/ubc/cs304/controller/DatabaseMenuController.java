@@ -2,10 +2,7 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.DatabaseMenuDelegate;
-import ca.ubc.cs304.ui.DataFromTableWindow;
-import ca.ubc.cs304.ui.DeleteFromTableWindow;
-import ca.ubc.cs304.ui.InsertIntoTableWindow;
-import ca.ubc.cs304.ui.MainOperations;
+import ca.ubc.cs304.ui.*;
 
 import javax.swing.*;
 
@@ -64,6 +61,14 @@ public class DatabaseMenuController implements DatabaseMenuDelegate {
         InsertIntoTableWindow insertIntoTableWindow = new InsertIntoTableWindow();
         DatabaseActionsController databaseActionsController = new DatabaseActionsController(insertIntoTableWindow);
         insertIntoTableWindow.showMenu(databaseActionsController);
+    }
+
+    @Override
+    public void navToUpdateDataWindow() {
+        currentWindow.dispose();
+        UpdateTableWindow updateTableWindow = new UpdateTableWindow();
+        DatabaseActionsController databaseActionsController = new DatabaseActionsController(updateTableWindow);
+        updateTableWindow.showMenu(databaseActionsController);
     }
 
     @Override
