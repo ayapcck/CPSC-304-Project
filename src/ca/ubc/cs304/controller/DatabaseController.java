@@ -3,7 +3,6 @@ package ca.ubc.cs304.controller;
 import ca.ubc.cs304.delegates.DatabaseManipulationsDelegate;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.ui.MainOperations;
-import org.omg.CORBA.FREE_MEM;
 
 import javax.swing.*;
 

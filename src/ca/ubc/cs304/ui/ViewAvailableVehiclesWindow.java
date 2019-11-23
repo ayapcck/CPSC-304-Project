@@ -22,9 +22,9 @@ import javax.swing.*;
 public class ViewAvailableVehiclesWindow extends Window implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private ViewVehiclesDelegate viewVehiclesDelegate = null;
-    private String locationData = "";
-    private String carTypeData = "";
-    private String cityData = "";
+    private JTextField locationData;
+    private JTextField carTypeData;
+    private JTextField cityData;
     private JDatePickerImpl datePicker;
     private JDatePickerImpl datePickerTo;
     private JButton submit;
@@ -87,11 +87,7 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == submit) {
-            java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
-            java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
-            java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
-            java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
-            viewVehiclesDelegate.submit(carTypeData, locationData, cityData, fromDateField, toDateField);
+            viewVehiclesDelegate.submit(carTypeData.getText(), locationData.getText(), cityData.getText());
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesDelegate.returnToCustomer();
         }
