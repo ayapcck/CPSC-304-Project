@@ -3,27 +3,34 @@ package ca.ubc.cs304.ui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.*;
 
-import ca.ubc.cs304.delegates.LoginWindowDelegate;
 import ca.ubc.cs304.delegates.NewCustomerDelegate;
 
-public class NewCustomerWindow extends JFrame implements ActionListener {
-    private static final int TEXT_FIELD_WIDTH = 10;
-    private JButton ok;
-    private JButton back;
+public class NewCustomerWindow extends Window implements ActionListener {
+    // delegate
+    private NewCustomerDelegate newCustomerDelegate;
+
+    private JButton submit;
+    private JButton backToCustomer;
     private JTextField nameField;
     private JTextField phoneField;
     private JTextField addrField;
     private JTextField licenseField;
-    // delegate
-    private NewCustomerDelegate newCustomerDelegate;
 
     public NewCustomerWindow() {
         super("New Customer Registration");
+
+        nameField = new JTextField(TEXT_FIELD_WIDTH);
+        phoneField = new JTextField(TEXT_FIELD_WIDTH);
+        addrField = new JTextField(TEXT_FIELD_WIDTH);
+        licenseField = new JTextField(TEXT_FIELD_WIDTH);
+
+        submit = new JButton("Submit");
+        backToCustomer = new JButton("Back");
     }
 
     public void showMenu(NewCustomerDelegate newCustomerDelegate) {
@@ -33,14 +40,6 @@ public class NewCustomerWindow extends JFrame implements ActionListener {
         JLabel phoneLabel = new JLabel("Phone number: ");
         JLabel addrLabel = new JLabel("Address: ");
         JLabel dLicenseLabel = new JLabel("Driver's license: ");
-
-        nameField = new JTextField(TEXT_FIELD_WIDTH);
-        phoneField = new JTextField(TEXT_FIELD_WIDTH);
-        addrField = new JTextField(TEXT_FIELD_WIDTH);
-        licenseField = new JTextField(TEXT_FIELD_WIDTH);
-
-        ok = new JButton("Submit");
-        back = new JButton("Back");
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -52,88 +51,27 @@ public class NewCustomerWindow extends JFrame implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // place the name label and field
+        placeLabel(nameLabel, contentPane, gb, c, 10, 5);
+        placeTextField(nameField, contentPane, gb, c, TEXT_FIELD_INSET);
 
-        // place the name label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(nameLabel, c);
-        contentPane.add(nameLabel);
-        // place the text field for the name
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 0, 5, 10);
-        gb.setConstraints(nameField, c);
-        contentPane.add(nameField);
+        // place phone label and field
+        placeLabel(phoneLabel, contentPane, gb, c, 0, 10);
+        placeTextField(phoneField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place phone label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(phoneLabel, c);
-        contentPane.add(phoneLabel);
+        // place licence label and field
+        placeLabel(dLicenseLabel, contentPane, gb, c, 0, 10);
+        placeTextField(licenseField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place the phone field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(phoneField, c);
-        contentPane.add(phoneField);
+        // place addr label and field
+        placeLabel(addrLabel, contentPane, gb, c, 0, 10);
+        placeTextField(addrField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place licence label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(dLicenseLabel, c);
-        contentPane.add(dLicenseLabel);
-
-        // place the licence field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(licenseField, c);
-        contentPane.add(licenseField);
-
-        // place addr label
-        c.gridwidth = GridBagConstraints.RELATIVE;
-        c.insets = new Insets(0, 10, 10, 0);
-        gb.setConstraints(addrLabel, c);
-        contentPane.add(addrLabel);
-
-        // place the addr field
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 0, 10, 10);
-        gb.setConstraints(addrField, c);
-        contentPane.add(addrField);
-
-        // place the login button
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(ok, c);
-        contentPane.add(ok);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(back, c);
-        contentPane.add(back);
-
-        // register login button with action event handler
-        ok.addActionListener(this);
-        back.addActionListener(this);
-
-        // anonymous inner class for closing the window
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // size the window to obtain a best fit for the components
-        this.pack();
-
-        // center the frame
-        Dimension d = this.getToolkit().getScreenSize();
-        Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-
-        // make the window visible
-        this.setVisible(true);
+        List<JButton> buttons = new ArrayList<>();
+        buttons.add(submit);
+        buttons.add(backToCustomer);
+        PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
+        new Panel(buttons, this, this, contentPane, gb, setConstraints);
 
         // place the cursor in the text field for the username
         nameField.requestFocus();
@@ -144,13 +82,13 @@ public class NewCustomerWindow extends JFrame implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == ok) {
+        if (e.getSource() == submit) {
             String name = nameField.getText();
             String phone = phoneField.getText();
             String licence = licenseField.getText();
             String addr = addrField.getText();
             newCustomerDelegate.finishRegistration(name, phone, licence, addr);
-        } else if (e.getSource() == back) {
+        } else if (e.getSource() == backToCustomer) {
             newCustomerDelegate.returnToCustomer();
         }
     }

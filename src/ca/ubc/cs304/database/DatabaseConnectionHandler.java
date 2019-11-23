@@ -79,13 +79,9 @@ public class DatabaseConnectionHandler {
 		Reservation reservation = getReservation(confNo);
 		assert reservation != null;
 		String vtName = reservation.getVtName();
-
-		Customer customer = getCustomerByDriversLicense(reservation.getdLicense());
-		assert customer != null;
-
+		System.out.println(vtName);
 		List<ForRent> vehicles = getVehiclesByVTName(vtName);
 		assert vehicles != null;
-
 		// arbitrarily choose the first car of the make since we don't know availability
 		ForRent forRent = vehicles.get(0);
 		String cardName = "VISA"; // TODO: fix
@@ -94,7 +90,7 @@ public class DatabaseConnectionHandler {
 		int rID = confNo / 2;
 		Rental rental = new Rental(rID,
 				forRent.getvLicense(),
-				customer.getDriversLicense(),
+				reservation.getdLicense(),
 				reservation.getFromDate(),
 				reservation.getFromTime(),
 				reservation.getToDate(),
@@ -131,6 +127,9 @@ public class DatabaseConnectionHandler {
 			ResultSet rs = ps.executeQuery();
 			List<ForRent> vehicles = ForRent.createForRentModel(rs);
 			ps.close();
+			if (vehicles.size() == 0) {
+				throw new SQLException();
+			}
 			return vehicles;
 		} catch (SQLException e) {
 			System.out.println("No vehicles found with vehicle type: " + vtName + "\n" + e.getMessage());
@@ -226,7 +225,7 @@ public class DatabaseConnectionHandler {
 
             // get value
             assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate);
+            int value = returnValue(vehicleType, fromDate, toDate);
             Return ret = new Return(rid, toDate, odometer, 1, value);
             insertIntoReturn(ret);
             //TODO: display receipt
@@ -238,11 +237,11 @@ public class DatabaseConnectionHandler {
 
     }
 
-    public int returnValue(VehicleType vehicleType, Date fromDate) {
-	    long currTime  = System.currentTimeMillis();
+    public int returnValue(VehicleType vehicleType, Date fromDate, Date toDate) {
+	    long currTime  = toDate.getTime();
 	    long startTime = fromDate.getTime();
         long diff = currTime - startTime;
-        long hours = diff * 1000 * 3600;
+        long hours = diff / 1000 / 3600;
 
         long days = Math.floorDiv(hours, 24);
 
@@ -299,6 +298,7 @@ public class DatabaseConnectionHandler {
 
         }
     }
+
 	public boolean customerExists(String driversLicense) {
 		try {
 			// TODO: changed customer exists
@@ -431,7 +431,7 @@ public class DatabaseConnectionHandler {
 	public boolean vehicleExist(String vtName, String location, String city) {
 		// TODO
 		try{
-			PreparedStatement ps = connection.prepareStatement("SELECT FROM VEHICLE WHERE vtName = ? AND location = ? AND city = ?");
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM FORRENT WHERE vtName = ? AND location = ? AND city = ?");
 			ps.setString(1, vtName);
 			ps.setString(2, location);
 			ps.setString(3, city);

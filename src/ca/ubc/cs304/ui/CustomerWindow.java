@@ -24,7 +24,7 @@ public class CustomerWindow extends JFrame implements ActionListener {
 
         view = new JButton("View Available Vehicles");
         reserve = new JButton("Reserve Vehicle");
-        back = new JButton("Back");
+        back = new JButton("Main Menu");
     }
 
     public void showMenu(CustomerTransactionDelegate customerTransactionDelegate) {

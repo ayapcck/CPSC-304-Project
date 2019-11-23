@@ -12,8 +12,6 @@ import java.util.List;
 public class DataFromTableWindow extends Window implements ActionListener {
     private JButton submit;
     private JButton backToDatabase;
-    private String tableName;
-    private String columns;
     private JTextField tableNameField;
     private JTextField columnsField;
 
@@ -42,12 +40,12 @@ public class DataFromTableWindow extends Window implements ActionListener {
         JLabel tableLabel = new JLabel("Table Name: ");
         tableNameField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(tableLabel, contentPane, gb, c, 10 ,5);
-        tableName = placeTextField(tableNameField, contentPane, gb, c, TEXT_FIELD_INSET);
+        placeTextField(tableNameField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         JLabel columnsLabel = new JLabel("Columns: ");
         columnsField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(columnsLabel, contentPane, gb, c, 10, 5);
-        columns = placeTextField(columnsField, contentPane, gb, c, TEXT_FIELD_INSET);
+        placeTextField(columnsField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
@@ -59,8 +57,8 @@ public class DataFromTableWindow extends Window implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            tableName = tableNameField.getText();
-            columns = columnsField.getText();
+            String tableName = tableNameField.getText();
+            String columns = columnsField.getText();
             dataFromTableDelegate.submit(tableName, columns);
         } else if (e.getSource() == backToDatabase) {
             dataFromTableDelegate.backToDatabase();
