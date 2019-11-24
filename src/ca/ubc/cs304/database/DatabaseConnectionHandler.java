@@ -810,7 +810,7 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	// revenue and total returned cars for one branch in total for specifed day and branch
+	// revenue and total returned cars for one branch in total for specified day and branch
 	public JTable returnOneBranchTotalVtAndRevenue(Date date, String location, String city) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
