@@ -77,6 +77,8 @@ public class DailyReturnsCompanyWindow extends Window implements ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if (e.getSource() == backToClerkMenu) {
+            reportGenerationDelegate.backToClerkMenu();
+        }
     }
 }
