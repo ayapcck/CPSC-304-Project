@@ -5,6 +5,8 @@ import ca.ubc.cs304.delegates.MakeReservationDelegate;
 import ca.ubc.cs304.model.Branch;
 import ca.ubc.cs304.model.Reservation;
 import ca.ubc.cs304.ui.CustomerWindow;
+import ca.ubc.cs304.ui.ErrorWindow;
+import ca.ubc.cs304.ui.MakeReservationWindow;
 
 import javax.swing.*;
 
@@ -19,7 +21,16 @@ public class MakeReservationController implements MakeReservationDelegate {
 
     @Override
     public void createReservation(Reservation reservation, Branch branch) {
-       // dbHandler.insertReservation(reservation, branch);
+        if (dbHandler.insertReservation(reservation, branch)) {
+            currentWindow.dispose();
+            MakeReservationWindow reservationConfirmWindow = new MakeReservationWindow();
+            MakeReservationController customerController = new MakeReservationController(reservationConfirmWindow);
+            reservationConfirmWindow.showConfirm(customerController, reservation, branch);
+        } else {
+            currentWindow.dispose();
+            ErrorWindow errorWindow = new ErrorWindow();
+            errorWindow.infoBox("Sorry, no vehicle matches your search", "No Available Vehicle");
+        }
     }
 
     @Override

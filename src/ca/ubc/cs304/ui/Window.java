@@ -67,6 +67,7 @@ class Window extends JFrame {
         }
     }
 
+
     void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);

@@ -17,7 +17,6 @@ import javax.swing.*;
  * The class is only responsible for displaying and handling the login GUI.
  */
 public class ViewAvailableVehicleResultWindow extends Window implements ActionListener {
-    private static final int TEXT_FIELD_WIDTH = 10;
     private int count;
     private ViewVehiclesResultDelegate viewVehiclesResultDelegate = null;
     private JPanel contentPane;
@@ -31,22 +30,20 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
     private Date toDate;
     private JButton backToCustomerMenu;
     private JButton moreDetail;
-
+    private JButton back;
     public ViewAvailableVehicleResultWindow() {
-        super("show number of vehicles available");
+        super("Number of vehicles available");
 
         backToCustomerMenu = new JButton("Back");
         moreDetail = new JButton("More detail");
     }
 
-    public void showMenu(ViewVehiclesResultDelegate viewVehiclesResultDelegate, int count, String carType, String location, String city, Date fromDate, Date toDate) {
+    public void showMenu(ViewVehiclesResultDelegate viewVehiclesResultDelegate, int count, String carType, String location, String city) {
         this.viewVehiclesResultDelegate = viewVehiclesResultDelegate;
         this.count = count;
         this.carType = carType;
         this.location = location;
         this.city = city;
-        this.fromDate = fromDate;
-        this.toDate = toDate;
 
         contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -73,7 +70,6 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         c = new GridBagConstraints();
         this.setContentPane(contentPane);
         JScrollPane jsp = new JScrollPane(rs);
-
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
@@ -98,9 +94,11 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
-            viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city, fromDate, toDate);
+            viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city);
         } else if (actionEvent.getSource() == backToCustomerMenu) {
             viewVehiclesResultDelegate.backToCustomer();
+        } else if (actionEvent.getSource() == back) {
+            viewVehiclesResultDelegate.backToView();
         }
     }
 }

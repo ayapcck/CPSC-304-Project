@@ -1,6 +1,9 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.*;
+import ca.ubc.cs304.model.Customer;
+import ca.ubc.cs304.model.Rental;
+import ca.ubc.cs304.model.TimePeriod;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
@@ -53,8 +56,8 @@ public class DatabaseConnectionHandler {
 
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
-		String pathRoot = new File("").getAbsolutePath();
-		path = pathRoot + path;
+//		String pathRoot = new File("").getAbsolutePath();
+//		path = pathRoot + path;
 		File file = new File(path);
 		try {
 			Reader reader = new BufferedReader(new FileReader(file));
@@ -63,14 +66,13 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
-
 	public void addRequiredTablesAndData() {
-		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
+		String path = "AddTablesAndData.sql";
 		executeSQLFile(path);
 	}
 
 	public void dropAllRequiredTables() {
-		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
+		String path = "DropTables.sql";
 		executeSQLFile(path);
 	}
 
@@ -99,7 +101,6 @@ public class DatabaseConnectionHandler {
 				confirmationNumber);
 		// inserts into database
 		insertIntoRental(rental);
-		System.out.println(reservation.getFromDate());
 		updateStatus( "notavailable", forRent.getvLicense());
 		// TODO: display receipt in new UI
 	}
@@ -123,6 +124,7 @@ public class DatabaseConnectionHandler {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM FORRENT WHERE VTNAME = ? AND STATUS='available'");
 			ps.setString(1, vtName);
 			ResultSet rs = ps.executeQuery();
+
 			List<ForRent> vehicles = ForRent.createForRentModel(rs);
 			ps.close();
 			if (vehicles.size() == 0) {
@@ -153,7 +155,7 @@ public class DatabaseConnectionHandler {
 											 String cardName, int cardNumber) {
 		TimePeriod timePeriod = reservation.getTimePeriod();
 		insertTimePeriod(timePeriod);
-		// insertReservation(reservation, branch);
+		insertReservation(reservation, branch);
 		rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
@@ -316,17 +318,16 @@ public class DatabaseConnectionHandler {
 	public JTable rentalsAtEachLocationByVT(Date date) {
 	    try {
             PreparedStatement ps = connection.prepareStatement
-                    ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num from Rental, ForRent where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense group by ForRent.location, ForRent.city, ForRent.vtname");
+                    ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
+                            "from Rental, ForRent\n" +
+                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
+                            "group by ForRent.location, ForRent.city, ForRent.vtname");
             ps.setDate(1, date);
             ResultSet rs = ps.executeQuery();
-            System.out.println("RentalsAtEachLocationByVT");
-            while (rs.next()) {
-                System.out.println(rs.getString(1));
-            }
 			JTable table = new JTable(buildTableModel(rs));
 			return table;
         } catch (SQLException e) {
-            System.out.println("No rentals found on queried date1");
+            System.out.println("No rentals found on queried date");
             return null; // either we can return an empty rs or throw the exception or just return null;
         }
     }
@@ -337,16 +338,17 @@ public class DatabaseConnectionHandler {
 		int totalRentals = -99;
 		try {
 			PreparedStatement ps = connection.prepareStatement
-					("select distinct COUNT(Rental.VLicense) as numRentals from Rental where Rental.fromDate = ?");
+					("select distinct COUNT(Rental.VLicense) as numRentals\n" +
+							"from Rental\n" +
+							"where Rental.fromDate = ?");
 			ps.setDate(1, date);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				totalRentals = rs.getInt(1);
-				System.out.println(rs.getInt(1));
 			}
 			return totalRentals;
 		} catch (SQLException e) {
-			System.out.println("No rentals found on queried date2");
+			System.out.println("No rentals found on queried date");
 			return totalRentals;
 		}
 	}
@@ -355,18 +357,17 @@ public class DatabaseConnectionHandler {
     public JTable totalNumRentalsEachBranch(Date date) {
         try {
             PreparedStatement ps = connection.prepareStatement
-                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals from Rental, ForRent where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense group by ForRent.location, ForRent.city");
+                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals\n" +
+                            "from Rental, ForRent\n" +
+                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
+                            "group by ForRent.location, ForRent.city");
             ps.setDate(1, date);
             ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
-            System.out.println("totalNumRentalsEachBranch");
-			while (rs.next()) {
-				System.out.println(rs.getString(1));
-			}
 			ps.close();
 			return table;
         } catch (SQLException e) {
-            System.out.println("No rentals found on queried date3");
+            System.out.println("No rentals found on queried date");
             return null; // either we can return an empty rs or throw the exception or just return null;
         }
     }
@@ -470,34 +471,30 @@ public class DatabaseConnectionHandler {
 		return false;
 	}
 
-    public boolean insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
-        try {
-            if (vehicleExist(vtName, location, city)) {
-                PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
-                ps.setInt(1, reservationNum);
-                ps.setString(2, vtName);
-                ps.setString(3, license);
-                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-                java.util.Date parsed = format.parse(fromDate);
-                java.sql.Date fromDatesqlDateType = new java.sql.Date(parsed.getTime());
+	public boolean insertReservation(Reservation reservation, Branch branch) {
+		try {
+			if (vehicleExist(reservation.getVtName(), branch.getLocation(), branch.getCity())) {
+				TimePeriod resTimePeriod = reservation.getTimePeriod();
 
-                ps.setDate(4, fromDatesqlDateType);
-                ps.setString(5, fromTime);
-                java.util.Date parsedTo = format.parse(toDate);
-                java.sql.Date ToDatesqlDateType = new java.sql.Date(parsedTo.getTime());
-                ps.setDate(6, ToDatesqlDateType);
-                ps.setString(7, toTime);
-                ps.executeQuery();
-                connection.commit();
-                ps.close();
-                return true;
-            } else return false;
-        } catch (SQLException | ParseException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-            rollbackConnection();
-        }
-        return false;
-    }
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+				ps.setInt(1, reservation.getConfNo());
+				ps.setString(2, reservation.getVtName());
+				ps.setString(3, reservation.getdLicense());
+				ps.setDate(4, resTimePeriod.getFromDate());
+				ps.setString(5, resTimePeriod.getFromTime());
+				ps.setDate(6, resTimePeriod.getToDate());
+				ps.setString(7, resTimePeriod.getToTime());
+				ps.executeQuery();
+				connection.commit();
+				ps.close();
+				return true;
+			} else return false;
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+		return false;
+	}
 
 	public void updateStatus(String value, String vLicense) {
 		try {
@@ -650,10 +647,9 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public int checkVehicleNum(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate ) {
+	public int checkVehicleNum(String carType, String location, String city) {
 		try {
-			PreparedStatement ps = connection.prepareStatement
-					("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
@@ -672,18 +668,18 @@ public class DatabaseConnectionHandler {
 		return 0;
 	}
 
-	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
+	public JTable showVehicleDetails(String carType, String location, String city) {
 		try {
-			String query = "SELECT * FROM ForRent R " +
-					"WHERE R.vtName = ? AND R.location = ? AND R.city = ? AND R.status = 'available'";
+			String query = "SELECT * FROM ForRent " +
+					"WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'";
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
 
 			ResultSet rs = ps.executeQuery();
-			connection.commit();
 			JTable table = new JTable(buildTableModel(rs));
+			connection.commit();
 			ps.close();
 			return table;
 		} catch (SQLException e) {
@@ -746,9 +742,6 @@ public class DatabaseConnectionHandler {
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
-			while (rs.next()) {
-				System.out.println(rs.getString(3));
-			}
 			ps.close();
 			return table;
 		} catch (SQLException e) {

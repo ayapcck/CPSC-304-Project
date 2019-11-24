@@ -21,7 +21,6 @@ import javax.swing.*;
  */
 public class ViewAvailableVehiclesWindow extends Window implements ActionListener {
     private ViewVehiclesDelegate viewVehiclesDelegate = null;
-
     private JButton submit;
     private JButton mainMenu;
     private JDatePickerImpl datePicker;
@@ -67,15 +66,15 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
         placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place fromDate label and field
-        JLabel fromDate = new JLabel("from Date:");
-        placeLabel(fromDate, contentPane, gb, c, 0, 10);
-        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
-
-        // place toDate label and field
-        JLabel toDate = new JLabel("to Date:");
-        placeLabel(toDate, contentPane, gb, c, 0, 10);
-        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+//        // place fromDate label and field
+//        JLabel fromDate = new JLabel("from Date:");
+//        placeLabel(fromDate, contentPane, gb, c, 0, 10);
+//        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+//
+//        // place toDate label and field
+//        JLabel toDate = new JLabel("to Date:");
+//        placeLabel(toDate, contentPane, gb, c, 0, 10);
+//        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
@@ -94,7 +93,7 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
             String carTypeData = carTypeField.getText();
             String cityData = cityField.getText();
             String locationData = locationField.getText();
-            viewVehiclesDelegate.submit(carTypeData, locationData, cityData, fromDateField, toDateField);
+            viewVehiclesDelegate.submit(carTypeData, locationData, cityData);
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesDelegate.returnToCustomer();
         }

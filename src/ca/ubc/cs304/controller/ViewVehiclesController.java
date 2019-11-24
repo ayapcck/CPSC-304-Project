@@ -17,12 +17,12 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
     }
 
     @Override
-    public void submit(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
+    public void submit(String carType, String location, String city) {
 		currentWindow.dispose();
-		int count = dbHandler.checkVehicleNum(carType, location, city, fromDate, toDate);
+		int count = dbHandler.checkVehicleNum(carType, location, city);
 		ViewAvailableVehicleResultWindow viewAvailableVehicleResultWindow = new ViewAvailableVehicleResultWindow();
 		ViewVehiclesResultController viewVehiclesResultController = new ViewVehiclesResultController(viewAvailableVehicleResultWindow);
-		viewAvailableVehicleResultWindow.showMenu(viewVehiclesResultController, count, carType, location, city, fromDate, toDate);
+		viewAvailableVehicleResultWindow.showMenu(viewVehiclesResultController, count, carType, location, city);
     }
 
     @Override
