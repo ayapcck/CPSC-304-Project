@@ -1,6 +1,5 @@
 package ca.ubc.cs304.ui;
 
-import ca.ubc.cs304.delegates.ClerkTransactionDelegate;
 import ca.ubc.cs304.delegates.ReportGenerationDelegate;
 import org.jdatepicker.impl.JDatePickerImpl;
 
@@ -75,6 +74,7 @@ public class ReportGenerationWindow extends Window implements ActionListener {
         if (e.getSource() == submit) {
             java.util.Date dateFromWindow = (java.util.Date) datePicker.getModel().getValue();
             Date date = new java.sql.Date(dateFromWindow.getTime());
+            System.out.println(date);
             if (companyWideReport.isSelected()) {
                 if (reportForRental.isSelected()) {
                     reportGenerationDelegate.dailyReportsRentalsWholeCompany(date);

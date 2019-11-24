@@ -160,3 +160,6 @@ INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, to
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
     VALUES (124, 'compact', '9282019', '2018-11-24', '12:05', '2019-01-20', '1:00');
+
+-- INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+-- -- --     VALUES (124, 'A10111', 'q1238822', '2019-11-24')

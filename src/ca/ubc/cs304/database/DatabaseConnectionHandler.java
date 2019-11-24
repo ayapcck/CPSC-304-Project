@@ -1,15 +1,14 @@
 package ca.ubc.cs304.database;
 
 import ca.ubc.cs304.model.*;
-import ca.ubc.cs304.model.Customer;
-import ca.ubc.cs304.model.Rental;
-import ca.ubc.cs304.model.TimePeriod;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -100,6 +99,7 @@ public class DatabaseConnectionHandler {
 				confirmationNumber);
 		// inserts into database
 		insertIntoRental(rental);
+		System.out.println(reservation.getFromDate());
 		updateStatus( "notavailable", forRent.getvLicense());
 		// TODO: display receipt in new UI
 	}
@@ -344,16 +344,17 @@ public class DatabaseConnectionHandler {
 	public JTable rentalsAtEachLocationByVT(Date date) {
 	    try {
             PreparedStatement ps = connection.prepareStatement
-                    ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
-                            "from Rental, ForRent\n" +
-                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
-                            "group by ForRent.location, ForRent.city, ForRent.vtname");
+                    ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num from Rental, ForRent where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense group by ForRent.location, ForRent.city, ForRent.vtname");
             ps.setDate(1, date);
             ResultSet rs = ps.executeQuery();
+            System.out.println("RentalsAtEachLocationByVT");
+            while (rs.next()) {
+                System.out.println(rs.getString(1));
+            }
 			JTable table = new JTable(buildTableModel(rs));
 			return table;
         } catch (SQLException e) {
-            System.out.println("No rentals found on queried date");
+            System.out.println("No rentals found on queried date1");
             return null; // either we can return an empty rs or throw the exception or just return null;
         }
     }
@@ -364,17 +365,16 @@ public class DatabaseConnectionHandler {
 		int totalRentals = -99;
 		try {
 			PreparedStatement ps = connection.prepareStatement
-					("select distinct COUNT(Rental.VLicense) as numRentals\n" +
-							"from Rental\n" +
-							"where Rental.fromDate = ?");
+					("select distinct COUNT(Rental.VLicense) as numRentals from Rental where Rental.fromDate = ?");
 			ps.setDate(1, date);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				totalRentals = rs.getInt(1);
+				System.out.println(rs.getInt(1));
 			}
 			return totalRentals;
 		} catch (SQLException e) {
-			System.out.println("No rentals found on queried date");
+			System.out.println("No rentals found on queried date2");
 			return totalRentals;
 		}
 	}
@@ -383,17 +383,18 @@ public class DatabaseConnectionHandler {
     public JTable totalNumRentalsEachBranch(Date date) {
         try {
             PreparedStatement ps = connection.prepareStatement
-                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals\n" +
-                            "from Rental, ForRent\n" +
-                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
-                            "group by ForRent.location, ForRent.city");
+                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals from Rental, ForRent where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense group by ForRent.location, ForRent.city");
             ps.setDate(1, date);
             ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
+            System.out.println("totalNumRentalsEachBranch");
+			while (rs.next()) {
+				System.out.println(rs.getString(1));
+			}
 			ps.close();
 			return table;
         } catch (SQLException e) {
-            System.out.println("No rentals found on queried date");
+            System.out.println("No rentals found on queried date3");
             return null; // either we can return an empty rs or throw the exception or just return null;
         }
     }
@@ -497,27 +498,34 @@ public class DatabaseConnectionHandler {
 		return false;
 	}
 
-	public void insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
-		try {
-			if (vehicleExist(vtName, location, city)) {
-				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
-				ps.setInt(1, reservationNum);
-				ps.setString(2, vtName);
-				ps.setString(3, license);
-				ps.setString(4, fromDate);
-				ps.setString(5, fromTime);
-				ps.setString(6, toDate);
-				ps.setString(7, toTime);
-				ps.executeQuery();
-				connection.commit();
-				ps.close();
-			}
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
+    public boolean insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
+        try {
+            if (vehicleExist(vtName, location, city)) {
+                PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+                ps.setInt(1, reservationNum);
+                ps.setString(2, vtName);
+                ps.setString(3, license);
+                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+                java.util.Date parsed = format.parse(fromDate);
+                java.sql.Date fromDatesqlDateType = new java.sql.Date(parsed.getTime());
 
-	}
+                ps.setDate(4, fromDatesqlDateType);
+                ps.setString(5, fromTime);
+                java.util.Date parsedTo = format.parse(toDate);
+                java.sql.Date ToDatesqlDateType = new java.sql.Date(parsedTo.getTime());
+                ps.setDate(6, ToDatesqlDateType);
+                ps.setString(7, toTime);
+                ps.executeQuery();
+                connection.commit();
+                ps.close();
+                return true;
+            } else return false;
+        } catch (SQLException | ParseException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+        return false;
+    }
 
 	public void updateStatus(String value, String vLicense) {
 		try {
@@ -766,6 +774,9 @@ public class DatabaseConnectionHandler {
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
+			while (rs.next()) {
+				System.out.println(rs.getString(3));
+			}
 			ps.close();
 			return table;
 		} catch (SQLException e) {
