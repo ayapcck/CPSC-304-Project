@@ -42,7 +42,7 @@ public class BeginReservationWindow extends JFrame implements ActionListener {
         if (e.getSource() == newCustomer) {
             beginReservationDelegate.newCustomerReservation();
         } else if (e.getSource() == existingCustomer) {
-            beginReservationDelegate.existingReservation();
+            beginReservationDelegate.existingCustomerReservation();
         }
      }
 }

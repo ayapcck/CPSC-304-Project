@@ -17,7 +17,6 @@ import javax.swing.*;
  * The class is only responsible for displaying and handling the login GUI.
  */
 public class ViewAvailableVehicleResultWindow extends Window implements ActionListener {
-    private static final int TEXT_FIELD_WIDTH = 10;
     private int count;
     private ViewVehiclesResultDelegate viewVehiclesResultDelegate = null;
     private JPanel contentPane;
@@ -27,13 +26,15 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
     private String carType;
     private String location;
     private String city;
-    private JButton mainMenu;
+    private Date fromDate;
+    private Date toDate;
+    private JButton backToCustomerMenu;
     private JButton moreDetail;
     private JButton back;
     public ViewAvailableVehicleResultWindow() {
         super("Number of vehicles available");
 
-        mainMenu = new JButton("Back");
+        backToCustomerMenu = new JButton("Back");
         moreDetail = new JButton("More detail");
     }
 
@@ -52,71 +53,30 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
 
         // show count of vehicles
         JLabel countResult = new JLabel("There are " + count + " vehicles of this type.");
+        placeLabel(countResult, contentPane, gb, c, 10, 5);
+        // TODO: need to fix positioning on this label
+        //  should set to REMAINDER instead of RELATIVE
 
-        this.setContentPane(contentPane);
-        c =  new GridBagConstraints();
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(10, 10, 5, 0);
-        gb.setConstraints(countResult, c);
-        contentPane.add(countResult);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(moreDetail, c);
-        contentPane.add(moreDetail);
-
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(0, 10, 10, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(mainMenu, c);
-        contentPane.add(mainMenu);
-
-
-        moreDetail.addActionListener(this);
-        mainMenu.addActionListener(this);
-
-        // anonymous inner class for closing the window
-        this.addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });
-
-        // size the window to obtain a best fit for the components
-        this.pack();
-
-        // center the frame
-        Dimension d = this.getToolkit().getScreenSize();
-        Rectangle r = this.getBounds();
-        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
-
-        // make the window visible
-        this.setVisible(true);
-
-        // place the cursor in the text field for the username
-        moreDetail.requestFocus();
+        List<JButton> buttons = new ArrayList<>();
+        buttons.add(moreDetail);
+        buttons.add(backToCustomerMenu);
+        PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
+        new Panel(buttons, this, this, contentPane, gb, setConstraints);
     }
 
-    public void showMoreDetail(JTable rs) {
+    public void showMoreDetail(ViewVehiclesResultDelegate viewVehiclesResultDelegate, JTable rs) {
+        this.viewVehiclesResultDelegate = viewVehiclesResultDelegate;
         contentPane = new JPanel();
         c = new GridBagConstraints();
         this.setContentPane(contentPane);
         JScrollPane jsp = new JScrollPane(rs);
-        jsp.setPreferredSize(new Dimension (900, 250));
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
         gb.setConstraints(jsp, c);
         contentPane.add(jsp);
-        back = new JButton("back");
-        c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 5, 10);
-        c.anchor = GridBagConstraints.CENTER;
-        gb.setConstraints(back, c);
-        contentPane.add(back);
-        back.addActionListener(this);
-
+        contentPane.add(backToCustomerMenu);
+        backToCustomerMenu.addActionListener(this);
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -129,14 +89,13 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
         // make the window visible
         this.setVisible(true);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == moreDetail) {
             viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city);
-        } else if (actionEvent.getSource() == mainMenu) {
+        } else if (actionEvent.getSource() == backToCustomerMenu) {
             viewVehiclesResultDelegate.backToCustomer();
         } else if (actionEvent.getSource() == back) {
             viewVehiclesResultDelegate.backToView();

@@ -9,18 +9,18 @@ import java.lang.invoke.SerializedLambda;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Panel {
+class Panel {
     private List<JButton> buttons = new ArrayList<>();
     private JPanel contentPane;
 
-    public Panel(List<JButton> buttons, JFrame frame, ActionListener al) {
+    Panel(List<JButton> buttons, JFrame frame, ActionListener al) {
         contentPane = new JPanel();
         FlowLayout flowLayout = new FlowLayout();
         new Panel(buttons, frame, al, contentPane, flowLayout, null);
     }
 
-    public Panel(List<JButton> buttons, JFrame frame, ActionListener al,
-                 JPanel contentPane, LayoutManager layout, PanelConstraints c) {
+    Panel(List<JButton> buttons, JFrame frame, ActionListener al,
+          JPanel contentPane, LayoutManager layout, PanelConstraints c) {
         frame.setContentPane(contentPane);
         contentPane.setLayout(layout);
 

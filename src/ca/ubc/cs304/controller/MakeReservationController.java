@@ -2,6 +2,8 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.MakeReservationDelegate;
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
 import ca.ubc.cs304.ui.CustomerWindow;
 import ca.ubc.cs304.ui.ErrorWindow;
 import ca.ubc.cs304.ui.MakeReservationWindow;
@@ -18,14 +20,12 @@ public class MakeReservationController implements MakeReservationDelegate {
     }
 
     @Override
-    public void createReservation(String license, String location, String city,
-                                  String vtName, String fromDate, String fromTime,
-                                  String toDate, String toTime, int ReservationNum) {
-        if (dbHandler.insertReservation(license, location, city, vtName, fromDate, fromTime, toDate, toTime, ReservationNum)) {
+    public void createReservation(Reservation reservation, Branch branch) {
+        if (dbHandler.insertReservation(reservation, branch)) {
             currentWindow.dispose();
             MakeReservationWindow reservationConfirmWindow = new MakeReservationWindow();
             MakeReservationController customerController = new MakeReservationController(reservationConfirmWindow);
-            reservationConfirmWindow.showConfirm(customerController, license, location, city, vtName, fromDate, fromTime, toDate, toTime, ReservationNum);
+            reservationConfirmWindow.showConfirm(customerController, reservation, branch);
         } else {
             currentWindow.dispose();
             ErrorWindow errorWindow = new ErrorWindow();

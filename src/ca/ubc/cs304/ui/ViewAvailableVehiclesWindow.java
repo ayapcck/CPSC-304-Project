@@ -21,13 +21,13 @@ import javax.swing.*;
  */
 public class ViewAvailableVehiclesWindow extends Window implements ActionListener {
     private ViewVehiclesDelegate viewVehiclesDelegate = null;
-    private JTextField locationData;
-    private JTextField carTypeData;
-    private JTextField cityData;
-    private JDatePickerImpl datePicker;
-    private JDatePickerImpl datePickerTo;
     private JButton submit;
     private JButton mainMenu;
+    private JDatePickerImpl datePicker;
+    private JDatePickerImpl datePickerTo;
+    private JTextField carTypeField;
+    private JTextField cityField;
+    private JTextField locationField;
 
     public ViewAvailableVehiclesWindow() {
         super("Please vehicle information:");
@@ -50,31 +50,31 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
 
         // place car type label and field
         JLabel carType = new JLabel("Car Type:");
-        JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
+        carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(carType, contentPane, gb, c, 10, 5);
-        carTypeData = placeTextFieldRetJText(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
+        placeTextField(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place location label and field
         JLabel location = new JLabel("Location:");
-        JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
+        locationField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(location, contentPane, gb, c, 0, 10);
-        locationData = placeTextFieldRetJText(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
+        placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place city label and field
         JLabel cityLabel = new JLabel("City:");
-        JTextField cityField = new JTextField(TEXT_FIELD_WIDTH);
+        cityField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
-        cityData = placeTextFieldRetJText(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
+        placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-        // place fromDate label and field
-        JLabel fromDate = new JLabel("from Date:");
-        placeLabel(fromDate, contentPane, gb, c, 0, 10);
-        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
-
-        // place toDate label and field
-        JLabel toDate = new JLabel("to Date:");
-        placeLabel(toDate, contentPane, gb, c, 0, 10);
-        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+//        // place fromDate label and field
+//        JLabel fromDate = new JLabel("from Date:");
+//        placeLabel(fromDate, contentPane, gb, c, 0, 10);
+//        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+//
+//        // place toDate label and field
+//        JLabel toDate = new JLabel("to Date:");
+//        placeLabel(toDate, contentPane, gb, c, 0, 10);
+//        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
@@ -86,7 +86,14 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == submit) {
-            viewVehiclesDelegate.submit(carTypeData.getText(), locationData.getText(), cityData.getText());
+            java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
+            java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
+            java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
+            java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
+            String carTypeData = carTypeField.getText();
+            String cityData = cityField.getText();
+            String locationData = locationField.getText();
+            viewVehiclesDelegate.submit(carTypeData, locationData, cityData);
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesDelegate.returnToCustomer();
         }

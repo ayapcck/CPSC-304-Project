@@ -12,34 +12,46 @@ public class Reservation {
     private Date toDate; // DATE in SQL
     private String fromTime;
     private String toTime;
+    private TimePeriod timePeriod;
 
     public Reservation(Integer confNo, String vtName, String dLicense,
                        Date fromDate, String fromTime,
                        Date toDate, String toTime) {
-        this.confNo = confNo;
+        if (confNo == null) {
+            this.confNo = (int) (Math.random() * 1000);
+        } else {
+            this.confNo = confNo;
+        }
         this.vtName = vtName;
         this.dLicense = dLicense;
         this.fromDate = fromDate;
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
+        this.timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
+    }
 
+    public Reservation(Integer confNo, String vtName, String dLicense, TimePeriod timePeriod) {
+        new Reservation(confNo, vtName, dLicense, timePeriod.getFromDate(), timePeriod.getFromTime(),
+                timePeriod.getToDate(), timePeriod.getToTime());
     }
 
     public static Reservation createReservationModel(ResultSet resultSet) {
         try {
-            int confNo = resultSet.getInt(1);
-            String vtName = resultSet.getString(2);
-            String dlicense = resultSet.getString(3);
-            Date fromDate = resultSet.getDate(4);
-            String fromTime = resultSet.getString(5);
-            Date toDate = resultSet.getDate(6);
-            String toTime = resultSet.getString(7);
-            return new Reservation(confNo, vtName, dlicense, fromDate, fromTime, toDate, toTime);
+            if (resultSet.next()) {
+                int confNo = resultSet.getInt(1);
+                String vtName = resultSet.getString(2);
+                String driversLicense = resultSet.getString(3);
+                Date fromDate = resultSet.getDate(4);
+                String fromTime = resultSet.getString(5);
+                Date toDate = resultSet.getDate(6);
+                String toTime = resultSet.getString(7);
+                return new Reservation(confNo, vtName, driversLicense, fromDate, fromTime, toDate, toTime);
+            }
         } catch (SQLException e) {
             System.out.println("Exception when parsing reservation from database\n" + e.getMessage());
-            return null;
         }
+        return null;
     }
 
     public Integer getConfNo() {
@@ -68,5 +80,9 @@ public class Reservation {
 
     public String getToTime() {
         return toTime;
+    }
+
+    public TimePeriod getTimePeriod() {
+        return timePeriod;
     }
 }
