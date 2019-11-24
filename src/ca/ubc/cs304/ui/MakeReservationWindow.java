@@ -324,12 +324,12 @@ public class MakeReservationWindow extends Window implements ActionListener {
         if (e.getSource() == submit) {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             DateFormat tf = new SimpleDateFormat("HH:mm");
-            java.sql.Date fromDate = (java.sql.Date) timeSpinnerFrom.getValue();
-            java.sql.Date toDate = (java.sql.Date) timeSpinnerTo.getValue();
-            String fromDateString = df.format(fromDate);
-            String fromTimeString = tf.format(fromDate);
-            String toDateString = df.format(toDate);
-            String toTimeString = tf.format(toDate);
+            Date fromDateTime = (Date) timeSpinnerFrom.getValue();
+            Date toDateTime = (Date) timeSpinnerTo.getValue();
+            String fromDate = df.format(fromDateTime);
+            String fromTime = tf.format(fromDateTime);
+            String toDate = df.format(toDateTime);
+            String toTime = tf.format(toDateTime);
             String city = cityField.getText();
             String location = locationField.getText();
             String vehicleType = vtField.getText();
@@ -338,7 +338,7 @@ public class MakeReservationWindow extends Window implements ActionListener {
                 license = licenseField.getText();
             }
             int reservationNum = (int) (Math.random());
-            Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTimeString, toDate, toTimeString);
+            Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTime, toDate, toTime);
             Branch branch = new Branch(location, city);
             makeReservationDelegate.createReservation(reservation, branch);
         } else if (e.getSource() == backToCustomer) {

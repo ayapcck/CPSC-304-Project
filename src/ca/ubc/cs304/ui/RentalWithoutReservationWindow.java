@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class RentalWithoutReservationWindow extends Window implements ActionListener {
@@ -89,11 +90,13 @@ public class RentalWithoutReservationWindow extends Window implements ActionList
         if (e.getSource() == submit) {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             DateFormat tf = new SimpleDateFormat("HH:mm");
-            java.sql.Date fromDate = (java.sql.Date) timeSpinnerFrom.getValue();
-            java.sql.Date toDate = (java.sql.Date) timeSpinnerTo.getValue();
-            String fromTimeString = tf.format(fromDate);
-            String toTimeString = tf.format(toDate);
-            TimePeriod timePeriod = new TimePeriod(fromDate, fromTimeString, toDate, toTimeString);
+            Date fromDateTime = (Date) timeSpinnerFrom.getValue();
+            Date toDateTime = (Date) timeSpinnerTo.getValue();
+            String fromDate = df.format(fromDateTime);
+            String fromTime = tf.format(fromDateTime);
+            String toDate = df.format(fromDateTime);
+            String toTime = tf.format(toDateTime);
+            TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
 
             Reservation reservation = new Reservation(null, vehicleTypeField.getText(),
                     licenseField.getText(), timePeriod);
