@@ -153,7 +153,7 @@ public class DatabaseConnectionHandler {
 											 String cardName, int cardNumber) {
 		TimePeriod timePeriod = reservation.getTimePeriod();
 		insertTimePeriod(timePeriod);
-		insertReservation(reservation, branch);
+		// insertReservation(reservation, branch);
 		rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 

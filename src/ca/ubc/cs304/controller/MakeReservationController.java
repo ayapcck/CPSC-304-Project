@@ -19,7 +19,7 @@ public class MakeReservationController implements MakeReservationDelegate {
 
     @Override
     public void createReservation(Reservation reservation, Branch branch) {
-        dbHandler.insertReservation(reservation, branch);
+       // dbHandler.insertReservation(reservation, branch);
     }
 
     @Override
