@@ -29,7 +29,7 @@ public class ClerkWindow extends JFrame implements ActionListener {
         dailyReturnReportsWholeCompany = new JButton("Daily Return Reports Whole Company");
         dailyReturReportOneBranch = new JButton("Daily Return Report One Branch");
     }
-
+// pushing
     public void showMenu(ClerkTransactionDelegate clerkTransactionDelegate) {
         this.clerkTransactionDelegate = clerkTransactionDelegate;
 
