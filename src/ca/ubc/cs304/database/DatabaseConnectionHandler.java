@@ -677,10 +677,14 @@ public class DatabaseConnectionHandler {
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
-			int rs = ps.executeQuery().getInt("num");
+			ResultSet rs = ps.executeQuery();
 			connection.commit();
+			int vehiclesSatisfyingCriteria = 0;
+			if (rs.next()) {
+				vehiclesSatisfyingCriteria = rs.getInt("num");
+			}
 			ps.close();
-			return rs;
+			return vehiclesSatisfyingCriteria;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
@@ -690,15 +694,12 @@ public class DatabaseConnectionHandler {
 
 	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
 		try {
-			PreparedStatement ps = connection.prepareStatement
-					("SELECT * FROM ForRent R, ForSale S WHERE R.vtName = ? AND R.location = ? AND R.city = ? " +
-							"AND S.vtName = ? AND S.location = ? AND S.city = ? AND S.status = 'available' AND R.status = 'available'");
+			String query = "SELECT * FROM ForRent R " +
+					"WHERE R.vtName = ? AND R.location = ? AND R.city = ? AND R.status = 'available'";
+			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
-			ps.setString(4, carType);
-			ps.setString(5, location);
-			ps.setString(6, city);
 
 			ResultSet rs = ps.executeQuery();
 			connection.commit();
