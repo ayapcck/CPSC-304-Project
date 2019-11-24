@@ -21,14 +21,15 @@ public class ViewVehiclesResultController implements ViewVehiclesResultDelegate 
 
     @Override
     public void showDetailCountResult(int count, String carType, String location, String city, Date fromDate, Date toDate) {
-		if (count == 0) {
-			currentWindow.dispose();
+        currentWindow.dispose();
+        if (count == 0) {
 //			JOptionPane.showMessageDialog(null, "There is no cars to be shown!", "Error: " + "no such info", JOptionPane.INFORMATION_MESSAGE);
 			ErrorWindow.infoBox("No cars to be shown!", "no info");
 		} else {
 			JTable resultTable = dbHandler.showVehicleDetails(carType, location, city, fromDate, toDate);
 			ViewAvailableVehicleResultWindow viewAvailableVehicleResultWindow = new ViewAvailableVehicleResultWindow();
-			viewAvailableVehicleResultWindow.showMoreDetail(resultTable);
+			ViewVehiclesResultController viewVehiclesResultController = new ViewVehiclesResultController(viewAvailableVehicleResultWindow);
+			viewAvailableVehicleResultWindow.showMoreDetail(viewVehiclesResultController, resultTable);
 		}
     }
 

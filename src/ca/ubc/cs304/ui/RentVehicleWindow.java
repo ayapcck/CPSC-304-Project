@@ -36,9 +36,9 @@ public class RentVehicleWindow extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == rentWithReservation) {
-            rentVehicleDelegate.rentWithReservation();
+            rentVehicleDelegate.navToRentalWithReservation();
         } else if (e.getSource() == rentWithoutReservation) {
-            rentVehicleDelegate.rentWithoutReservation();
+            rentVehicleDelegate.navToRentalNoReservation();
         } else if (e.getSource() == backToClerk) {
             rentVehicleDelegate.backToClerk();
         }

@@ -1,8 +1,9 @@
 package ca.ubc.cs304.delegates;
 
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
+
 public interface MakeReservationDelegate {
-    void createReservation(String license, String location, String city,
-                           String vtName, String fromDate, String fromTime,
-                           String toDate, String toTime, int ReservationNum);
+    void createReservation(Reservation reservation, Branch branch);
     void returnToCustomer();
 }
