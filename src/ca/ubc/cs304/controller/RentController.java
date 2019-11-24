@@ -26,7 +26,9 @@ public class RentController implements RentVehicleDelegate {
     @Override
     public void rentWithReservation() {
         int confNo = -9999;
-        dbHandler.rentVehicleWithReservation(confNo);
+        String cardName = "VISA";
+        int cardNo = 1234565789;
+        dbHandler.rentVehicleWithReservation(confNo, cardName, cardNo);
     }
 
     @Override

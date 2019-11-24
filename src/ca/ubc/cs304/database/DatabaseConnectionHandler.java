@@ -75,7 +75,7 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(int confNo) {
+	public void rentVehicleWithReservation(int confNo, String cardName, int cardNo) {
 		Reservation reservation = getReservation(confNo);
 		assert reservation != null;
 		String vtName = reservation.getVtName();
@@ -86,8 +86,8 @@ public class DatabaseConnectionHandler {
 		assert vehicles != null;
 		// arbitrarily choose the first car of the make since we don't know availability
 		ForRent forRent = vehicles.get(0);
-		String cardName = "VISA"; // TODO: fix
-		int cardNo = forRent.getOdometer() % 2 + 564979545;
+		String fakeCardName = "VISA"; // TODO: fix
+		int fakeCardNo = forRent.getOdometer() % 2 + 564979545;
 		// have the reservation made at this confNo. Should be unique because confNo is a primary key
 		int rID = confNo / 2;
 		Rental rental = new Rental(rID,
@@ -98,8 +98,8 @@ public class DatabaseConnectionHandler {
 				reservation.getToDate(),
 				reservation.getToTime(),
 				forRent.getOdometer(),
-				cardName,
-				cardNo,
+				fakeCardName,
+				fakeCardNo,
 				"02/21",
 				confNo);
 		// inserts into database
@@ -231,7 +231,7 @@ public class DatabaseConnectionHandler {
             Return ret = new Return(rid, toDate, odometer, 1, value);
             insertIntoReturn(ret);
             //TODO: display receipt
-            System.out.println(value);
+            return "Amount paid " + value;
         } catch (SQLException e) {
             System.out.println("No rental with that id exists");
         }
@@ -342,6 +342,64 @@ public class DatabaseConnectionHandler {
         return new ForRent(vId, vLicense, make, model, year, color, odometer, status, vtName, location, city);
 	}
 
+	// tuples are location, city, type of car, number of that car that were rented.
+	// Each element in the list corresponds to such a tuple
+	public JTable rentalsAtEachLocationByVT(Date date) {
+	    try {
+            PreparedStatement ps = connection.prepareStatement
+                    ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
+                            "from Rental, ForRent\n" +
+                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
+                            "group by ForRent.location, ForRent.city, ForRent.vtname");
+            ps.setDate(1, date);
+            ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			return table;
+        } catch (SQLException e) {
+            System.out.println("No rentals found on queried date");
+            return null; // either we can return an empty rs or throw the exception or just return null;
+        }
+    }
+
+
+    // total rentals for whole company on specified date
+	public int totalRentalsWholeCompany(Date date) {
+		int totalRentals = -99;
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct COUNT(Rental.VLicense) as numRentals\n" +
+							"from Rental\n" +
+							"where Rental.fromDate = ?");
+			ps.setDate(1, date);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				totalRentals = rs.getInt(1);
+			}
+			return totalRentals;
+		} catch (SQLException e) {
+			System.out.println("No rentals found on queried date");
+			return totalRentals;
+		}
+	}
+
+    // tuples are location, city, type of car, number of that car that were rented.
+    public JTable totalNumRentalsEachBranch(Date date) {
+        try {
+            PreparedStatement ps = connection.prepareStatement
+                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals\n" +
+                            "from Rental, ForRent\n" +
+                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
+                            "group by ForRent.location, ForRent.city");
+            ps.setDate(1, date);
+            ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+        } catch (SQLException e) {
+            System.out.println("No rentals found on queried date");
+            return null; // either we can return an empty rs or throw the exception or just return null;
+        }
+    }
 	/**
 	 * Insert rental model into database
 	 * @param model:
@@ -582,14 +640,29 @@ public class DatabaseConnectionHandler {
 
 			ResultSet rs = ps.executeQuery();
 			connection.commit();
-			ps.close();
 			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
 			return table;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
 		return null;
+	}
+
+	/**
+	 * returns unique used VT for the given arrayList. Use to create column names for daily Reports
+	 * @param rbv
+	 * @return
+	 */
+	public ArrayList<String> getvtColumnNames(ArrayList<RentalsByVT> rbv) {
+		ArrayList<String> columns = new ArrayList<>();
+		for (RentalsByVT elem: rbv) {
+			if (!columns.contains(elem.getVtName())) {
+				columns.add(elem.getVtName());
+			}
+		}
+		return columns;
 	}
 
 	public static DefaultTableModel buildTableModel(ResultSet rs)
@@ -614,6 +687,151 @@ public class DatabaseConnectionHandler {
 			data.add(vector);
 		}
 		return new DefaultTableModel(data, columnNames);
+	}
+
+	// each tuple represent one vtName and the total number of vehicles of that type that are rented on that day
+	public JTable rentalsPerBranchVT(Date date, String location, String city) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
+							"from Rental, ForRent\n" +
+							"where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense AND ForRent.city = ? AND\n" +
+							"\t\t\tForRent.location = ?\n" +
+							"group by ForRent.location, ForRent.city, ForRent.vtname");
+			ps.setDate(1, date);
+			ps.setString(2, city);
+			ps.setString(3, location);
+			ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+		} catch (SQLException e) {
+			System.out.println("No rentals found on queried date");
+			return null; // either we can return an empty rs or throw the exception or just return null;
+		}
+	}
+	// should be one tuple that contains the total number of daily rentals at the branch that was specified
+	public int totalRentalsOneBranch(Date date, String location, String city) {
+		int totalRentals = -1;
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct COUNT(Rental.VLicense) as numRentals\n" +
+							"from Rental, ForRent\n" +
+							"where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense AND ForRent.city = ? AND\n" +
+							"\t\t\tForRent.location = ?");
+			ps.setDate(1, date);
+			ps.setString(2, city);
+			ps.setString(3, location);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				totalRentals = rs.getInt(1);
+			}
+			return totalRentals;
+		} catch (SQLException e) {
+			System.out.println("No rentals found on queried date");
+			return totalRentals; // either we can return an empty rs or throw the exception or just return null;
+		}
+	}
+
+	// each tuple is a branch, vtname, number of these type of vehicles that were returns. Each tuple doesn't have to
+	// be a unique branch. Each tuple just encodes info about one specific vtName
+	public JTable returnForAllBranchesVT(Date date) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num, SUM(Return.value) as revenue\n" +
+							"from Rental, ForRent, Return\n" +
+							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ?\n" +
+							"group by ForRent.location, ForRent.city, ForRent.vtname\t");
+			ps.setDate(1, date);
+			ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+		} catch (SQLException e) {
+			System.out.println("No return found on queried date");
+			return null; // either we can return an empty rs or throw the exception or just return null;
+		}
+	}
+
+	// each tuple is a branch with the total number of returns for that branch with revenue per branch
+	public JTable returnForAllBranches(Date date) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLICENSE) as numReturns, SUM(Return.value) as value\n" +
+							"from Rental, ForRent, Return\n" +
+							"where Return.returnDate = ? AND Rental.VLicense = ForRent.vLicense AND Return.rID = Rental.rId\n" +
+							"group by ForRent.location, ForRent.city");
+			ps.setDate(1, date);
+			ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+		} catch (SQLException e) {
+			System.out.println("No return found on queried date");
+			return null; // either we can return an empty rs or throw the exception or just return null;
+		}
+	}
+
+	public int grandTotalRevenue(Date date) {
+		int grandTotal = -1;
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct SUM(Return.value) as totalRevenue\n" +
+							"from Return\n" +
+							"where Return.returnDate = ?");
+			ps.setDate(1, date);
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				grandTotal = rs.getInt(1);
+			}
+			ps.close();
+			return grandTotal;
+		} catch (SQLException e) {
+			System.out.println("No return found on queried date");
+			return grandTotal;
+		}
+	}
+
+	// each tuple shows the number of vehicles returned per category, the revenue per category
+	public JTable returnForOneBranchVTAndRevenue(Date date, String location, String city) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num, SUM(Return.value) as value\n" +
+							"from Rental, ForRent, Return\n" +
+							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ? AND ForRent.city = ? AND ForRent.location = ?\n" +
+							"group by ForRent.location, ForRent.city, ForRent.vtname");
+			ps.setDate(1, date);
+			ps.setString(2, city);
+			ps.setString(3, location);
+			ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+		} catch (SQLException e) {
+			System.out.println("No returns found on queried date");
+			return null; // either we can return an empty rs or throw the exception or just return null;
+		}
+	}
+
+	// revenue and total returned cars for one branch in total for specifed day and branch
+	public JTable returnOneBranchTotalVtAndRevenue(Date date, String location, String city) {
+		try {
+			PreparedStatement ps = connection.prepareStatement
+					("select distinct SUM(Return.value) as numRevenue, COUNT(Rental.VLicense) as numVehicles\n" +
+							"from Rental, ForRent, Return\n" +
+							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ? AND ForRent.city = ? AND ForRent.location = ?\n" +
+							"group by ForRent.city, ForRent.location");
+			ps.setDate(1, date);
+			ps.setString(2, city);
+			ps.setString(3, location);
+			ResultSet rs = ps.executeQuery();
+			JTable table = new JTable(buildTableModel(rs));
+			ps.close();
+			return table;
+		} catch (SQLException e) {
+			System.out.println("No returns found on queried date");
+			return null; // either we can return an empty rs or throw the exception or just return null;
+		}
 	}
 
 }
