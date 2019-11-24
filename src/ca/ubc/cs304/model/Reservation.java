@@ -8,15 +8,15 @@ public class Reservation {
     private Integer confNo;
     private String vtName;
     private String dLicense;
-    private Date fromDate; // DATE in SQL
-    private Date toDate; // DATE in SQL
+    private String fromDate;
+    private String toDate;
     private String fromTime;
     private String toTime;
     private TimePeriod timePeriod;
 
     public Reservation(Integer confNo, String vtName, String dLicense,
-                       Date fromDate, String fromTime,
-                       Date toDate, String toTime) {
+                       String fromDate, String fromTime,
+                       String toDate, String toTime) {
         if (confNo == null) {
             this.confNo = (int) (Math.random() * 1000);
         } else {
@@ -32,7 +32,7 @@ public class Reservation {
     }
 
     public Reservation(Integer confNo, String vtName, String dLicense, TimePeriod timePeriod) {
-        new Reservation(confNo, vtName, dLicense, timePeriod.getFromDate(), timePeriod.getFromTime(),
+        this(confNo, vtName, dLicense, timePeriod.getFromDate(), timePeriod.getFromTime(),
                 timePeriod.getToDate(), timePeriod.getToTime());
     }
 
@@ -42,9 +42,9 @@ public class Reservation {
                 int confNo = resultSet.getInt(1);
                 String vtName = resultSet.getString(2);
                 String driversLicense = resultSet.getString(3);
-                Date fromDate = resultSet.getDate(4);
+                String fromDate = resultSet.getString(4);
                 String fromTime = resultSet.getString(5);
-                Date toDate = resultSet.getDate(6);
+                String toDate = resultSet.getString(6);
                 String toTime = resultSet.getString(7);
                 return new Reservation(confNo, vtName, driversLicense, fromDate, fromTime, toDate, toTime);
             }
@@ -66,11 +66,11 @@ public class Reservation {
         return dLicense;
     }
 
-    public Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
-    public Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 

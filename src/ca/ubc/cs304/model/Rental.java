@@ -4,9 +4,9 @@ public class Rental {
     private Integer rID;
     private String vLicense;
     private String driversLicense;
-    private java.sql.Date fromDate;
+    private String fromDate;
     private String fromTime;
-    private java.sql.Date toDate;
+    private String toDate;
     private String toTime;
     private Integer odometer;
     private String cardName;
@@ -14,9 +14,8 @@ public class Rental {
     private String expDate;
     private Integer confNo;
 
-    public Rental (Integer rID, String vLicense, String driversLicense, java.sql.Date fromDate, String fromTime, java.sql.Date toDate,
+    public Rental (Integer rID, String vLicense, String driversLicense, String fromDate, String fromTime, String toDate,
                    String toTime, Integer odometer, String cardName, Integer cardNo, String expDate, Integer confNo) {
-        // TODO: ENFORCE PRIMARY KEY AND FOREIGN KEY
         this.rID = rID;
         this.vLicense = vLicense;
         this.driversLicense = driversLicense;
@@ -35,7 +34,7 @@ public class Rental {
         return rID;
     }
 
-    public java.sql.Date getFromDate() {
+    public String getFromDate() {
         return fromDate;
     }
 
@@ -43,7 +42,7 @@ public class Rental {
         return fromTime;
     }
 
-    public java.sql.Date getToDate() {
+    public String getToDate() {
         return toDate;
     }
 
