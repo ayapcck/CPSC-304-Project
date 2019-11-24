@@ -12,9 +12,6 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-/**
- * The class is only responsible for displaying and handling the login GUI.
- */
 public class MainOperations extends JFrame implements ActionListener {
     private static final int TEXT_FIELD_WIDTH = 10;
     private JButton customer;
