@@ -75,8 +75,8 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(int confNo, String cardName, int cardNo) {
-		Reservation reservation = getReservation(confNo);
+	public void rentVehicleWithReservation(int confirmationNumber, String cardName, int cardNumber) {
+		Reservation reservation = getReservation(confirmationNumber);
 		assert reservation != null;
 		String vtName = reservation.getVtName();
 		System.out.println(vtName);
@@ -84,10 +84,8 @@ public class DatabaseConnectionHandler {
 		assert vehicles != null;
 		// arbitrarily choose the first car of the make since we don't know availability
 		ForRent forRent = vehicles.get(0);
-		String fakeCardName = "VISA"; // TODO: fix
-		int fakeCardNo = forRent.getOdometer() % 2 + 564979545;
 		// have the reservation made at this confNo. Should be unique because confNo is a primary key
-		int rID = confNo / 2;
+		int rID = confirmationNumber / 2;
 		Rental rental = new Rental(rID,
 				forRent.getvLicense(),
 				reservation.getdLicense(),
@@ -96,10 +94,10 @@ public class DatabaseConnectionHandler {
 				reservation.getToDate(),
 				reservation.getToTime(),
 				forRent.getOdometer(),
-				fakeCardName,
-				fakeCardNo,
+				cardName,
+				cardNumber,
 				"02/21",
-				confNo);
+				confirmationNumber);
 		// inserts into database
 		insertIntoRental(rental);
 		updateStatus( "notavailable", forRent.getvLicense());

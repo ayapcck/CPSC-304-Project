@@ -18,7 +18,7 @@ public class ClerkController implements ClerkTransactionDelegate {
     }
 
 	@Override
-	public void rentVehicle() {
+	public void navToRentalWindow() {
 		currentWindow.dispose();
         RentVehicleWindow rentVehicleWindow = new RentVehicleWindow();
         RentController rentController = new RentController(rentVehicleWindow);

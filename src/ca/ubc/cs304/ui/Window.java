@@ -47,6 +47,14 @@ class Window extends JFrame {
         contentPane.add(field);
     }
 
+    void placeFieldAndLabel(String label, JTextField jTextField,
+                            JPanel contentPane, GridBagLayout gb, GridBagConstraints c) {
+        String labelWithExtra = label.concat(": ");
+        JLabel jLabel = new JLabel(labelWithExtra);
+        placeLabel(jLabel, contentPane, gb, c, 10, 5);
+        placeTextField(jTextField, contentPane, gb, c, TEXT_FIELD_INSET);
+    }
+
     void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);

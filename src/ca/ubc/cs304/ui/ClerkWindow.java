@@ -49,7 +49,7 @@ public class ClerkWindow extends JFrame implements ActionListener {
         if (actionEvent.getSource() == mainMenu) {
             clerkTransactionDelegate.mainMenu();
         } else if (actionEvent.getSource() == rentVehicle) {
-            clerkTransactionDelegate.rentVehicle();
+            clerkTransactionDelegate.navToRentalWindow();
         } else if (actionEvent.getSource() == returnVehicle) {
             clerkTransactionDelegate.returnVehicle();
         } else if (actionEvent.getSource() == dailyRentalReportsWholeCompany) {
