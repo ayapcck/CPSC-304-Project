@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -448,16 +450,22 @@ public class DatabaseConnectionHandler {
 				ps.setInt(1, reservationNum);
 				ps.setString(2, vtName);
 				ps.setString(3, license);
-				ps.setString(4, fromDate);
+				SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+				java.util.Date parsed = format.parse(fromDate);
+				java.sql.Date fromDatesqlDateType = new java.sql.Date(parsed.getTime());
+
+				ps.setDate(4, fromDatesqlDateType);
 				ps.setString(5, fromTime);
-				ps.setString(6, toDate);
+				java.util.Date parsedTo = format.parse(toDate);
+				java.sql.Date ToDatesqlDateType = new java.sql.Date(parsedTo.getTime());
+				ps.setDate(6, ToDatesqlDateType);
 				ps.setString(7, toTime);
 				ps.executeQuery();
 				connection.commit();
 				ps.close();
 				return true;
 			} else return false;
-		} catch (SQLException e) {
+		} catch (SQLException | ParseException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}

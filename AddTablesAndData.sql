@@ -118,6 +118,15 @@ INSERT INTO Branch (location, city) VALUES ('shop_2', 'Vancouver');
 INSERT INTO Branch (location, city) VALUES ('shop_3', 'Vancouver');
 INSERT INTO Branch (location, city) VALUES ('shop_1', 'Burnaby');
 INSERT INTO Branch (location, city) VALUES ('shop_2', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_1', 'Coquitlam');
+INSERT INTO Branch (location, city) VALUES ('shop_2', 'Coquitlam');
+INSERT INTO Branch (location, city) VALUES ('shop_3', 'Coquitlam');
+INSERT INTO Branch (location, city) VALUES ('shop_4', 'Coquitlam');
+
+INSERT INTO Branch (location, city) VALUES ('shop_1', 'Richmond');
+INSERT INTO Branch (location, city) VALUES ('shop_2', 'Richmond');
+INSERT INTO Branch (location, city) VALUES ('shop_3', 'Richmond');
+INSERT INTO Branch (location, city) VALUES ('shop_4', 'Richmond');
 
 INSERT INTO Customer (cellNum, name, address, driversLicense)
     VALUES (6041234567, 'John Smith', '1234 made up lane', '9282019');

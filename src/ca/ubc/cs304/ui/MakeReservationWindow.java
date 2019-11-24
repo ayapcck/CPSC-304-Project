@@ -26,6 +26,7 @@ public class MakeReservationWindow extends JFrame implements ActionListener {
     private JTextField vtField;
     private JTextField cityField;
     private JTextField licenceField;
+    private JComboBox locationBox;
     private String license;
     private JSpinner timeSpinnerFrom;
     private JSpinner timeSpinnerTo;
@@ -421,10 +422,6 @@ public class MakeReservationWindow extends JFrame implements ActionListener {
             String fromTimeString = tf.format(fromDate);
             String toDateString = df.format(toDate);
             String toTimeString = tf.format(toDate);
-//            System.out.println(fromDateString+"\n");
-//            System.out.println(fromTimeString+"\n");
-//            System.out.println(toDateString+"\n");
-//            System.out.println(toTimeString+"\n");
             int reservationNum = (int) (Math.random());
             //get time
             makeReservationDelegate.createReservation(license, locationField.getText(), cityField.getText(), vtField.getText(), fromDateString, fromTimeString, toDateString, toTimeString, reservationNum);
@@ -440,7 +437,6 @@ public class MakeReservationWindow extends JFrame implements ActionListener {
             String toDateString = df.format(toDate);
             String toTimeString = tf.format(toDate);
             int reservationNum = (int) (Math.random());
-            if ((licenceField == null) || (cityField == null) || (locationField == null) || (vtField == null)) System.out.println("q");
             makeReservationDelegate.createReservation(licenceField.getText(), locationField.getText(), cityField.getText(), vtField.getText(), fromDateString, fromTimeString, toDateString, toTimeString, reservationNum);
         } else if (e.getSource() == backAfterConfirm) {
             makeReservationDelegate.returnToCustomer();
