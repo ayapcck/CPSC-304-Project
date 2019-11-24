@@ -56,8 +56,8 @@ public class DatabaseConnectionHandler {
 
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
-//		String pathRoot = new File("").getAbsolutePath();
-//		path = pathRoot + path;
+		String pathRoot = new File("").getAbsolutePath();
+		path = pathRoot + path;
 		File file = new File(path);
 		try {
 			Reader reader = new BufferedReader(new FileReader(file));
@@ -67,12 +67,12 @@ public class DatabaseConnectionHandler {
 		}
 	}
 	public void addRequiredTablesAndData() {
-		String path = "AddTablesAndData.sql";
+		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
 		executeSQLFile(path);
 	}
 
 	public void dropAllRequiredTables() {
-		String path = "DropTables.sql";
+		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
 		executeSQLFile(path);
 	}
 
