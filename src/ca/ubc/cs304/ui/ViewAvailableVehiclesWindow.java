@@ -52,19 +52,19 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         JLabel carType = new JLabel("Car Type:");
         JTextField carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(carType, contentPane, gb, c, 10, 5);
-        carTypeData = placeTextField(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
+        carTypeData = placeTextFieldRetJText(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place location label and field
         JLabel location = new JLabel("Location:");
         JTextField locationField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(location, contentPane, gb, c, 0, 10);
-        locationData = placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
+        locationData = placeTextFieldRetJText(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
 
         // place city label and field
         JLabel cityLabel = new JLabel("City:");
         JTextField cityField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
-        cityData = placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
+        cityData = placeTextFieldRetJText(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
         // place fromDate label and field
         JLabel fromDate = new JLabel("from Date:");

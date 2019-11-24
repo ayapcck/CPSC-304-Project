@@ -39,7 +39,7 @@ class Window extends JFrame {
         contentPane.add(label);
     }
 
-    JTextField placeTextField(JTextField field, JPanel contentPane, GridBagLayout gb,
+    JTextField placeTextFieldRetJText(JTextField field, JPanel contentPane, GridBagLayout gb,
                           GridBagConstraints c, Insets insets) {
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = insets;
@@ -47,6 +47,16 @@ class Window extends JFrame {
         contentPane.add(field);
         return field;
     }
+
+    String placeTextField(JTextField field, JPanel contentPane, GridBagLayout gb,
+                              GridBagConstraints c, Insets insets) {
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = insets;
+        gb.setConstraints(field, c);
+        contentPane.add(field);
+        return field.getText();
+    }
+
 
     void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {
         c.gridwidth = GridBagConstraints.REMAINDER;

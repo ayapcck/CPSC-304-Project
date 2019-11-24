@@ -441,7 +441,7 @@ public class DatabaseConnectionHandler {
 		return false;
 	}
 
-	public void insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
+	public boolean insertReservation(String license, String location, String city, String vtName, String fromDate, String fromTime, String toDate, String toTime, int reservationNum) {
 		try {
 			if (vehicleExist(vtName, location, city)) {
 				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
@@ -455,12 +455,13 @@ public class DatabaseConnectionHandler {
 				ps.executeQuery();
 				connection.commit();
 				ps.close();
-			}
+				return true;
+			} else return false;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
-
+		return false;
 	}
 
 	public void updateStatus(String value, String vLicense) {

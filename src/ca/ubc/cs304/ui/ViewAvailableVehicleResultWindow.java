@@ -29,7 +29,7 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
     private String city;
     private JButton mainMenu;
     private JButton moreDetail;
-
+    private JButton back;
     public ViewAvailableVehicleResultWindow() {
         super("Number of vehicles available");
 
@@ -103,12 +103,20 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         c = new GridBagConstraints();
         this.setContentPane(contentPane);
         JScrollPane jsp = new JScrollPane(rs);
-
+        jsp.setPreferredSize(new Dimension (900, 250));
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
         gb.setConstraints(jsp, c);
         contentPane.add(jsp);
+        back = new JButton("back");
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(5, 10, 5, 10);
+        c.anchor = GridBagConstraints.CENTER;
+        gb.setConstraints(back, c);
+        contentPane.add(back);
+        back.addActionListener(this);
+
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -130,6 +138,8 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
             viewVehiclesResultDelegate.showDetailCountResult(count, carType, location, city);
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesResultDelegate.backToCustomer();
+        } else if (actionEvent.getSource() == back) {
+            viewVehiclesResultDelegate.backToView();
         }
     }
 }

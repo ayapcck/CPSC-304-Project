@@ -1,6 +1,7 @@
 package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
+import ca.ubc.cs304.delegates.ViewVehiclesDelegate;
 import ca.ubc.cs304.delegates.ViewVehiclesResultDelegate;
 import ca.ubc.cs304.ui.CustomerWindow;
 import ca.ubc.cs304.ui.ErrorWindow;
@@ -23,7 +24,6 @@ public class ViewVehiclesResultController implements ViewVehiclesResultDelegate 
     public void showDetailCountResult(int count, String carType, String location, String city) {
 		if (count == 0) {
 			currentWindow.dispose();
-//			JOptionPane.showMessageDialog(null, "There is no cars to be shown!", "Error: " + "no such info", JOptionPane.INFORMATION_MESSAGE);
 			ErrorWindow.infoBox("No cars to be shown!", "no info");
 		} else {
             currentWindow.dispose();
@@ -39,5 +39,16 @@ public class ViewVehiclesResultController implements ViewVehiclesResultDelegate 
         CustomerWindow customerWindow = new CustomerWindow();
         CustomerController customerController = new CustomerController(customerWindow);
         customerWindow.showMenu(customerController);
+    }
+
+    @Override
+    public void backToView() {
+        // TODO car
+        currentWindow.dispose();
+        ViewAvailableVehiclesWindow viewWindow = new ViewAvailableVehiclesWindow();
+        ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
+        ViewVehiclesController viewVehiclesController = new ViewVehiclesController(viewAvailableVehiclesWindow);
+        viewWindow.showMenu(viewVehiclesController);
+
     }
 }
