@@ -2,8 +2,11 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.RentVehicleDelegate;
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
 import ca.ubc.cs304.ui.ClerkWindow;
 import ca.ubc.cs304.ui.RentalWithReservationWindow;
+import ca.ubc.cs304.ui.RentalWithoutReservationWindow;
 
 import javax.swing.*;
 
@@ -34,7 +37,10 @@ public class RentController implements RentVehicleDelegate {
 
     @Override
     public void navToRentalNoReservation() {
-
+        currentWindow.dispose();
+        RentalWithoutReservationWindow rentalWithoutReservationWindow = new RentalWithoutReservationWindow();
+        RentController rentController = new RentController(rentalWithoutReservationWindow);
+        rentalWithoutReservationWindow.showMenu(rentController);
     }
 
     @Override
@@ -43,7 +49,7 @@ public class RentController implements RentVehicleDelegate {
     }
 
     @Override
-    public void rentWithoutReservation() {
-        dbHandler.rentVehicleWithNoReservation();
+    public void rentWithoutReservation(Reservation reservation, Branch branch, String cardName, int cardNumber) {
+        dbHandler.rentVehicleWithNoReservation(reservation, branch, cardName, cardNumber);
     }
 }

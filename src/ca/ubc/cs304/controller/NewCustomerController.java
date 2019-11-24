@@ -2,6 +2,7 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.NewCustomerDelegate;
+import ca.ubc.cs304.model.Customer;
 import ca.ubc.cs304.ui.MakeReservationWindow;
 import ca.ubc.cs304.ui.CustomerWindow;
 
@@ -16,13 +17,12 @@ public class NewCustomerController implements NewCustomerDelegate {
     }
 
     @Override
-    public void finishRegistration(String name, String phone,
-                                   String license, String address) {
-        dbHandler.insertCustomer(name, phone, license, address);
+    public void finishRegistration(Customer customer) {
+        dbHandler.insertCustomer(customer);
         currentWindow.dispose();
         MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
         MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-        makeReservationWindow.showMenu(makeReservationController, license);
+        makeReservationWindow.showMenu(makeReservationController, customer.getDriversLicense());
     }
 
     @Override
