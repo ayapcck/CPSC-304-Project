@@ -10,6 +10,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -54,8 +56,8 @@ public class DatabaseConnectionHandler {
 
 	private void executeSQLFile(String path) {
 		ScriptRunner sr = new ScriptRunner(connection);
-		String pathRoot = new File("").getAbsolutePath();
-		path = pathRoot + path;
+//		String pathRoot = new File("").getAbsolutePath();
+//		path = pathRoot + path;
 		File file = new File(path);
 		try {
 			Reader reader = new BufferedReader(new FileReader(file));
@@ -64,14 +66,13 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
-
 	public void addRequiredTablesAndData() {
-		String path = "\\src\\ca\\ubc\\cs304\\database\\AddTablesAndData.sql";
+		String path = "AddTablesAndData.sql";
 		executeSQLFile(path);
 	}
 
 	public void dropAllRequiredTables() {
-		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
+		String path = "DropTables.sql";
 		executeSQLFile(path);
 	}
 
@@ -123,6 +124,7 @@ public class DatabaseConnectionHandler {
 			PreparedStatement ps = connection.prepareStatement("SELECT * FROM FORRENT WHERE VTNAME = ? AND STATUS='available'");
 			ps.setString(1, vtName);
 			ResultSet rs = ps.executeQuery();
+
 			List<ForRent> vehicles = ForRent.createForRentModel(rs);
 			ps.close();
 			if (vehicles.size() == 0) {
@@ -469,26 +471,29 @@ public class DatabaseConnectionHandler {
 		return false;
 	}
 
-	public void insertReservation(Reservation reservation, Branch branch) {
+	public boolean insertReservation(Reservation reservation, Branch branch) {
 		try {
 			if (vehicleExist(reservation.getVtName(), branch.getLocation(), branch.getCity())) {
+				TimePeriod resTimePeriod = reservation.getTimePeriod();
+
 				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
-				ps.setString(4, reservation.getFromDate().toString());
-				ps.setString(5, reservation.getFromTime());
-				ps.setString(6, reservation.getToDate().toString());
-				ps.setString(7, reservation.getToTime());
+				ps.setDate(4, resTimePeriod.getFromDate());
+				ps.setString(5, resTimePeriod.getFromTime());
+				ps.setDate(6, resTimePeriod.getToDate());
+				ps.setString(7, resTimePeriod.getToTime());
 				ps.executeQuery();
 				connection.commit();
 				ps.close();
-			}
+				return true;
+			} else return false;
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 			rollbackConnection();
 		}
-
+		return false;
 	}
 
 	public void updateStatus(String value, String vLicense) {
@@ -642,10 +647,9 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public int checkVehicleNum(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate ) {
+	public int checkVehicleNum(String carType, String location, String city) {
 		try {
-			PreparedStatement ps = connection.prepareStatement
-					("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
@@ -664,18 +668,18 @@ public class DatabaseConnectionHandler {
 		return 0;
 	}
 
-	public JTable showVehicleDetails(String carType, String location, String city, java.sql.Date fromDate, java.sql.Date toDate) {
+	public JTable showVehicleDetails(String carType, String location, String city) {
 		try {
-			String query = "SELECT * FROM ForRent R " +
-					"WHERE R.vtName = ? AND R.location = ? AND R.city = ? AND R.status = 'available'";
+			String query = "SELECT * FROM ForRent " +
+					"WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'";
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
 
 			ResultSet rs = ps.executeQuery();
-			connection.commit();
 			JTable table = new JTable(buildTableModel(rs));
+			connection.commit();
 			ps.close();
 			return table;
 		} catch (SQLException e) {

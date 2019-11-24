@@ -22,10 +22,10 @@ public class BeginReservationController implements BeginReservationDelegate {
     }
 
     @Override
-    public void existingReservation() {
+    public void existingCustomerReservation() {
         currentWindow.dispose();
-        MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
-        MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-        makeReservationWindow.showMenu(makeReservationController, "FIX-ME"); // TODO: need to supply license on existing customer
+        MakeReservationWindow reservationWindow = new MakeReservationWindow();
+        MakeReservationController makeReservationController = new MakeReservationController(reservationWindow);
+        reservationWindow.showMenu(makeReservationController, null);
     }
 }
