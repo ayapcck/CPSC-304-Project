@@ -12,6 +12,7 @@ import java.util.Properties;
 class Window extends JFrame {
     static final int TEXT_FIELD_WIDTH = 10;
     static final Insets TEXT_FIELD_INSET = new Insets(10, 0, 5, 10);
+
     Window(String label) {
         super(label);
     }
@@ -32,6 +33,14 @@ class Window extends JFrame {
         return picker;
     }
 
+    void placeFieldAndLabel(String label, JTextField jTextField,
+                            JPanel contentPane, GridBagLayout gb, GridBagConstraints c) {
+        String labelWithExtra = label.concat(": ");
+        JLabel jLabel = new JLabel(labelWithExtra);
+        placeLabel(jLabel, contentPane, gb, c, 10, 5);
+        placeTextField(jTextField, contentPane, gb, c, TEXT_FIELD_INSET);
+    }
+
     void placeLabel(JLabel label, JPanel contentPane, GridBagLayout gb, GridBagConstraints c, int i, int i2) {
         c.gridwidth = GridBagConstraints.RELATIVE;
         c.insets = new Insets(i, 10, i2, 0);
@@ -47,12 +56,11 @@ class Window extends JFrame {
         contentPane.add(field);
     }
 
-    void placeFieldAndLabel(String label, JTextField jTextField,
-                            JPanel contentPane, GridBagLayout gb, GridBagConstraints c) {
-        String labelWithExtra = label.concat(": ");
-        JLabel jLabel = new JLabel(labelWithExtra);
-        placeLabel(jLabel, contentPane, gb, c, 10, 5);
-        placeTextField(jTextField, contentPane, gb, c, TEXT_FIELD_INSET);
+
+    void clearFields(JTextField[] fields) {
+        for (JTextField field : fields) {
+            field.setText("");
+        }
     }
 
     void setButtonConstraints(GridBagLayout gb, GridBagConstraints c, JButton button) {

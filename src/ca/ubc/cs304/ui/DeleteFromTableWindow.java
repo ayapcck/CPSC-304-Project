@@ -9,16 +9,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataFromTableWindow extends Window implements ActionListener {
+public class DeleteFromTableWindow extends Window implements ActionListener {
     private JButton submit;
     private JButton backToDatabase;
     private JTextField tableNameField;
-    private JTextField columnsField;
+    private JTextField columnField;
+    private JTextField valueField;
 
     private DatabaseActionsDelegate databaseActionsDelegate = null;
 
-    public DataFromTableWindow() {
-        super("Retrieve data from table");
+    public DeleteFromTableWindow() {
+        super("Delete data from table");
 
         submit = new JButton("Submit");
         backToDatabase = new JButton("Back");
@@ -38,8 +39,10 @@ public class DataFromTableWindow extends Window implements ActionListener {
 
         tableNameField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Table Name", tableNameField, contentPane, gb, c);
-        columnsField = new JTextField(TEXT_FIELD_WIDTH);
-        placeFieldAndLabel("Columns", columnsField, contentPane, gb, c);
+        columnField = new JTextField(TEXT_FIELD_WIDTH);
+        placeFieldAndLabel("Column in WHERE", columnField, contentPane, gb, c);
+        valueField = new JTextField(TEXT_FIELD_WIDTH);
+        placeFieldAndLabel("Value in WHERE", valueField, contentPane, gb, c);
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
@@ -52,10 +55,12 @@ public class DataFromTableWindow extends Window implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
             String tableName = tableNameField.getText();
-            String columns = columnsField.getText();
-            databaseActionsDelegate.selectFromTable(tableName, columns);
+            String column = columnField.getText();
+            String value = valueField.getText();
+            databaseActionsDelegate.deleteFromTable(tableName, column, value);
             tableNameField.setText("");
-            columnsField.setText("");
+            columnField.setText("");
+            valueField.setText("");
         } else if (e.getSource() == backToDatabase) {
             databaseActionsDelegate.backToDatabaseMenu();
         }

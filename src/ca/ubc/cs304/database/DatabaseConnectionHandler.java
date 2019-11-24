@@ -566,7 +566,7 @@ public class DatabaseConnectionHandler {
 			ResultSet rs = stmt.executeQuery();
 			String[] listCols = columns.split(",");
 			while (rs.next()) {
-				for (int i = 1; i <= columns.length(); i++) {
+				for (int i = 1; i <= listCols.length; i++) {
 					System.out.println(rs.getString(i));
 				}
 			}
@@ -577,6 +577,71 @@ public class DatabaseConnectionHandler {
 			rollbackConnection();
 		}
 		return result.toArray(new String[result.size()]);
+	}
+
+	public void deleteFromTable(String tableName, String column, String value) {
+		try {
+			String query = "DELETE FROM " + tableName + " WHERE " + column + " = ?";
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, value);
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Successfully deleted");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void insertIntoTable(String tableName, String columns, String values) {
+		try {
+			String query = "INSERT INTO " + tableName + " (" + columns + ") VALUES (";
+			String[] valuesSplit = values.split(", ");
+			for (String value : valuesSplit) {
+				query = query.concat("?, ");
+			}
+			query = query.substring(0, query.length()-2);
+			query = query.concat(")");
+			PreparedStatement ps = connection.prepareStatement(query);
+			for (int i = 1; i <= valuesSplit.length; i++) {
+				ps.setString(i, valuesSplit[i-1]);
+			}
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Successfully inserted");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
+	}
+
+	public void updateTable(String tableName, String columns, String values, String whereColumn, String whereValue) {
+		try {
+			String query = "UPDATE " + tableName + " SET ";
+			String[] columnsSplit = columns.split(", ");
+			String[] valuesSplit = values.split(", ");
+			int numValues = valuesSplit.length;
+			for (int i = 0; i < numValues; i++) {
+				query = query.concat(columnsSplit[i] + " = ?, ");
+			}
+			query = query.substring(0, query.length() - 2);
+			query = query.concat(" WHERE " + whereColumn + " = ?");
+			PreparedStatement ps = connection.prepareStatement(query);
+			int i;
+			for (i = 1; i <= numValues; i++) {
+				ps.setString(i, valuesSplit[i-1]);
+			}
+			ps.setString(i, whereValue);
+			ps.executeUpdate();
+			connection.commit();
+			ps.close();
+			System.out.println("Updated successfully");
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+		}
 	}
 	
 	public boolean login(String username, String password) {
