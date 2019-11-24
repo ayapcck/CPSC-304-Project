@@ -9,19 +9,30 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DataFromTableWindow extends Window implements ActionListener {
-    private JButton submit;
-    private JButton backToDatabase;
-    private JTextField tableNameField;
-    private JTextField columnsField;
-
+public class UpdateTableWindow extends Window implements ActionListener {
     private DatabaseActionsDelegate databaseActionsDelegate = null;
 
-    public DataFromTableWindow() {
-        super("Retrieve data from table");
+    private JButton submit;
+    private JButton backToDatabaseMenu;
+    private JTextField tableNameField;
+    private JTextField columnsField;
+    private JTextField valuesField;
+    private JTextField whereColumnField;
+    private JTextField whereValueField;
+    private JTextField[] fields;
+
+    public UpdateTableWindow() {
+        super("Update data in table");
+
+        tableNameField = new JTextField(TEXT_FIELD_WIDTH);
+        columnsField = new JTextField(TEXT_FIELD_WIDTH);
+        valuesField = new JTextField(TEXT_FIELD_WIDTH);
+        whereColumnField = new JTextField(TEXT_FIELD_WIDTH);
+        whereValueField = new JTextField(TEXT_FIELD_WIDTH);
+        fields = new JTextField[]{tableNameField, columnsField, valuesField, whereColumnField, whereValueField};
 
         submit = new JButton("Submit");
-        backToDatabase = new JButton("Back");
+        backToDatabaseMenu = new JButton("Back");
     }
 
     public void showMenu(DatabaseActionsDelegate databaseActionsDelegate) {
@@ -36,14 +47,15 @@ public class DataFromTableWindow extends Window implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        tableNameField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Table Name", tableNameField, contentPane, gb, c);
-        columnsField = new JTextField(TEXT_FIELD_WIDTH);
         placeFieldAndLabel("Columns", columnsField, contentPane, gb, c);
+        placeFieldAndLabel("Values", valuesField, contentPane, gb, c);
+        placeFieldAndLabel("Where Column", whereColumnField, contentPane, gb, c);
+        placeFieldAndLabel("Where Value", whereValueField, contentPane, gb, c);
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
-        buttons.add(backToDatabase);
+        buttons.add(backToDatabaseMenu);
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
         new Panel(buttons, this, this, contentPane, gb, setConstraints);
     }
@@ -51,12 +63,10 @@ public class DataFromTableWindow extends Window implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            String tableName = tableNameField.getText();
-            String columns = columnsField.getText();
-            databaseActionsDelegate.selectFromTable(tableName, columns);
-            tableNameField.setText("");
-            columnsField.setText("");
-        } else if (e.getSource() == backToDatabase) {
+            databaseActionsDelegate.updateTable(tableNameField.getText(), columnsField.getText(),
+                    valuesField.getText(), whereColumnField.getText(), whereValueField.getText());
+            clearFields(fields);
+        } else if (e.getSource() == backToDatabaseMenu) {
             databaseActionsDelegate.backToDatabaseMenu();
         }
     }

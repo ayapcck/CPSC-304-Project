@@ -8,13 +8,7 @@ import ca.ubc.cs304.ui.DatabaseManipulationWindow;
 import javax.swing.*;
 
 public class MainController implements MainOperationsDelegate {
-    private ClerkController clerkController = null;
-    private ClerkWindow clerkWindow = null;
     private JFrame currentWindow = null;
-    private CustomerController customerController = null;
-    private CustomerWindow customerWindow = null;
-    private DatabaseController databaseController = null;
-    private DatabaseManipulationWindow databaseManipulationWindow = null;
 
     public MainController(JFrame currentWindow) {
         this.currentWindow = currentWindow;
@@ -23,8 +17,8 @@ public class MainController implements MainOperationsDelegate {
     @Override
     public void showCustomerWindow() {
         currentWindow.dispose();
-        customerWindow = new CustomerWindow();
-        customerController = new CustomerController(customerWindow);
+        CustomerWindow customerWindow = new CustomerWindow();
+        CustomerController customerController = new CustomerController(customerWindow);
         customerWindow.showMenu(customerController);
         this.currentWindow = customerWindow;
     }
@@ -32,8 +26,8 @@ public class MainController implements MainOperationsDelegate {
     @Override
     public void showClerkWindow() {
         currentWindow.dispose();
-        clerkWindow = new ClerkWindow();
-        clerkController = new ClerkController(clerkWindow);
+        ClerkWindow clerkWindow = new ClerkWindow();
+        ClerkController clerkController = new ClerkController(clerkWindow);
         clerkWindow.showMenu(clerkController);
         this.currentWindow = clerkWindow;
     }
@@ -41,9 +35,9 @@ public class MainController implements MainOperationsDelegate {
     @Override
     public void showDatabaseWindow() {
         currentWindow.dispose();
-        databaseManipulationWindow = new DatabaseManipulationWindow();
-        databaseController = new DatabaseController(databaseManipulationWindow);
-        databaseManipulationWindow.showMenu(databaseController);
+        DatabaseManipulationWindow databaseManipulationWindow = new DatabaseManipulationWindow();
+        DatabaseMenuController databaseMenuController = new DatabaseMenuController(databaseManipulationWindow);
+        databaseManipulationWindow.showMenu(databaseMenuController);
         this.currentWindow = databaseManipulationWindow;
     }
 }
