@@ -149,40 +149,12 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void rentVehicleWithNoReservation() {
-//		// create new reservation;
-//		int confNo = (int) (Math.random() * 1000);
-//		System.out.println("Enter type of vehicle");
-//		String VtName = terminalTransactions.readLine();
-//		System.out.println("Enter customer's driver license");
-//		String driverLicense = terminalTransactions.readLine();
-//		System.out.println("Enter fromDate");
-//		String stringDate = terminalTransactions.readLine();
-//		Date fromDate = Date.valueOf(stringDate);
-//		System.out.println("Enter from Time");
-//		String fromTime = terminalTransactions.readLine();
-//		System.out.println("Enter end date (toDate)");
-//		String stringToDate = terminalTransactions.readLine();
-//		Date toDate = Date.valueOf(stringToDate);
-//		System.out.println("Enter to time");
-//		String toTime = terminalTransactions.readLine();
-//		// determine if customer already exists, if not add customer to database to avoid errors
-//		if (!customerExists(driverLicense)) {
-//			System.out.println("Enter cellNum of customer");
-//			String cellNum = terminalTransactions.readLine();
-//			System.out.println("Enter name of customer");
-//			String name = terminalTransactions.readLine();
-//			System.out.println("Enter address of customer");
-//			String address = terminalTransactions.readLine();
-//			Customer customer = new Customer(cellNum, name, address, driverLicense);
-//			insertCustomer(customer);
-//		}
-//		TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
-//		insertTimePeriod(timePeriod);
-//		Reservations reservations = new Reservations(confNo, VtName, driverLicense, fromDate, fromTime, toDate, toTime);
-//		insertReservation(reservations);
-//
-//		rentVehicleWithReservation(terminalTransactions, confNo);
+	public void rentVehicleWithNoReservation(Reservation reservation, Branch branch,
+											 String cardName, int cardNumber) {
+		TimePeriod timePeriod = reservation.getTimePeriod();
+		insertTimePeriod(timePeriod);
+		insertReservation(reservation, branch);
+		rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
 	public String returnVehicle() {
@@ -466,13 +438,13 @@ public class DatabaseConnectionHandler {
 
 	}
 
-	public void insertCustomer(String name, String phone, String license, String addr) {
+	public void insertCustomer(Customer customer) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO CUSTOMER VALUES (?,?,?,?)");
-			ps.setString(1, phone);
-			ps.setString(2, name);
-			ps.setString(3, addr);
-			ps.setString(4, license);
+			ps.setString(1, customer.getCellNum());
+			ps.setString(2, customer.getName());
+			ps.setString(3, customer.getAddress());
+			ps.setString(4, customer.getDriversLicense());
 
 			ps.executeUpdate();
 			connection.commit();

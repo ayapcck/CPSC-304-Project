@@ -2,6 +2,8 @@ package ca.ubc.cs304.controller;
 
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.MakeReservationDelegate;
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
 import ca.ubc.cs304.ui.CustomerWindow;
 
 import javax.swing.*;
@@ -16,10 +18,8 @@ public class MakeReservationController implements MakeReservationDelegate {
     }
 
     @Override
-    public void createReservation(String license, String location, String city,
-                                  String vtName, String fromDate, String fromTime,
-                                  String toDate, String toTime, int ReservationNum) {
-        dbHandler.insertReservation(license, location, city, vtName, fromDate, fromTime, toDate, toTime, ReservationNum);
+    public void createReservation(Reservation reservation, Branch branch) {
+        dbHandler.insertReservation(reservation, branch);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.swing.*;
 
 import ca.ubc.cs304.delegates.NewCustomerDelegate;
+import ca.ubc.cs304.model.Customer;
 
 public class NewCustomerWindow extends Window implements ActionListener {
     // delegate
@@ -85,9 +86,10 @@ public class NewCustomerWindow extends Window implements ActionListener {
         if (e.getSource() == submit) {
             String name = nameField.getText();
             String phone = phoneField.getText();
-            String licence = licenseField.getText();
+            String license = licenseField.getText();
             String addr = addrField.getText();
-            newCustomerDelegate.finishRegistration(name, phone, licence, addr);
+            Customer customer = new Customer(phone, name, addr, license);
+            newCustomerDelegate.finishRegistration(customer);
         } else if (e.getSource() == backToCustomer) {
             newCustomerDelegate.returnToCustomer();
         }

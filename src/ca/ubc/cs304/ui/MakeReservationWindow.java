@@ -12,6 +12,8 @@ import java.util.List;
 import javax.swing.*;
 
 import ca.ubc.cs304.delegates.MakeReservationDelegate;
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
@@ -119,8 +121,8 @@ public class MakeReservationWindow extends Window implements ActionListener {
         if (e.getSource() == submit) {
             DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
             DateFormat tf = new SimpleDateFormat("HH:mm");
-            Date fromDate = (Date) timeSpinnerFrom.getValue();
-            Date toDate = (Date) timeSpinnerTo.getValue();
+            java.sql.Date fromDate = (java.sql.Date) timeSpinnerFrom.getValue();
+            java.sql.Date toDate = (java.sql.Date) timeSpinnerTo.getValue();
             String fromDateString = df.format(fromDate);
             String fromTimeString = tf.format(fromDate);
             String toDateString = df.format(toDate);
@@ -129,8 +131,9 @@ public class MakeReservationWindow extends Window implements ActionListener {
             String location = locationField.getText();
             String vehicleType = vtField.getText();
             int reservationNum = (int) (Math.random());
-            makeReservationDelegate.createReservation(license, location, city, vehicleType, fromDateString,
-                    fromTimeString, toDateString, toTimeString, reservationNum);
+            Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTimeString, toDate, toTimeString);
+            Branch branch = new Branch(location, city);
+            makeReservationDelegate.createReservation(reservation, branch);
         } else if (e.getSource() == backToCustomer) {
             makeReservationDelegate.returnToCustomer();
         }

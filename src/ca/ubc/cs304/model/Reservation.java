@@ -12,25 +12,34 @@ public class Reservation {
     private Date toDate; // DATE in SQL
     private String fromTime;
     private String toTime;
+    private TimePeriod timePeriod;
 
     public Reservation(Integer confNo, String vtName, String dLicense,
                        Date fromDate, String fromTime,
                        Date toDate, String toTime) {
-        this.confNo = confNo;
+        if (confNo == null) {
+            this.confNo = (int) (Math.random() * 1000);
+        } else {
+            this.confNo = confNo;
+        }
         this.vtName = vtName;
         this.dLicense = dLicense;
         this.fromDate = fromDate;
         this.fromTime = fromTime;
         this.toDate = toDate;
         this.toTime = toTime;
+        this.timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
+    }
 
+    public Reservation(Integer confNo, String vtName, String dLicense, TimePeriod timePeriod) {
+        new Reservation(confNo, vtName, dLicense, timePeriod.getFromDate(), timePeriod.getFromTime(),
+                timePeriod.getToDate(), timePeriod.getToTime());
     }
 
     public static Reservation createReservationModel(ResultSet resultSet) {
         try {
-            int confNo = -99;
             if (resultSet.next()) {
-                confNo = resultSet.getInt(1);
+                int confNo = resultSet.getInt(1);
                 String vtName = resultSet.getString(2);
                 String driversLicense = resultSet.getString(3);
                 Date fromDate = resultSet.getDate(4);
@@ -71,5 +80,9 @@ public class Reservation {
 
     public String getToTime() {
         return toTime;
+    }
+
+    public TimePeriod getTimePeriod() {
+        return timePeriod;
     }
 }
