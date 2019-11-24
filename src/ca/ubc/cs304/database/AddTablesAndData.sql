@@ -1,7 +1,7 @@
 CREATE TABLE TimePeriod(
-    fromDate DATE,
+    fromDate VARCHAR(255),
     fromTime VARCHAR(255),
-    toDate DATE,
+    toDate VARCHAR(255),
     toTime VARCHAR(255),
     PRIMARY KEY (fromDate, fromTime, toDate, toTime)
 );
@@ -73,9 +73,9 @@ CREATE TABLE Reservations(
     confNo INTEGER,
     VTName VARCHAR(255) NOT NULL,
     driversLicense VARCHAR(255) NOT NULL,
-    fromDate DATE,
+    fromDate VARCHAR(255),
     fromTime VARCHAR(255),
-    toDate DATE,
+    toDate VARCHAR(255),
     toTime VARCHAR(255),
     PRIMARY KEY (confNo),
     FOREIGN KEY (VTName) REFERENCES VehicleType,
@@ -87,9 +87,9 @@ CREATE TABLE Rental(
     rID INTEGER,
     vLicense VARCHAR(255) NOT NULL,
     driversLicense VARCHAR(255) NOT NULL,
-    fromDate DATE NOT NULL,
+    fromDate VARCHAR(255) NOT NULL,
     fromTime VARCHAR(255) NOT NULL,
-    toDate DATE NOT NULL,
+    toDate VARCHAR(255) NOT NULL,
     toTime VARCHAR(255) NOT NULL,
     odometer INTEGER,
     cardName VARCHAR(255),

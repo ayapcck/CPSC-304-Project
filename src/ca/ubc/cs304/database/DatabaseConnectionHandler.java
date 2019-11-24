@@ -381,9 +381,9 @@ public class DatabaseConnectionHandler {
 			ps.setInt(1, model.getrID());
 			ps.setString(2, model.getvLicense());
 			ps.setString(3, model.getDriversLicense());
-			ps.setDate(4, model.getFromDate());
+			ps.setString(4, model.getFromDate());
 			ps.setString(5, model.getFromTime());
-			ps.setDate(6, model.getToDate());
+			ps.setString(6, model.getToDate());
 			ps.setString(7, model.getToTime());
 			ps.setInt(8, model.getOdometer());
 			ps.setString(9, model.getCardName());
@@ -423,9 +423,9 @@ public class DatabaseConnectionHandler {
     public void insertTimePeriod(TimePeriod model) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("INSERT INTO TIMEPERIOD VALUES (?,?,?,?)");
-			ps.setDate(1, model.getFromDate());
+			ps.setString(1, model.getFromDate());
 			ps.setString(2, model.getFromTime());
-			ps.setDate(3, model.getToDate());
+			ps.setString(3, model.getToDate());
 			ps.setString(4, model.getToTime());
 
 			ps.executeUpdate();
@@ -459,16 +459,11 @@ public class DatabaseConnectionHandler {
 	}
 
 	public boolean vehicleExist(String vtName, String location, String city) {
-		// TODO
-		try{
-			PreparedStatement ps = connection.prepareStatement("SELECT * FROM FORRENT WHERE vtName = ? AND location = ? AND city = ?");
-			ps.setString(1, vtName);
-			ps.setString(2, location);
-			ps.setString(3, city);
-		} catch (SQLException e) {
+		if (checkVehicleNum(vtName, location, city) == 0) {
 			return false;
+		} else {
+			return true;
 		}
-		return false;
 	}
 
 	public boolean insertReservation(Reservation reservation, Branch branch) {
@@ -480,9 +475,9 @@ public class DatabaseConnectionHandler {
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
-				ps.setDate(4, resTimePeriod.getFromDate());
+				ps.setString(4, resTimePeriod.getFromDate());
 				ps.setString(5, resTimePeriod.getFromTime());
-				ps.setDate(6, resTimePeriod.getToDate());
+				ps.setString(6, resTimePeriod.getToDate());
 				ps.setString(7, resTimePeriod.getToTime());
 				ps.executeQuery();
 				connection.commit();
