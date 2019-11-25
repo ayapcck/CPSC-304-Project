@@ -21,7 +21,22 @@ public class MakeReservationController implements MakeReservationDelegate {
 
     @Override
     public void createReservation(Reservation reservation, Branch branch) {
-        if (!checkDateIsValid(reservation.getFromDate(), reservation.getToDate())) {
+        System.out.println("fromDate:"+reservation.getToTime());
+
+        if (!checkDateIsValid(reservation.getFromDate(), reservation.getToDate(), reservation.getFromTime(), reservation.getToTime())) {
+            currentWindow.dispose();
+            ErrorWindow errorWindow = new ErrorWindow();
+            errorWindow.infoBox("Sorry, time information is invalid", "Invalid Input!");
+            MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
+            MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
+            makeReservationWindow.showMenu(makeReservationController, null);
+        } else if (reservation.getdLicense().equals("")) {
+            currentWindow.dispose();
+            ErrorWindow errorWindow = new ErrorWindow();
+            errorWindow.infoBox("Licence cannot be empty", "Missing licence plate!");
+            MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
+            MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
+            makeReservationWindow.showMenu(makeReservationController, null);
 
         } else if (dbHandler.insertReservation(reservation, branch)) {
             currentWindow.dispose();
@@ -32,6 +47,10 @@ public class MakeReservationController implements MakeReservationDelegate {
             currentWindow.dispose();
             ErrorWindow errorWindow = new ErrorWindow();
             errorWindow.infoBox("Sorry, no vehicle matches your search", "No Available Vehicle");
+            MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
+            MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
+            makeReservationWindow.showMenu(makeReservationController, null);
+
         }
     }
 
@@ -43,17 +62,27 @@ public class MakeReservationController implements MakeReservationDelegate {
         customerWindow.showMenu(customerController);
     }
 
-    public boolean checkDateIsValid(String fromDate, String toDate) {
+    public boolean checkDateIsValid(String fromDate, String toDate, String fromTime, String toTime) {
         int fromyear = Integer.parseInt(fromDate.split("-")[0]);
         int fromMonth = Integer.parseInt(fromDate.split("-")[1]);
         int fromDay = Integer.parseInt(fromDate.split("-")[2]);
         int toyear = Integer.parseInt(toDate.split("-")[0]);
         int toMonth = Integer.parseInt(toDate.split("-")[1]);
         int toDay = Integer.parseInt(toDate.split("-")[2]);
+        int fromHour = Integer.parseInt(fromTime.split(":")[0]);
+        int fromMin = Integer.parseInt(fromTime.split(":")[1]);
+        int toHour = Integer.parseInt(toTime.split(":")[0]);
+        int toMin = Integer.parseInt(toTime.split(":")[1]);
 
-        if ((toyear >= fromyear) && (toDay >= fromDay) && (toMonth >= fromMonth)
-        && (toyear <= 2021) && (fromyear >= 2015)) return true;
-        return false;
+        if ((fromyear > toyear)) return false;
+        if ((fromyear == toyear) && (fromMonth > toMonth)) return false;
+        if ((fromyear == toyear) && (fromMonth == toMonth) && (fromDay > toDay)) return false;
+        if (fromyear < 2019) return false;
+        if ((fromyear == toyear) && (fromMonth == toMonth) && (fromDay == toDay) &&
+                (fromHour > toHour)) return false;
+        if ((fromyear == toyear) && (fromMonth == toMonth) && (fromDay == toDay) &&
+                (fromHour == toHour) && (fromMin >= toMin)) return false;
+        return true;
     }
 
 }

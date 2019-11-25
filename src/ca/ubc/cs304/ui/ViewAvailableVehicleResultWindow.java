@@ -69,6 +69,7 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         c = new GridBagConstraints();
         this.setContentPane(contentPane);
         JScrollPane jsp = new JScrollPane(rs);
+        jsp.setSize(1000,300);
         c.gridwidth = GridBagConstraints.REMAINDER;
         c.insets = new Insets(5, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
