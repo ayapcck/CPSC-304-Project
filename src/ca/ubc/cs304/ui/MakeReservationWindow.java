@@ -229,7 +229,7 @@ public class MakeReservationWindow extends Window implements ActionListener {
             if (license == null) {
                 license = licenseField.getText();
             }
-            int reservationNum = (int) (Math.random());
+            int reservationNum = (int) (Math.random() * 1000);
             Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTime, toDate, toTime,
                     location, city);
             Branch branch = new Branch(location, city);
