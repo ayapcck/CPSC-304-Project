@@ -102,7 +102,6 @@ public class DatabaseConnectionHandler {
 		// inserts into database
 		insertIntoRental(rental);
 		updateStatus( "notavailable", forRent.getvLicense());
-		// TODO: display receipt in new UI
 	}
 
 	private Reservation getReservation(int confNo) {
@@ -427,7 +426,6 @@ public class DatabaseConnectionHandler {
 			ps.setString(2, model.getFromTime());
 			ps.setString(3, model.getToDate());
 			ps.setString(4, model.getToTime());
-
 			ps.executeUpdate();
 			connection.commit();
 
@@ -644,7 +642,7 @@ public class DatabaseConnectionHandler {
 
 	public int checkVehicleNum(String carType, String location, String city) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
@@ -652,7 +650,7 @@ public class DatabaseConnectionHandler {
 			connection.commit();
 			int vehiclesSatisfyingCriteria = 0;
 			if (rs.next()) {
-				vehiclesSatisfyingCriteria = rs.getInt("num");
+				vehiclesSatisfyingCriteria = rs.getInt(1);
 			}
 			ps.close();
 			return vehiclesSatisfyingCriteria;

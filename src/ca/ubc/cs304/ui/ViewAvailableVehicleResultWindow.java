@@ -53,9 +53,7 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
 
         // show count of vehicles
         JLabel countResult = new JLabel("There are " + count + " vehicles of this type.");
-        placeLabel(countResult, contentPane, gb, c, 10, 5);
-        // TODO: need to fix positioning on this label
-        //  should set to REMAINDER instead of RELATIVE
+        placeLabelRemainder(countResult, contentPane, gb, c);
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(moreDetail);
