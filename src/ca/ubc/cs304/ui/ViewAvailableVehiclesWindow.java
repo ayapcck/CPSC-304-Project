@@ -83,7 +83,7 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
 //        placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
         String[] cityList = {"Vancouver", "Richmond", "Burnaby", "Coquitlam"};
-        cityBox = new JComboBox(locationList);
+        cityBox = new JComboBox(cityList);
         cityBox.setSelectedIndex(0);
         cityBox.addActionListener(this);
         c.gridwidth = GridBagConstraints.REMAINDER;
