@@ -154,9 +154,7 @@ public class DatabaseConnectionHandler {
 											 String cardName, int cardNumber) {
 		TimePeriod timePeriod = reservation.getTimePeriod();
 		insertTimePeriod(timePeriod);
-		System.out.println("After timeperiod");
 		insertReservation(reservation, branch);
-		System.out.println("after reservation");
 		rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 

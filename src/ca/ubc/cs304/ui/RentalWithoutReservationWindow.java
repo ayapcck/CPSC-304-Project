@@ -94,12 +94,11 @@ public class RentalWithoutReservationWindow extends Window implements ActionList
             Date toDateTime = (Date) timeSpinnerTo.getValue();
             String fromDate = df.format(fromDateTime);
             String fromTime = tf.format(fromDateTime);
-            String toDate = df.format(fromDateTime);
+            String toDate = df.format(toDateTime);
             String toTime = tf.format(toDateTime);
-            System.out.println(fromDate + " " + toDate);
             TimePeriod timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
 
-            int confNo = (int) (Math.random() + 100);
+            int confNo = (int) (Math.random() * 100);
             System.out.println(confNo);
             Reservation reservation = new Reservation(confNo, vehicleTypeField.getText(),
                     licenseField.getText(), timePeriod);
