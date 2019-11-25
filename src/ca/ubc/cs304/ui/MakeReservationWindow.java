@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -147,9 +149,9 @@ public class MakeReservationWindow extends Window implements ActionListener {
         JLabel locationLabel = new JLabel("Location: " + branch.getLocation());
         JLabel cityLabel = new JLabel("City:" + branch.getCity());
         JLabel vtLabel = new JLabel("Vehicle Type:" + reservation.getVtName());
-        JLabel fromTimeLabel = new JLabel("Pickup Time:" + timePeriod.getFromDate().toString() + " " + timePeriod.getFromTime());
-        JLabel toTimeLabel = new JLabel("Return Time:" + timePeriod.getToDate().toString() + " " + timePeriod.getToTime());
-        JLabel licenceLabel = new JLabel("Licence plate:" + license);
+        JLabel fromTimeLabel = new JLabel("Pickup Time:" + timePeriod.getFromDate() + " " + timePeriod.getFromTime());
+        JLabel toTimeLabel = new JLabel("Return Time:" + timePeriod.getToDate() + " " + timePeriod.getToTime());
+        JLabel licenceLabel = new JLabel("Licence plate:" + reservation.getdLicense());
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -160,7 +162,6 @@ public class MakeReservationWindow extends Window implements ActionListener {
 
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
 
         // place info label
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -203,10 +204,31 @@ public class MakeReservationWindow extends Window implements ActionListener {
         gb.setConstraints(toTimeLabel, c);
         contentPane.add(toTimeLabel);
 
-        List<JButton> buttons = new ArrayList<>();
-        buttons.add(backToCustomer);
-        new Panel(buttons, this, this);
+//        List<JButton> buttons = new ArrayList<>();
+//        buttons.add(backToCustomer);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(0, 10, 10, 0);
+        gb.setConstraints(backToCustomer, c);
+        contentPane.add(backToCustomer);
 
+//        new Panel(buttons, this, this);
+        // anonymous inner class for closing the window
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+
+        // size the window to obtain a best fit for the components
+        this.pack();
+
+        // center the frame
+        Dimension d = this.getToolkit().getScreenSize();
+        Rectangle r = this.getBounds();
+        this.setLocation( (d.width - r.width)/2, (d.height - r.height)/2 );
+
+        // make the window visible
+        this.setVisible(true);
     }
     /**
      * ActionListener Methods
