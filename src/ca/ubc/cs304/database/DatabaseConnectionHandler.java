@@ -159,33 +159,32 @@ public class DatabaseConnectionHandler {
 		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
-	public String returnVehicle() {
-	    int rid = -99;
+	public Return returnVehicle(int rId) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
-            ps.setInt(1, rid);
+            ps.setInt(1, rId);
             ResultSet rental = ps.executeQuery();
             String vLicense = null;
-            Date toDate = null;
-            Date fromDate = null;
+            String toDate = null;
+            String fromDate = null;
             String toTime = null;
-            while (rental.next()) {
+            if (rental.next()) {
                 vLicense = rental.getString(2);
-                toDate = rental.getDate(6);
+                toDate = rental.getString(6);
                 toTime = rental.getString(7);
-                fromDate = rental.getDate(4);
+                fromDate = rental.getString(4);
+            }
 
-            }
-            if (!rentedVehicle(vLicense)) {
-                return "Vehicle is not rented";
-            }
+//            if (!rentedVehicle(vLicense)) {
+//                return "Vehicle is not rented";
+//            }
 
             PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
             ps1.setString(1, vLicense);
             ResultSet forRent = ps1.executeQuery();
             int odometer = -99;
             String vtName = null;
-            while (forRent.next()) {
+            if (forRent.next()) {
                 odometer = forRent.getInt(7);
                 vtName = forRent.getString(9);
             }
@@ -198,18 +197,18 @@ public class DatabaseConnectionHandler {
             // get value
             assert fromDate != null;
             int value = returnValue(vehicleType, fromDate, toDate);
-            Return ret = new Return(rid, toDate, odometer, 1, value);
+            Return ret = new Return(rId, toDate, odometer, 1, value);
             insertIntoReturn(ret);
-            //TODO: display receipt
-            return "Amount paid " + value;
+            return ret;
         } catch (SQLException e) {
             System.out.println("No rental with that id exists");
+            return null;
         }
-        return "";
-
     }
 
-    public int returnValue(VehicleType vehicleType, Date fromDate, Date toDate) {
+    public int returnValue(VehicleType vehicleType, String fromDateString, String toDateString) {
+		Date fromDate = Date.valueOf(fromDateString);
+		Date toDate = Date.valueOf(toDateString);
 	    long currTime  = toDate.getTime();
 	    long startTime = fromDate.getTime();
         long diff = currTime - startTime;
@@ -406,9 +405,9 @@ public class DatabaseConnectionHandler {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO RETURN VALUES (?,?,?,?,?)");
             ps.setInt(1, model.getrID());
-            ps.setDate(2, model.getReturnDate());
+            ps.setString(2, model.getReturnDate());
             ps.setInt(3, model.getOdometer());
-            ps.setInt(4, model.getFullTank());
+            ps.setBoolean(4, model.getFullTank()==1);
             ps.setInt(5, model.getValue());
 
             ps.executeUpdate();
