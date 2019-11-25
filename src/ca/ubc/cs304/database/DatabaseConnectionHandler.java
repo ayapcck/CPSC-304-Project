@@ -211,6 +211,7 @@ public class DatabaseConnectionHandler {
             int value = rentalCost.getCalculatedCost();
             Return ret = new Return(rId, toDate, odometer, 1, value);
             insertIntoReturn(ret);
+			updateStatus( "available", vLicense);
             return new Pair<Return, RentalCost>(ret, rentalCost);
         } catch (SQLException e) {
             System.out.println("No rental with that id exists");
