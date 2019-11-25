@@ -32,7 +32,7 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
     private JComboBox cityBox;
 
     public ViewAvailableVehiclesWindow() {
-        super("Please vehicle information:");
+        super("Please enter vehicle information:");
 
         mainMenu = new JButton("Back");
         submit = new JButton("Submit");
@@ -63,12 +63,10 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         gb.setConstraints(vtBox, c);
         contentPane.add(vtBox);
 
-
-
         // place location label and field
         JLabel location = new JLabel("Location:");
         placeLabel(location, contentPane, gb, c, 0, 10);
-//        placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
+
         String[] locationList = {"shop_1", "shop_2", "shop_3", "shop_4"};
         locationBox = new JComboBox(locationList);
         locationBox.setSelectedIndex(0);
@@ -81,7 +79,7 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         // place city label and field
         JLabel cityLabel = new JLabel("City:");
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
-//        placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
+
         String[] cityList = {"Vancouver", "Richmond", "Burnaby", "Coquitlam"};
         cityBox = new JComboBox(cityList);
         cityBox.setSelectedIndex(0);
@@ -114,8 +112,12 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
             java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
             DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
-            String toDate = df.format(toDateUtil);
-            String fromDate = df.format(fromDateUtil);
+            String toDate = "";
+            String fromDate = "";
+            if ((toDateUtil != null) && (fromDateUtil != null)) {
+                toDate = df.format(toDateUtil);
+                fromDate = df.format(fromDateUtil);
+            }
             String carTypeData = (String) vtBox.getSelectedItem();
             String cityData = (String) cityBox.getSelectedItem();
             String locationData = (String) locationBox.getSelectedItem();

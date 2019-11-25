@@ -32,7 +32,7 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
     private JButton moreDetail;
     private JButton back;
     public ViewAvailableVehicleResultWindow() {
-        super("Number of vehicles available");
+        super("Check Available Vehicles");
 
         backToCustomerMenu = new JButton("Back");
         moreDetail = new JButton("More detail");
@@ -56,6 +56,7 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         placeLabelRemainder(countResult, contentPane, gb, c);
 
         List<JButton> buttons = new ArrayList<>();
+
         buttons.add(moreDetail);
         buttons.add(backToCustomerMenu);
         PanelConstraints setConstraints = (JButton button) -> { setButtonConstraints(gb, c, button); };
@@ -73,8 +74,13 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
         c.anchor = GridBagConstraints.CENTER;
         gb.setConstraints(jsp, c);
         contentPane.add(jsp);
+
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10, 10, 10, 10);
+        gb.setConstraints(backToCustomerMenu, c);
         contentPane.add(backToCustomerMenu);
         backToCustomerMenu.addActionListener(this);
+
         // anonymous inner class for closing the window
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {

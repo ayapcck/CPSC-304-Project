@@ -21,7 +21,9 @@ public class MakeReservationController implements MakeReservationDelegate {
 
     @Override
     public void createReservation(Reservation reservation, Branch branch) {
-        if (dbHandler.insertReservation(reservation, branch)) {
+        if (!checkDateIsValid(reservation.getFromDate(), reservation.getToDate())) {
+
+        } else if (dbHandler.insertReservation(reservation, branch)) {
             currentWindow.dispose();
             MakeReservationWindow reservationConfirmWindow = new MakeReservationWindow();
             MakeReservationController customerController = new MakeReservationController(reservationConfirmWindow);
@@ -40,4 +42,18 @@ public class MakeReservationController implements MakeReservationDelegate {
         CustomerController customerController = new CustomerController(customerWindow);
         customerWindow.showMenu(customerController);
     }
+
+    public boolean checkDateIsValid(String fromDate, String toDate) {
+        int fromyear = Integer.parseInt(fromDate.split("-")[0]);
+        int fromMonth = Integer.parseInt(fromDate.split("-")[1]);
+        int fromDay = Integer.parseInt(fromDate.split("-")[2]);
+        int toyear = Integer.parseInt(toDate.split("-")[0]);
+        int toMonth = Integer.parseInt(toDate.split("-")[1]);
+        int toDay = Integer.parseInt(toDate.split("-")[2]);
+
+        if ((toyear >= fromyear) && (toDay >= fromDay) && (toMonth >= fromMonth)
+        && (toyear <= 2021) && (fromyear >= 2015)) return true;
+        return false;
+    }
+
 }
