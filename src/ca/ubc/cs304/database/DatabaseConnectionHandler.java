@@ -479,15 +479,15 @@ public class DatabaseConnectionHandler {
 					insertTimePeriod(resTimePeriod);
 				}
 				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?,?,?)");
-				System.out.println(reservation.getConfNo());
-				System.out.println(reservation.getVtName());
-				System.out.println(reservation.getdLicense());
-				System.out.println(resTimePeriod.getFromDate());
-				System.out.println(resTimePeriod.getFromTime());
-				System.out.println(resTimePeriod.getToDate());
-				System.out.println(resTimePeriod.getToTime());
-				System.out.println(reservation.getLocation());
-				System.out.println(reservation.getCity());
+				System.out.println("confNo: " + reservation.getConfNo());
+				System.out.println("vtName: " +reservation.getVtName());
+				System.out.println("driver License: " + reservation.getdLicense());
+				System.out.println("FromDate: + " + resTimePeriod.getFromDate());
+				System.out.println("fromTime: " + resTimePeriod.getFromTime());
+				System.out.println("To date: " +resTimePeriod.getToDate());
+				System.out.println("To time: " +resTimePeriod.getToTime());
+				System.out.println("Location: " + reservation.getLocation());
+				System.out.println("City: " + reservation.getCity());
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
