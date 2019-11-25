@@ -649,7 +649,7 @@ public class DatabaseConnectionHandler {
 
 	public int checkVehicleNum(String carType, String location, String city) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
