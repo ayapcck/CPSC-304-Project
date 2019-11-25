@@ -46,6 +46,7 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
     }
 
     public boolean checkDateIsValid(String fromDate, String toDate) {
+        if (fromDate.equals("") || (toDate.equals(""))) return false;
         int fromyear = Integer.parseInt(fromDate.split("-")[0]);
         int fromMonth = Integer.parseInt(fromDate.split("-")[1]);
         int fromDay = Integer.parseInt(fromDate.split("-")[2]);
