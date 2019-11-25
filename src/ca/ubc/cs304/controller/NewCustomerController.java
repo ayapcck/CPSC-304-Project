@@ -3,8 +3,10 @@ package ca.ubc.cs304.controller;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.NewCustomerDelegate;
 import ca.ubc.cs304.model.Customer;
+import ca.ubc.cs304.ui.ErrorWindow;
 import ca.ubc.cs304.ui.MakeReservationWindow;
 import ca.ubc.cs304.ui.CustomerWindow;
+import ca.ubc.cs304.ui.NewCustomerWindow;
 
 import javax.swing.*;
 
@@ -18,11 +20,20 @@ public class NewCustomerController implements NewCustomerDelegate {
 
     @Override
     public void finishRegistration(Customer customer) {
-        dbHandler.insertCustomer(customer);
-        currentWindow.dispose();
-        MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
-        MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-        makeReservationWindow.showMenu(makeReservationController, customer.getDriversLicense());
+        if (customer.getDriversLicense().equals("")) {
+            currentWindow.dispose();
+            ErrorWindow errorWindow = new ErrorWindow();
+            errorWindow.infoBox("Driver's license cannot be empty", "Driver's license missing");
+            NewCustomerWindow newCustomerWindow = new NewCustomerWindow();
+            NewCustomerController newCustomerController = new NewCustomerController(newCustomerWindow);
+            newCustomerWindow.showMenu(newCustomerController);
+        } else {
+            dbHandler.insertCustomer(customer);
+            currentWindow.dispose();
+            MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
+            MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
+            makeReservationWindow.showMenu(makeReservationController, customer.getDriversLicense());
+        }
     }
 
     @Override

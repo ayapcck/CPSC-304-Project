@@ -88,6 +88,7 @@ public class NewCustomerWindow extends Window implements ActionListener {
             String phone = phoneField.getText();
             String license = licenseField.getText();
             String addr = addrField.getText();
+            System.out.println("licences:"+license);
             Customer customer = new Customer(phone, name, addr, license);
             newCustomerDelegate.finishRegistration(customer);
         } else if (e.getSource() == backToCustomer) {

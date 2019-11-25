@@ -21,10 +21,10 @@ import java.util.List;
 public class MakeReservationWindow extends Window implements ActionListener {
     private JButton submit;
     private JButton backToCustomer;
-    private JTextField locationField;
-    private JTextField vtField;
-    private JTextField cityField;
     private JTextField licenseField;
+    private JComboBox vtBox;
+    private JComboBox locationBox;
+    private JComboBox cityBox;
     private String license;
     private JSpinner timeSpinnerFrom;
     private JSpinner timeSpinnerTo;
@@ -38,18 +38,11 @@ public class MakeReservationWindow extends Window implements ActionListener {
         submit = new JButton("Submit");
         backToCustomer = new JButton("Back");
 
-        locationField = new JTextField(TEXT_FIELD_WIDTH);
-        licenseField = new JTextField(TEXT_FIELD_WIDTH);
-        vtField = new JTextField(TEXT_FIELD_WIDTH);
-        cityField = new JTextField(TEXT_FIELD_WIDTH);
     }
 
     public void showMenu(MakeReservationDelegate makeReservationDelegate, String license) {
         this.makeReservationDelegate = makeReservationDelegate;
         this.license = license;
-
-        JLabel fromTimeLabel = new JLabel("Pickup Time: ");
-        JLabel toTimeLabel = new JLabel("Return Time: ");
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -65,9 +58,41 @@ public class MakeReservationWindow extends Window implements ActionListener {
             placeFieldAndLabel("License", licenseField, contentPane, gb, c);
         }
 
-        placeFieldAndLabel("Location", locationField, contentPane, gb, c);
-        placeFieldAndLabel("City", cityField, contentPane, gb, c);
-        placeFieldAndLabel("Vehicle Type", vtField, contentPane, gb, c);
+        // place car type
+        JLabel carType = new JLabel("Car Type:");
+        placeLabel(carType, contentPane, gb, c, 10, 5);
+        String[] vtList = {"SUV", "full-size", "truck", "economy", "mid-size", "standard"};
+        vtBox = new JComboBox(vtList);
+        vtBox.setSelectedIndex(0);
+        vtBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(vtBox, c);
+        contentPane.add(vtBox);
+
+        // place location label and field
+        JLabel location = new JLabel("Location:");
+        placeLabel(location, contentPane, gb, c, 0, 10);
+        String[] locationList = {"shop_1", "shop_2", "shop_3", "shop_4"};
+        locationBox = new JComboBox(locationList);
+        locationBox.setSelectedIndex(0);
+        locationBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(locationBox, c);
+        contentPane.add(locationBox);
+
+        // place city label and field
+        JLabel cityLabel = new JLabel("City:");
+        placeLabel(cityLabel, contentPane, gb, c, 0, 10);
+        String[] cityList = {"Vancouver", "Richmond", "Burnaby", "Coquitlam"};
+        cityBox = new JComboBox(cityList);
+        cityBox.setSelectedIndex(0);
+        cityBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(cityBox, c);
+        contentPane.add(cityBox);
 
         // place fromTime label
         placeLabel("Pickup Time: ", contentPane, gb, c, 0, 10);
@@ -96,7 +121,7 @@ public class MakeReservationWindow extends Window implements ActionListener {
         new Panel(buttons, this, this, contentPane, gb, setConstraints);
 
         // place the cursor in the text field for the username
-        locationField.requestFocus();
+        vtBox.requestFocus();
     }
 
 //    public void showExistingCusMenu(MakeReservationDelegate makeReservationDelegate) {
@@ -329,9 +354,9 @@ public class MakeReservationWindow extends Window implements ActionListener {
             String fromTime = tf.format(fromDateTime);
             String toDate = df.format(toDateTime);
             String toTime = tf.format(toDateTime);
-            String city = cityField.getText();
-            String location = locationField.getText();
-            String vehicleType = vtField.getText();
+            String city = (String) cityBox.getSelectedItem();
+            String location = (String) locationBox.getSelectedItem();
+            String vehicleType = (String) vtBox.getSelectedItem();
             String license = this.license;
             if (license == null) {
                 license = licenseField.getText();

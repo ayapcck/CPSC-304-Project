@@ -43,12 +43,11 @@ public class ViewVehiclesResultController implements ViewVehiclesResultDelegate 
 
     @Override
     public void backToView() {
-        // TODO car
+//         TODO car
         currentWindow.dispose();
         ViewAvailableVehiclesWindow viewWindow = new ViewAvailableVehiclesWindow();
         ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
         ViewVehiclesController viewVehiclesController = new ViewVehiclesController(viewAvailableVehiclesWindow);
         viewWindow.showMenu(viewVehiclesController);
-
     }
 }
