@@ -76,7 +76,7 @@ public class DatabaseConnectionHandler {
 		executeSQLFile(path);
 	}
 
-	public void rentVehicleWithReservation(int confirmationNumber, String cardName, int cardNumber) {
+	public Rental rentVehicleWithReservation(int confirmationNumber, String cardName, int cardNumber) {
 		Reservation reservation = getReservation(confirmationNumber);
 		assert reservation != null;
 		String vtName = reservation.getVtName();
@@ -102,6 +102,7 @@ public class DatabaseConnectionHandler {
 		// inserts into database
 		insertIntoRental(rental);
 		updateStatus( "notavailable", forRent.getvLicense());
+		return rental;
 	}
 
 	private Reservation getReservation(int confNo) {
@@ -150,12 +151,12 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public void rentVehicleWithNoReservation(Reservation reservation, Branch branch,
+	public Rental rentVehicleWithNoReservation(Reservation reservation, Branch branch,
 											 String cardName, int cardNumber) {
 		TimePeriod timePeriod = reservation.getTimePeriod();
 		insertTimePeriod(timePeriod);
 		insertReservation(reservation, branch);
-		rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
+		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
 	public String returnVehicle() {

@@ -2,6 +2,7 @@ package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.RentVehicleDelegate;
 import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Rental;
 import ca.ubc.cs304.model.Reservation;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ public class RentalReceiptWindow extends Window implements ActionListener {
         backToClerkMenu = new JButton("Back");
     }
 
-    public void showMenu(RentVehicleDelegate rentVehicleDelegate, Reservation reservation, Branch branch) {
+    public void showMenu(RentVehicleDelegate rentVehicleDelegate, Rental rental) {
         this.rentVehicleDelegate = rentVehicleDelegate;
 
         JPanel contentPane = new JPanel();
@@ -34,17 +35,14 @@ public class RentalReceiptWindow extends Window implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel confirmationNumberLabel = new JLabel("Confirmation Number: " + reservation.getConfNo());
-        JLabel vehicleTypeLabel = new JLabel("Vehicle Type: " + reservation.getVtName());
-        JLabel locationField = new JLabel("Location: " + branch.getLocation());
-        JLabel cityField = new JLabel("City: " + branch.getCity());
-        JLabel fromDateLabel = new JLabel("Pickup Date: " + reservation.getFromDate());
-        JLabel toDateLabel = new JLabel("Return Date: " + reservation.getToDate());
+        JLabel confirmationNumberLabel = new JLabel("Confirmation Number: " + rental.getConfNo());
+        JLabel fromDateLabel = new JLabel("Pickup Date: " + rental.getFromDate());
+        JLabel toDateLabel = new JLabel("Return Date: " + rental.getToDate());
 
         placeLabelRemainder(confirmationNumberLabel, contentPane, gb, c);
-        placeLabelRemainder(vehicleTypeLabel, contentPane, gb, c);
-        placeLabelRemainder(locationField, contentPane, gb, c);
-        placeLabelRemainder(cityField, contentPane, gb, c);
+//        placeLabelRemainder(vehicleTypeLabel, contentPane, gb, c);
+//        placeLabelRemainder(locationField, contentPane, gb, c);
+//        placeLabelRemainder(cityField, contentPane, gb, c);
         placeLabelRemainder(fromDateLabel, contentPane, gb, c);
         placeLabelRemainder(toDateLabel, contentPane, gb, c);
 
