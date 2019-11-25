@@ -27,9 +27,9 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
     private JButton mainMenu;
     private JDatePickerImpl datePicker;
     private JDatePickerImpl datePickerTo;
-    private JTextField carTypeField;
-    private JTextField cityField;
-    private JTextField locationField;
+    private JComboBox vtBox;
+    private JComboBox locationBox;
+    private JComboBox cityBox;
 
     public ViewAvailableVehiclesWindow() {
         super("Please vehicle information:");
@@ -52,21 +52,44 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
 
         // place car type label and field
         JLabel carType = new JLabel("Car Type:");
-        carTypeField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(carType, contentPane, gb, c, 10, 5);
-        placeTextField(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
+//        placeTextField(carTypeField, contentPane, gb, c, TEXT_FIELD_INSET);
+        String[] vtList = {"SUV", "full-size", "truck", "economy", "mid-size", "standard"};
+        vtBox = new JComboBox(vtList);
+        vtBox.setSelectedIndex(0);
+        vtBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(vtBox, c);
+        contentPane.add(vtBox);
+
+
 
         // place location label and field
         JLabel location = new JLabel("Location:");
-        locationField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(location, contentPane, gb, c, 0, 10);
-        placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
+//        placeTextField(locationField, contentPane, gb, c, TEXT_FIELD_INSET);
+        String[] locationList = {"shop_1", "shop_2", "shop_3", "shop_4"};
+        locationBox = new JComboBox(locationList);
+        locationBox.setSelectedIndex(0);
+        locationBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(locationBox, c);
+        contentPane.add(locationBox);
 
         // place city label and field
         JLabel cityLabel = new JLabel("City:");
-        cityField = new JTextField(TEXT_FIELD_WIDTH);
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
-        placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
+//        placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
+        String[] cityList = {"Vancouver", "Richmond", "Burnaby", "Coquitlam"};
+        cityBox = new JComboBox(locationList);
+        cityBox.setSelectedIndex(0);
+        cityBox.addActionListener(this);
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.insets = new Insets(10,0,0,0);
+        gb.setConstraints(cityBox, c);
+        contentPane.add(cityBox);
 
         // place fromDate label and field
         JLabel fromDate = new JLabel("from Date:");
@@ -93,9 +116,9 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
             java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
             String toDate = df.format(toDateUtil);
             String fromDate = df.format(fromDateUtil);
-            String carTypeData = carTypeField.getText();
-            String cityData = cityField.getText();
-            String locationData = locationField.getText();
+            String carTypeData = (String) vtBox.getSelectedItem();
+            String cityData = (String) cityBox.getSelectedItem();
+            String locationData = (String) locationBox.getSelectedItem();
             viewVehiclesDelegate.submit(carTypeData, locationData, cityData, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesDelegate.returnToCustomer();
