@@ -807,7 +807,7 @@ public class DatabaseConnectionHandler {
 			return table;
 		} catch (SQLException e) {
 			System.out.println("No return found on queried date");
-			return null; // either we can return an empty rs or throw the exception or just return null
+			return null; // either we can return an empty rs or throw the exception or just return null;
 		}
 	}
 
