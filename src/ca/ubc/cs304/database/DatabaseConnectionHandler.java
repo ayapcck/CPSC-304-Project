@@ -169,6 +169,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	public String returnVehicle() {
+		// TODO: AYA when you fix this make sure to change the status of the car i didn't do it
 	    int rid = -99;
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");

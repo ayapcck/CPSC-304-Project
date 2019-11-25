@@ -196,7 +196,7 @@ INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
-VALUES ('2019-11-20', '12:05', '2019-01-25', '1:00');
+VALUES ('2019-11-20', '12:05', '2019-11-25', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-26', '12:05', '2019-01-20', '1:00');
@@ -210,7 +210,7 @@ VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 's
 
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
-VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 'shop_1', 'Vancouver');
+VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-11-25', '1:00', 'shop_1', 'Vancouver');
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
 VALUES (125, 'truck', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
@@ -231,10 +231,46 @@ INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, to
 VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
-                  VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
+                  VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-11-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
-VALUES (126, 'A10116', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
+VALUES (126, 'A10116', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
 
-INSERT INTO Return( rID, returnDate, odometer, fullTank, value)
-    VALUES(125, '2019-01-25', 5, 1, 510);
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (127, 'A10112', '9262019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 126);
+
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (128, 'A10113', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 127);
+
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (129, 'A10117', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 128);
+
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (130, 'A10118', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 129);
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (131, 'A10119', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 130);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+    VALUES(125, '2019-11-25', 5, 1, 510);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(126, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(127, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(128, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(129, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(130, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(131, '2020-01-20', 5, 1, 410);
