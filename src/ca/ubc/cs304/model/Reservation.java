@@ -1,6 +1,5 @@
 package ca.ubc.cs304.model;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -13,10 +12,12 @@ public class Reservation {
     private String fromTime;
     private String toTime;
     private TimePeriod timePeriod;
+    private String location;
+    private String city;
 
     public Reservation(Integer confNo, String vtName, String dLicense,
                        String fromDate, String fromTime,
-                       String toDate, String toTime) {
+                       String toDate, String toTime, String location, String city) {
         if (confNo == null) {
             this.confNo = (int) (Math.random() * 1000);
         } else {
@@ -29,11 +30,13 @@ public class Reservation {
         this.toDate = toDate;
         this.toTime = toTime;
         this.timePeriod = new TimePeriod(fromDate, fromTime, toDate, toTime);
+        this.location = location;
+        this.city = city;
     }
 
-    public Reservation(Integer confNo, String vtName, String dLicense, TimePeriod timePeriod) {
+    public Reservation(Integer confNo, String vtName, String dLicense, TimePeriod timePeriod, String location, String city) {
         this(confNo, vtName, dLicense, timePeriod.getFromDate(), timePeriod.getFromTime(),
-                timePeriod.getToDate(), timePeriod.getToTime());
+                timePeriod.getToDate(), timePeriod.getToTime(), location, city);
     }
 
     public static Reservation createReservationModel(ResultSet resultSet) {
@@ -46,7 +49,9 @@ public class Reservation {
                 String fromTime = resultSet.getString(5);
                 String toDate = resultSet.getString(6);
                 String toTime = resultSet.getString(7);
-                return new Reservation(confNo, vtName, driversLicense, fromDate, fromTime, toDate, toTime);
+                String location = resultSet.getString(8);
+                String city = resultSet.getString(9);
+                return new Reservation(confNo, vtName, driversLicense, fromDate, fromTime, toDate, toTime, location, city);
             }
         } catch (SQLException e) {
             System.out.println("Exception when parsing reservation from database\n" + e.getMessage());
@@ -84,5 +89,13 @@ public class Reservation {
 
     public TimePeriod getTimePeriod() {
         return timePeriod;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public String getCity() {
+        return city;
     }
 }

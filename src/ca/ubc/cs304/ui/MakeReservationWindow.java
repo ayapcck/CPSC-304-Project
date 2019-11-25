@@ -1,5 +1,11 @@
 package ca.ubc.cs304.ui;
 
+import ca.ubc.cs304.delegates.MakeReservationDelegate;
+import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Reservation;
+import ca.ubc.cs304.model.TimePeriod;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,13 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.*;
-
-import ca.ubc.cs304.delegates.MakeReservationDelegate;
-import ca.ubc.cs304.model.Branch;
-import ca.ubc.cs304.model.Reservation;
-import ca.ubc.cs304.model.TimePeriod;
 
 /**
  * The class is only responsible for displaying and handling the login GUI.
@@ -338,7 +337,8 @@ public class MakeReservationWindow extends Window implements ActionListener {
                 license = licenseField.getText();
             }
             int reservationNum = (int) (Math.random());
-            Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTime, toDate, toTime);
+            Reservation reservation = new Reservation(reservationNum, vehicleType, license, fromDate, fromTime, toDate, toTime,
+                    location, city);
             Branch branch = new Branch(location, city);
             makeReservationDelegate.createReservation(reservation, branch);
         } else if (e.getSource() == backToCustomer) {

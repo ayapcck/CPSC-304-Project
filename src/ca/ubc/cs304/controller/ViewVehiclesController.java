@@ -17,7 +17,7 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
     }
 
     @Override
-    public void submit(String carType, String location, String city) {
+    public void submit(String carType, String location, String city, String fromDate, String toDate) {
 		currentWindow.dispose();
 		int count = dbHandler.checkVehicleNum(carType, location, city);
 		ViewAvailableVehicleResultWindow viewAvailableVehicleResultWindow = new ViewAvailableVehicleResultWindow();
