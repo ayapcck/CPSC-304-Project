@@ -3,6 +3,7 @@ package ca.ubc.cs304.ui;
 import ca.ubc.cs304.delegates.ReturnVehicleDelegate;
 import ca.ubc.cs304.model.RentalCost;
 import ca.ubc.cs304.model.Return;
+import ca.ubc.cs304.model.VehicleType;
 import javafx.util.Pair;
 
 import javax.swing.*;
@@ -38,9 +39,11 @@ public class ReturnReceiptWindow extends Window implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        long totalWeeklyRate = rentalCost.getWeekInsuranceValue() + rentalCost.getWeekValue();
-        long totalDailyRate = rentalCost.getDayInsuranceValue() + rentalCost.getDayValue();
-        long totalHourlyRate = rentalCost.getHourInsuranceValue() + rentalCost.getHourValue();
+        VehicleType vehicleType = rentalCost.getVehicleType();
+
+        long totalWeeklyRate = vehicleType.getWeeklyInsuranceRate() + vehicleType.getWeeklyRate();
+        long totalDailyRate = vehicleType.getDailyInsuranceRate() + vehicleType.getDailyRate();
+        long totalHourlyRate = vehicleType.getHourlyInsuranceRate() + vehicleType.getHourlyRate();
         JLabel weeksRented = new JLabel("Weeks rented: " + rentalCost.getWeeks() + " at $" + totalWeeklyRate + "/week");
         JLabel daysRented = new JLabel("Days rented: " + rentalCost.getDaysLeft() + " at $" + totalDailyRate + "/day");
         JLabel hoursRented = new JLabel("Hours rented: " + rentalCost.getHoursLeft() + " at $" + totalHourlyRate + "/hour");

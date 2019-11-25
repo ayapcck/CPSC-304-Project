@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class handles all database related transactions
@@ -214,12 +215,12 @@ public class DatabaseConnectionHandler {
 	    long currTime  = toDate.getTime();
 	    long startTime = fromDate.getTime();
         long diff = currTime - startTime;
-        long hours = diff / 1000 / 3600;
+        long hours = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
 
 		long days = Math.floorDiv(hours, 24);
 
         long weeks = Math.floorDiv(days, 7);
-        long daysLeft = (weeks * 7) - days;
+        long daysLeft = days - (weeks * 7);
         long hoursLeft = hours - (days * 24);
 
         return new RentalCost(vehicleType, weeks, daysLeft, hoursLeft);
