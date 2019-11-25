@@ -3,8 +3,11 @@ package ca.ubc.cs304.controller;
 import ca.ubc.cs304.database.DatabaseConnectionHandler;
 import ca.ubc.cs304.delegates.RentVehicleDelegate;
 import ca.ubc.cs304.model.Branch;
+import ca.ubc.cs304.model.Rental;
+import ca.ubc.cs304.model.RentalReturn;
 import ca.ubc.cs304.model.Reservation;
 import ca.ubc.cs304.ui.ClerkWindow;
+import ca.ubc.cs304.ui.RentalReceiptWindow;
 import ca.ubc.cs304.ui.RentalWithReservationWindow;
 import ca.ubc.cs304.ui.RentalWithoutReservationWindow;
 
@@ -45,11 +48,19 @@ public class RentController implements RentVehicleDelegate {
 
     @Override
     public void rentWithReservation(int confirmationNumber, String cardName, int cardNumber) {
-        dbHandler.rentVehicleWithReservation(confirmationNumber, cardName, cardNumber);
+        Rental rental = dbHandler.rentVehicleWithReservation(confirmationNumber, cardName, cardNumber);
+        currentWindow.dispose();
+        RentalReceiptWindow rentalReceiptWindow = new RentalReceiptWindow();
+        RentController rentController = new RentController(rentalReceiptWindow);
+        rentalReceiptWindow.showMenu(rentController, rental);
     }
 
     @Override
     public void rentWithoutReservation(Reservation reservation, Branch branch, String cardName, int cardNumber) {
-        dbHandler.rentVehicleWithNoReservation(reservation, branch, cardName, cardNumber);
+        Rental rental = dbHandler.rentVehicleWithNoReservation(reservation, branch, cardName, cardNumber);
+        currentWindow.dispose();
+        RentalReceiptWindow rentalReceiptWindow = new RentalReceiptWindow();
+        RentController rentController = new RentController(rentalReceiptWindow);
+        rentalReceiptWindow.showMenu(rentController, rental);
     }
 }
