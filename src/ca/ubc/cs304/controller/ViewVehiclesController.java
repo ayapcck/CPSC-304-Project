@@ -46,15 +46,17 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
     }
 
     public boolean checkDateIsValid(String fromDate, String toDate) {
-        if ((fromDate == "") || (toDate == "")) return false;
         int fromyear = Integer.parseInt(fromDate.split("-")[0]);
         int fromMonth = Integer.parseInt(fromDate.split("-")[1]);
         int fromDay = Integer.parseInt(fromDate.split("-")[2]);
         int toyear = Integer.parseInt(toDate.split("-")[0]);
         int toMonth = Integer.parseInt(toDate.split("-")[1]);
         int toDay = Integer.parseInt(toDate.split("-")[2]);
-        if ((toyear >= fromyear) && (toDay >= fromDay) && (toMonth >= fromMonth)
-                && (toyear <= 2021) && (fromyear >= 2015)) return true;
-        return false;
+
+        if ((fromyear > toyear)) return false;
+        if ((fromyear == toyear) && (fromMonth > toMonth)) return false;
+        if ((fromyear == toyear) && (fromMonth == toMonth) && (fromDay > toDay)) return false;
+        if (fromyear < 2019) return false;
+        return true;
     }
 }
