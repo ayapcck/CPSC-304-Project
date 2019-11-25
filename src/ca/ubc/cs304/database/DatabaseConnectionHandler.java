@@ -75,6 +75,8 @@ public class DatabaseConnectionHandler {
 
 	public void dropAllRequiredTables() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
+		String path = "DropTables.sql";
+
 		executeSQLFile(path);
 	}
 
@@ -170,7 +172,7 @@ public class DatabaseConnectionHandler {
 		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
-	public Pair<Return, RentalCost> returnVehicle(int rId) {
+	public Pair<Return, RentalCost> returnVehicle(int rId) throws Exception{
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
             ps.setInt(1, rId);
@@ -186,9 +188,9 @@ public class DatabaseConnectionHandler {
                 fromDate = rental.getString(4);
             }
 
-//            if (!rentedVehicle(vLicense)) {
-//                return "Vehicle is not rented";
-//            }
+            if (!rentedVehicle(vLicense)) {
+                throw new Exception("This vehicle was not rented");
+            }
 
             PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
             ps1.setString(1, vLicense);
@@ -534,7 +536,6 @@ public class DatabaseConnectionHandler {
 
 	public String[] getDataFromTable(String tableName, String columns) {
 		ArrayList<String> result = new ArrayList<String>();
-		// TODO: do we want to return anything or just print information? display in a ui?
 
 		try {
 			String query = "SELECT ".concat(columns);
@@ -544,7 +545,7 @@ public class DatabaseConnectionHandler {
 			String[] listCols = columns.split(",");
 			while (rs.next()) {
 				for (int i = 1; i <= listCols.length; i++) {
-					System.out.println(rs.getString(i));
+					System.out.println(listCols[i-1] + ": " + rs.getString(i));
 				}
 			}
 			rs.close();
