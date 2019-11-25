@@ -1,7 +1,9 @@
 package ca.ubc.cs304.ui;
 
 import ca.ubc.cs304.delegates.ReturnVehicleDelegate;
+import ca.ubc.cs304.model.RentalCost;
 import ca.ubc.cs304.model.Return;
+import javafx.util.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,8 +23,11 @@ public class ReturnReceiptWindow extends Window implements ActionListener {
         backToClerkMenu = new JButton("Back");
     }
 
-    public void showMenu(ReturnVehicleDelegate returnVehicleDelegate, Return returnObj) {
+    public void showMenu(ReturnVehicleDelegate returnVehicleDelegate, Pair<Return, RentalCost> returnPair) {
         this.returnVehicleDelegate = returnVehicleDelegate;
+
+        Return returnObj = returnPair.getKey();
+        RentalCost rentalCost = returnPair.getValue();
 
         JPanel contentPane = new JPanel();
         this.setContentPane(contentPane);
@@ -33,8 +38,17 @@ public class ReturnReceiptWindow extends Window implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JLabel costLabel = new JLabel("Cost: $" + returnObj.getValue());
+        long totalWeeklyRate = rentalCost.getWeekInsuranceValue() + rentalCost.getWeekValue();
+        long totalDailyRate = rentalCost.getDayInsuranceValue() + rentalCost.getDayValue();
+        long totalHourlyRate = rentalCost.getHourInsuranceValue() + rentalCost.getHourValue();
+        JLabel weeksRented = new JLabel("Weeks rented: " + rentalCost.getWeeks() + " at $" + totalWeeklyRate + "/week");
+        JLabel daysRented = new JLabel("Days rented: " + rentalCost.getDaysLeft() + " at $" + totalDailyRate + "/day");
+        JLabel hoursRented = new JLabel("Hours rented: " + rentalCost.getHoursLeft() + " at $" + totalHourlyRate + "/hour");
+        JLabel costLabel = new JLabel("Total Cost: $" + returnObj.getValue());
         JLabel returnDateLabel = new JLabel("Date: " + returnObj.getReturnDate());
+        placeLabelRemainder(weeksRented, contentPane, gb, c);
+        placeLabelRemainder(daysRented, contentPane, gb, c);
+        placeLabelRemainder(hoursRented, contentPane, gb, c);
         placeLabelRemainder(costLabel, contentPane, gb, c);
         placeLabelRemainder(returnDateLabel, contentPane, gb, c);
 

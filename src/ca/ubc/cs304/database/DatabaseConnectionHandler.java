@@ -4,6 +4,7 @@ import ca.ubc.cs304.model.*;
 import ca.ubc.cs304.model.Customer;
 import ca.ubc.cs304.model.Rental;
 import ca.ubc.cs304.model.TimePeriod;
+import javafx.util.Pair;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
@@ -159,7 +160,7 @@ public class DatabaseConnectionHandler {
 		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
-	public Return returnVehicle(int rId) {
+	public Pair<Return, RentalCost> returnVehicle(int rId) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
             ps.setInt(1, rId);
@@ -196,17 +197,18 @@ public class DatabaseConnectionHandler {
 
             // get value
             assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate, toDate);
+            RentalCost rentalCost = returnValue(vehicleType, fromDate, toDate);
+            int value = rentalCost.getCalculatedCost();
             Return ret = new Return(rId, toDate, odometer, 1, value);
             insertIntoReturn(ret);
-            return ret;
+            return new Pair<Return, RentalCost>(ret, rentalCost);
         } catch (SQLException e) {
             System.out.println("No rental with that id exists");
             return null;
         }
     }
 
-    public int returnValue(VehicleType vehicleType, String fromDateString, String toDateString) {
+    public RentalCost returnValue(VehicleType vehicleType, String fromDateString, String toDateString) {
 		Date fromDate = Date.valueOf(fromDateString);
 		Date toDate = Date.valueOf(toDateString);
 	    long currTime  = toDate.getTime();
@@ -214,20 +216,13 @@ public class DatabaseConnectionHandler {
         long diff = currTime - startTime;
         long hours = diff / 1000 / 3600;
 
-        long days = Math.floorDiv(hours, 24);
+		long days = Math.floorDiv(hours, 24);
 
         long weeks = Math.floorDiv(days, 7);
         long daysLeft = (weeks * 7) - days;
         long hoursLeft = hours - (days * 24);
 
-        long weekValue = vehicleType.getWeeklyRate() * weeks;
-        long dayValue = vehicleType.getDailyRate() * daysLeft;
-        long hourValue = vehicleType.getHourlyRate() * hoursLeft;
-
-        long weekInsValue = vehicleType.getWeeklyInsuranceRate() * weeks;
-        long dayInsValue = vehicleType.getDailyInsuranceRate() * daysLeft;
-        long hourInsValue = vehicleType.getHourlyInsuranceRate() * hoursLeft;
-        return (int) (weekValue + dayValue + hourValue + weekInsValue + dayInsValue + hourInsValue);
+        return new RentalCost(vehicleType, weeks, daysLeft, hoursLeft);
 
     }
     public VehicleType createVehicleTypeModel(ResultSet rs) throws SQLException {
