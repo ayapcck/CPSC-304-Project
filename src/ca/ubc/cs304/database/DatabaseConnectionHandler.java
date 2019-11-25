@@ -86,7 +86,7 @@ public class DatabaseConnectionHandler {
 		// arbitrarily choose the first car of the make since we don't know availability
 		ForRent forRent = vehicles.get(0);
 		// have the reservation made at this confNo. Should be unique because confNo is a primary key
-		int rID = confirmationNumber / 2;
+		int rID = confirmationNumber + 1;
 		Rental rental = new Rental(rID,
 				forRent.getvLicense(),
 				reservation.getdLicense(),

@@ -120,15 +120,30 @@ INSERT INTO Branch (location, city) VALUES ('shop_1', 'Burnaby');
 INSERT INTO Branch (location, city) VALUES ('shop_2', 'Burnaby');
 
 INSERT INTO Customer (cellNum, name, address, driversLicense)
-    VALUES (6041234567, 'John Smith', '1234 made up lane', '9282019');
+VALUES (6041234567, 'John Smith', '1234 made up lane', '9282019');
 INSERT INTO Customer (cellNum, name, address, driversLicense)
-    VALUES (1234567890, 'Cane Able', '4312 does not exist', 'license_num');
+VALUES (6041234567, 'Bob Smith', '1234 made up lane', '9272019');
 INSERT INTO Customer (cellNum, name, address, driversLicense)
-    VALUES (0109238881, 'Smith Apple', 'Disney Land Resort', 'q1238822');
+VALUES (6041234567, 'Jo Smith', '1234 made up lane', '9262019');
 INSERT INTO Customer (cellNum, name, address, driversLicense)
-    VALUES (8388772838, 'Jonny Rocket', 'Tim Hortons', '920019293');
+VALUES (6041234567, 'Jon Smith', '1234 made up lane', '9252019');
 INSERT INTO Customer (cellNum, name, address, driversLicense)
-    VALUES (8289199482, 'Robert Frost', '9829 something road', '9maybe8912');
+VALUES (6041234567, 'Joh Smith', '1234 made up lane', '9242019');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (6041234567, 'J Smith', '1234 made up lane', '9232019');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (6041234567, 'Rob Smith', '1234 made up lane', '9222019');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (6041234567, 'Ro Smith', '1234 made up lane', '9212019');
+
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (1234567890, 'Cane Able', '4312 does not exist', 'license_num');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (0109238881, 'Smith Apple', 'Disney Land Resort', 'q1238822');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (8388772838, 'Jonny Rocket', 'Tim Hortons', '920019293');
+INSERT INTO Customer (cellNum, name, address, driversLicense)
+VALUES (8289199482, 'Robert Frost', '9829 something road', '9maybe8912');
 
 INSERT INTO VehicleType (VTName, features) VALUES ('SUV', 'car seat');
 INSERT INTO VehicleType (VTName, features) VALUES ('truck', 'car seat');
@@ -139,27 +154,81 @@ INSERT INTO VehicleType (VTName, features) VALUES ('standard', 'car seat');
 INSERT INTO VehicleType (VTName, features) VALUES ('full-size', 'car seat');
 
 INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-    VALUES (1,'A10111', 'red', 'available', 'SUV', 'shop_1', 'Vancouver');
+VALUES (1,'A10111', 'red', 'available', 'SUV', 'shop_1', 'Vancouver');
 INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-    VALUES (2, 'B10111', 'blue', 'available', 'truck', 'shop_2', 'Vancouver');
+VALUES (1,'A10112', 'red', 'available', 'full-size', 'shop_1', 'Vancouver');
 INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-    VALUES (3, 'C10111', 'green', 'available', 'standard', 'shop_1', 'Vancouver');
+VALUES (1,'A10113', 'red', 'available', 'full-size', 'shop_1', 'Vancouver');
 INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-    VALUES (4, 'D10111', 'red', 'available', 'full-size', 'shop_1', 'Burnaby');
+VALUES (1,'A10114', 'red', 'available', 'truck', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10115', 'red', 'available', 'truck', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10116', 'red', 'available', 'truck', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10117', 'red', 'available', 'economy', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10118', 'red', 'available', 'economy', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10119', 'red', 'available', 'economy', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10121', 'red', 'available', 'economy', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10122', 'red', 'available', 'mid-size', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (1,'A10123', 'red', 'available', 'SUV', 'shop_1', 'Vancouver');
+
+
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (2, 'B10111', 'blue', 'available', 'truck', 'shop_2', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (3, 'C10111', 'green', 'available', 'standard', 'shop_1', 'Vancouver');
+INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
+VALUES (4, 'D10111', 'red', 'available', 'full-size', 'shop_1', 'Burnaby');
 INSERT INTO ForSale (vID, vFSLicense, color, status, VTName, location, city)
-    VALUES (5, 'E10111', 'blue', 'available', 'economy', 'shop_1', 'Burnaby');
+VALUES (5, 'E10111', 'blue', 'available', 'economy', 'shop_1', 'Burnaby');
+
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
-    VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
+VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
-VALUES ('2018-11-24', '12:05', '2019-01-20', '1:00');
+VALUES ('2019-11-20', '12:05', '2019-01-25', '1:00');
+
+INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
+VALUES ('2019-11-26', '12:05', '2019-01-20', '1:00');
+
+INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
+VALUES ('2019-11-27', '12:05', '2019-01-20', '1:00');
+
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-    VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-    VALUES (124, 'compact', '9282019', '2018-11-24', '12:05', '2019-01-20', '1:00');
+VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00');
 
--- INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
--- -- --     VALUES (124, 'A10111', 'q1238822', '2019-11-24')
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (125, 'truck', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (126, 'full-size', '9262019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (127, 'full-size', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (128, 'economy', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (129, 'economy', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
+VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+                  VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (126, 'A10116', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
