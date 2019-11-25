@@ -75,8 +75,6 @@ public class DatabaseConnectionHandler {
 
 	public void dropAllRequiredTables() {
 		String path = "\\src\\ca\\ubc\\cs304\\database\\DropTables.sql";
-		String path = "DropTables.sql";
-
 		executeSQLFile(path);
 	}
 
