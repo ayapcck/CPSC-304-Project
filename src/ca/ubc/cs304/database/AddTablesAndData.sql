@@ -77,8 +77,11 @@ CREATE TABLE Reservations(
     fromTime VARCHAR(255),
     toDate VARCHAR(255),
     toTime VARCHAR(255),
+    location VARCHAR(255) NOT NULL,
+    city     VARCHAR(255) NOT NULL,
     PRIMARY KEY (confNo),
     FOREIGN KEY (VTName) REFERENCES VehicleType,
+    FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (driversLicense) REFERENCES Customer,
     FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES TimePeriod
 );
@@ -193,7 +196,7 @@ INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
-VALUES ('2019-11-20', '12:05', '2019-01-25', '1:00');
+VALUES ('2019-11-20', '12:05', '2019-11-25', '1:00');
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-26', '12:05', '2019-01-20', '1:00');
@@ -202,33 +205,37 @@ INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-27', '12:05', '2019-01-20', '1:00');
 
 
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (128, 'A10113', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 127);
 
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (125, 'truck', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (126, 'full-size', '9262019', '2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (127, 'full-size', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (128, 'economy', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (129, 'economy', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00');
-
-INSERT INTO Reservation (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
-                  VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
+VALUES (129, 'A10117', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 128);
+
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
-VALUES (126, 'A10116', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
+VALUES (130, 'A10118', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 129);
+
+INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
+VALUES (131, 'A10119', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 130);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+    VALUES(125, '2019-11-25', 5, 1, 510);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(126, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(127, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(128, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(129, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(130, '2020-01-20', 5, 1, 410);
+
+INSERT INTO Return(rID, returnDate, odometer, fullTank, value)
+VALUES(131, '2020-01-20', 5, 1, 410);

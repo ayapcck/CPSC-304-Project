@@ -4,6 +4,7 @@ import ca.ubc.cs304.model.*;
 import ca.ubc.cs304.model.Customer;
 import ca.ubc.cs304.model.Rental;
 import ca.ubc.cs304.model.TimePeriod;
+import javafx.util.Pair;
 import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class handles all database related transactions
@@ -84,7 +86,16 @@ public class DatabaseConnectionHandler {
 		List<ForRent> vehicles = getVehiclesByVTName(vtName);
 		assert vehicles != null;
 		// arbitrarily choose the first car of the make since we don't know availability
-		ForRent forRent = vehicles.get(0);
+		ForRent forRent = null;
+		for (ForRent f: vehicles) {
+			if (f.getLocation().equals(reservation.getLocation()) && f.getCity().equals(reservation.getCity())) {
+				forRent = f;
+			}
+		}
+		if (forRent == null) {
+			System.out.println("No vehicles of type " + reservation.getVtName() + " at " + reservation.getLocation() + " " + reservation.getCity());
+			return null;
+		}
 		// have the reservation made at this confNo. Should be unique because confNo is a primary key
 		int rID = confirmationNumber + 1;
 		Rental rental = new Rental(rID,
@@ -159,33 +170,32 @@ public class DatabaseConnectionHandler {
 		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
-	public String returnVehicle() {
-	    int rid = -99;
+	public Pair<Return, RentalCost> returnVehicle(int rId) {
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
-            ps.setInt(1, rid);
+            ps.setInt(1, rId);
             ResultSet rental = ps.executeQuery();
             String vLicense = null;
-            Date toDate = null;
-            Date fromDate = null;
+            String toDate = null;
+            String fromDate = null;
             String toTime = null;
-            while (rental.next()) {
+            if (rental.next()) {
                 vLicense = rental.getString(2);
-                toDate = rental.getDate(6);
+                toDate = rental.getString(6);
                 toTime = rental.getString(7);
-                fromDate = rental.getDate(4);
+                fromDate = rental.getString(4);
+            }
 
-            }
-            if (!rentedVehicle(vLicense)) {
-                return "Vehicle is not rented";
-            }
+//            if (!rentedVehicle(vLicense)) {
+//                return "Vehicle is not rented";
+//            }
 
             PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
             ps1.setString(1, vLicense);
             ResultSet forRent = ps1.executeQuery();
             int odometer = -99;
             String vtName = null;
-            while (forRent.next()) {
+            if (forRent.next()) {
                 odometer = forRent.getInt(7);
                 vtName = forRent.getString(9);
             }
@@ -197,38 +207,32 @@ public class DatabaseConnectionHandler {
 
             // get value
             assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate, toDate);
-            Return ret = new Return(rid, toDate, odometer, 1, value);
+            RentalCost rentalCost = returnValue(vehicleType, fromDate, toDate);
+            int value = rentalCost.getCalculatedCost();
+            Return ret = new Return(rId, toDate, odometer, 1, value);
             insertIntoReturn(ret);
-            //TODO: display receipt
-            return "Amount paid " + value;
+            return new Pair<Return, RentalCost>(ret, rentalCost);
         } catch (SQLException e) {
             System.out.println("No rental with that id exists");
+            return null;
         }
-        return "";
-
     }
 
-    public int returnValue(VehicleType vehicleType, Date fromDate, Date toDate) {
+    public RentalCost returnValue(VehicleType vehicleType, String fromDateString, String toDateString) {
+		Date fromDate = Date.valueOf(fromDateString);
+		Date toDate = Date.valueOf(toDateString);
 	    long currTime  = toDate.getTime();
 	    long startTime = fromDate.getTime();
         long diff = currTime - startTime;
-        long hours = diff / 1000 / 3600;
+        long hours = TimeUnit.HOURS.convert(diff, TimeUnit.MILLISECONDS);
 
-        long days = Math.floorDiv(hours, 24);
+		long days = Math.floorDiv(hours, 24);
 
         long weeks = Math.floorDiv(days, 7);
-        long daysLeft = (weeks * 7) - days;
+        long daysLeft = days - (weeks * 7);
         long hoursLeft = hours - (days * 24);
 
-        long weekValue = vehicleType.getWeeklyRate() * weeks;
-        long dayValue = vehicleType.getDailyRate() * daysLeft;
-        long hourValue = vehicleType.getHourlyRate() * hoursLeft;
-
-        long weekInsValue = vehicleType.getWeeklyInsuranceRate() * weeks;
-        long dayInsValue = vehicleType.getDailyInsuranceRate() * daysLeft;
-        long hourInsValue = vehicleType.getHourlyInsuranceRate() * hoursLeft;
-        return (int) (weekValue + dayValue + hourValue + weekInsValue + dayInsValue + hourInsValue);
+        return new RentalCost(vehicleType, weeks, daysLeft, hoursLeft);
 
     }
     public VehicleType createVehicleTypeModel(ResultSet rs) throws SQLException {
@@ -406,9 +410,9 @@ public class DatabaseConnectionHandler {
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO RETURN VALUES (?,?,?,?,?)");
             ps.setInt(1, model.getrID());
-            ps.setDate(2, model.getReturnDate());
+            ps.setString(2, model.getReturnDate());
             ps.setInt(3, model.getOdometer());
-            ps.setInt(4, model.getFullTank());
+            ps.setBoolean(4, model.getFullTank()==1);
             ps.setInt(5, model.getValue());
 
             ps.executeUpdate();
@@ -470,7 +474,7 @@ public class DatabaseConnectionHandler {
 			if (vehicleExist(reservation.getVtName(), branch.getLocation(), branch.getCity())) {
 				TimePeriod resTimePeriod = reservation.getTimePeriod();
 
-				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?,?,?)");
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
@@ -478,6 +482,8 @@ public class DatabaseConnectionHandler {
 				ps.setString(5, resTimePeriod.getFromTime());
 				ps.setString(6, resTimePeriod.getToDate());
 				ps.setString(7, resTimePeriod.getToTime());
+				ps.setString(8, reservation.getLocation());
+				ps.setString(9, reservation.getCity());
 				ps.executeQuery();
 				connection.commit();
 				ps.close();

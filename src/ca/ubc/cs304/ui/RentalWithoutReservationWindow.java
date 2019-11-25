@@ -101,7 +101,7 @@ public class RentalWithoutReservationWindow extends Window implements ActionList
             int confNo = (int) (Math.random() * 100);
             System.out.println(confNo);
             Reservation reservation = new Reservation(confNo, vehicleTypeField.getText(),
-                    licenseField.getText(), timePeriod);
+                    licenseField.getText(), timePeriod, locationField.getText(), cityField.getText());
             Branch branch = new Branch(locationField.getText(), cityField.getText());
             rentVehicleDelegate.rentWithoutReservation(reservation, branch,
                     cardNameField.getText(), Integer.parseInt(cardNumberField.getText()));

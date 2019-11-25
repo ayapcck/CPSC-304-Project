@@ -39,7 +39,6 @@ public class ForRent {
         int odometer = -99;
         List<ForRent> vehicles = new ArrayList<>();
         try {
-            System.out.println("test1");
             while (resultSet.next()) {
                 vId = resultSet.getInt(1);
                 String vLicense = resultSet.getString(2);
