@@ -84,7 +84,16 @@ public class DatabaseConnectionHandler {
 		List<ForRent> vehicles = getVehiclesByVTName(vtName);
 		assert vehicles != null;
 		// arbitrarily choose the first car of the make since we don't know availability
-		ForRent forRent = vehicles.get(0);
+		ForRent forRent = null;
+		for (ForRent f: vehicles) {
+			if (f.getLocation().equals(reservation.getLocation()) && f.getCity().equals(reservation.getCity())) {
+				forRent = f;
+			}
+		}
+		if (forRent == null) {
+			System.out.println("No vehicles of type " + reservation.getVtName() + " at " + reservation.getLocation() + " " + reservation.getCity());
+			return null;
+		}
 		// have the reservation made at this confNo. Should be unique because confNo is a primary key
 		int rID = confirmationNumber + 1;
 		Rental rental = new Rental(rID,
@@ -197,7 +206,7 @@ public class DatabaseConnectionHandler {
 
             // get value
             assert fromDate != null;
-            int value = returnValue(vehicleType, fromDate, toDate);
+            int value = 200; // hard coded need to make function that will calculate the cost
             Return ret = new Return(rid, toDate, odometer, 1, value);
             insertIntoReturn(ret);
             //TODO: display receipt
@@ -470,7 +479,7 @@ public class DatabaseConnectionHandler {
 			if (vehicleExist(reservation.getVtName(), branch.getLocation(), branch.getCity())) {
 				TimePeriod resTimePeriod = reservation.getTimePeriod();
 
-				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?)");
+				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?,?,?)");
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
@@ -478,6 +487,8 @@ public class DatabaseConnectionHandler {
 				ps.setString(5, resTimePeriod.getFromTime());
 				ps.setString(6, resTimePeriod.getToDate());
 				ps.setString(7, resTimePeriod.getToTime());
+				ps.setString(8, reservation.getLocation());
+				ps.setString(9, reservation.getCity());
 				ps.executeQuery();
 				connection.commit();
 				ps.close();

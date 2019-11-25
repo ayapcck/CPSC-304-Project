@@ -77,8 +77,11 @@ CREATE TABLE Reservations(
     fromTime VARCHAR(255),
     toDate VARCHAR(255),
     toTime VARCHAR(255),
+    location VARCHAR(255) NOT NULL,
+    city     VARCHAR(255) NOT NULL,
     PRIMARY KEY (confNo),
     FOREIGN KEY (VTName) REFERENCES VehicleType,
+    FOREIGN KEY (location, city) REFERENCES Branch,
     FOREIGN KEY (driversLicense) REFERENCES Customer,
     FOREIGN KEY (fromDate, fromTime, toDate, toTime) REFERENCES TimePeriod
 );
@@ -202,33 +205,36 @@ INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-27', '12:05', '2019-01-20', '1:00');
 
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (124, 'truck', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (125, 'truck', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (125, 'truck', '9272019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (126, 'full-size', '9262019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (126, 'full-size', '9262019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (127, 'full-size', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (127, 'full-size', '9252019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (128, 'economy', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (128, 'economy', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (129, 'economy', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (129, 'economy', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
-VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00');
+INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
+VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
                   VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
 VALUES (126, 'A10116', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
+
+INSERT INTO Return( rID, returnDate, odometer, fullTank, value)
+    VALUES(125, '2019-01-25', 5, 1, 510);
