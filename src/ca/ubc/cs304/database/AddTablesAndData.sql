@@ -132,6 +132,7 @@ INSERT INTO Branch (location, city) VALUES ('shop_1', 'Richmond');
 INSERT INTO Branch (location, city) VALUES ('shop_2', 'Richmond');
 INSERT INTO Branch (location, city) VALUES ('shop_3', 'Richmond');
 INSERT INTO Branch (location, city) VALUES ('shop_4', 'Richmond');
+INSERT INTO Branch (location, city) VALUES ('shop_5', 'Seattle');
 
 
 INSERT INTO Customer (cellNum, name, address, driversLicense)

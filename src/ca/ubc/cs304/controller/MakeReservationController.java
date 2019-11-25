@@ -9,6 +9,7 @@ import ca.ubc.cs304.ui.ErrorWindow;
 import ca.ubc.cs304.ui.MakeReservationWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class MakeReservationController implements MakeReservationDelegate {
     private DatabaseConnectionHandler dbHandler = null;
@@ -29,14 +30,22 @@ public class MakeReservationController implements MakeReservationDelegate {
             errorWindow.infoBox("Sorry, time information is invalid", "Invalid Input!");
             MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
             MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-            makeReservationWindow.showMenu(makeReservationController, null);
+            ArrayList<String> vtlist = dbHandler.findAllVT();
+            ArrayList<String> locationList = dbHandler.findAllBranch();
+            ArrayList<String> citylist = dbHandler.findAllCity();
+
+            makeReservationWindow.showMenu(vtlist, locationList, citylist, makeReservationController, null);
         } else if (reservation.getdLicense().equals("")) {
             currentWindow.dispose();
             ErrorWindow errorWindow = new ErrorWindow();
             errorWindow.infoBox("Licence cannot be empty", "Missing licence plate!");
             MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
             MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-            makeReservationWindow.showMenu(makeReservationController, null);
+            ArrayList<String> vtlist = dbHandler.findAllVT();
+            ArrayList<String> locationList = dbHandler.findAllBranch();
+            ArrayList<String> citylist = dbHandler.findAllCity();
+
+            makeReservationWindow.showMenu(vtlist, locationList, citylist, makeReservationController, null);
 
         } else if (dbHandler.insertReservation(reservation, branch)) {
             currentWindow.dispose();
@@ -49,7 +58,11 @@ public class MakeReservationController implements MakeReservationDelegate {
             errorWindow.infoBox("Sorry, no vehicle matches your search", "No Available Vehicle");
             MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
             MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-            makeReservationWindow.showMenu(makeReservationController, null);
+            ArrayList<String> vtlist = dbHandler.findAllVT();
+            ArrayList<String> locationList = dbHandler.findAllBranch();
+            ArrayList<String> citylist = dbHandler.findAllCity();
+
+            makeReservationWindow.showMenu(vtlist, locationList, citylist, makeReservationController, null);
 
         }
     }

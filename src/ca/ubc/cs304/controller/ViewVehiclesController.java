@@ -8,6 +8,7 @@ import ca.ubc.cs304.ui.ViewAvailableVehicleResultWindow;
 import ca.ubc.cs304.ui.ViewAvailableVehiclesWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class ViewVehiclesController implements ViewVehiclesDelegate {
     private DatabaseConnectionHandler dbHandler = null;
@@ -33,7 +34,10 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
             ViewAvailableVehiclesWindow viewWindow = new ViewAvailableVehiclesWindow();
             ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
             ViewVehiclesController viewVehiclesController = new ViewVehiclesController(viewAvailableVehiclesWindow);
-            viewWindow.showMenu(viewVehiclesController);
+            ArrayList<String> branchList = dbHandler.findAllBranch();
+            ArrayList<String> cityList = dbHandler.findAllCity();
+            ArrayList<String> vtList = dbHandler.findAllVT();
+            viewWindow.showMenu(vtList, branchList, cityList, viewVehiclesController);
         }
     }
 
