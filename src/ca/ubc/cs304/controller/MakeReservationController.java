@@ -29,7 +29,6 @@ public class MakeReservationController implements MakeReservationDelegate {
             MakeReservationController customerController = new MakeReservationController(reservationConfirmWindow);
             reservationConfirmWindow.showConfirm(customerController, reservation, branch);
         } else {
-            currentWindow.dispose();
             ErrorWindow errorWindow = new ErrorWindow();
             errorWindow.infoBox("Sorry, no vehicle matches your search", "No Available Vehicle");
         }
