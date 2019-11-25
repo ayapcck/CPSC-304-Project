@@ -10,6 +10,8 @@ import org.jdatepicker.impl.UtilDateModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -66,15 +68,15 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
         placeTextField(cityField, contentPane, gb, c, new Insets(0, 0, 10, 10));
 
-//        // place fromDate label and field
-//        JLabel fromDate = new JLabel("from Date:");
-//        placeLabel(fromDate, contentPane, gb, c, 0, 10);
-//        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+        // place fromDate label and field
+        JLabel fromDate = new JLabel("from Date:");
+        placeLabel(fromDate, contentPane, gb, c, 0, 10);
+        datePicker = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 //
-//        // place toDate label and field
-//        JLabel toDate = new JLabel("to Date:");
-//        placeLabel(toDate, contentPane, gb, c, 0, 10);
-//        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
+        // place toDate label and field
+        JLabel toDate = new JLabel("to Date:");
+        placeLabel(toDate, contentPane, gb, c, 0, 10);
+        datePickerTo = placeDateField(contentPane, gb, c, new Insets(0, 0, 10, 10));
 
         List<JButton> buttons = new ArrayList<>();
         buttons.add(submit);
@@ -87,13 +89,14 @@ public class ViewAvailableVehiclesWindow extends Window implements ActionListene
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == submit) {
             java.util.Date fromDateUtil = (java.util.Date) datePicker.getModel().getValue();
-            java.sql.Date fromDateField = new java.sql.Date(fromDateUtil.getTime());
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date toDateUtil = (java.util.Date) datePickerTo.getModel().getValue();
-            java.sql.Date toDateField = new java.sql.Date(toDateUtil.getTime());
+            String toDate = df.format(toDateUtil);
+            String fromDate = df.format(fromDateUtil);
             String carTypeData = carTypeField.getText();
             String cityData = cityField.getText();
             String locationData = locationField.getText();
-            viewVehiclesDelegate.submit(carTypeData, locationData, cityData);
+            viewVehiclesDelegate.submit(carTypeData, locationData, cityData, fromDate, toDate);
         } else if (actionEvent.getSource() == mainMenu) {
             viewVehiclesDelegate.returnToCustomer();
         }
