@@ -49,7 +49,7 @@ public class ClerkWindow extends Window implements ActionListener {
         } else if (e.getSource() == rentVehicle) {
             clerkTransactionDelegate.navToRentalWindow();
         } else if (e.getSource() == returnVehicle) {
-            clerkTransactionDelegate.returnVehicle();
+            clerkTransactionDelegate.navToReturnWindow();
         } else if (e.getSource() == navToReportGenerationWindow) {
             clerkTransactionDelegate.navToGenerateReportWindow();
         }

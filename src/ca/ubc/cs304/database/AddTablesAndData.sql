@@ -105,7 +105,7 @@ CREATE TABLE Rental(
 
 CREATE TABLE Return(
     rID INTEGER,
-    returnDate DATE,
+    returnDate VARCHAR(255),
     odometer INTEGER,
     fullTank NUMBER(1),
     value INTEGER,
@@ -201,6 +201,8 @@ VALUES ('2019-11-26', '12:05', '2019-01-20', '1:00');
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
 VALUES ('2019-11-27', '12:05', '2019-01-20', '1:00');
 
+INSERT INTO TimePeriod VALUES ('2019-01-25', '1:00', '2019-11-20', '12:05');
+
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime)
 VALUES (123, 'truck', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00');
@@ -228,7 +230,7 @@ INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, to
 VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00');
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
-                  VALUES (125, 'A10115', '9282019', '2019-11-20', '12:05', '2019-01-25', '1:00', 0, 'VISA', 123456, '02/21', 124);
+                  VALUES (125, 'A10115', '9282019', '2019-01-25', '1:00', '2019-11-20', '12:05', 0, 'VISA', 123456, '02/21', 124);
 
 INSERT INTO Rental(rID ,vLicense, driversLicense , fromDate , fromTime, toDate, toTime, odometer,cardName,cardNo ,expDate, confNo)
 VALUES (126, 'A10116', '9282019', '2019-11-24', '12:05', '2020-01-20', '1:00', 0, 'VISA', 123456, '02/21', 125);
