@@ -10,6 +10,7 @@ import ca.ubc.cs304.ui.ViewAvailableVehiclesWindow;
 
 import javax.swing.*;
 import java.sql.Date;
+import java.util.ArrayList;
 
 public class ViewVehiclesResultController implements ViewVehiclesResultDelegate {
     private DatabaseConnectionHandler dbHandler = null;
@@ -48,6 +49,9 @@ public class ViewVehiclesResultController implements ViewVehiclesResultDelegate 
         ViewAvailableVehiclesWindow viewWindow = new ViewAvailableVehiclesWindow();
         ViewAvailableVehiclesWindow viewAvailableVehiclesWindow = new ViewAvailableVehiclesWindow();
         ViewVehiclesController viewVehiclesController = new ViewVehiclesController(viewAvailableVehiclesWindow);
-        viewWindow.showMenu(viewVehiclesController);
+        ArrayList<String> branchList = dbHandler.findAllBranch();
+        ArrayList<String> cityList = dbHandler.findAllCity();
+        ArrayList<String> vtList = dbHandler.findAllVT();
+        viewWindow.showMenu(vtList, branchList, cityList, viewVehiclesController);
     }
 }

@@ -9,6 +9,7 @@ import ca.ubc.cs304.ui.CustomerWindow;
 import ca.ubc.cs304.ui.NewCustomerWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class NewCustomerController implements NewCustomerDelegate {
     private DatabaseConnectionHandler dbHandler = DatabaseConnectionHandler.getDBHandlerInstance();
@@ -32,7 +33,11 @@ public class NewCustomerController implements NewCustomerDelegate {
             currentWindow.dispose();
             MakeReservationWindow makeReservationWindow = new MakeReservationWindow();
             MakeReservationController makeReservationController = new MakeReservationController(makeReservationWindow);
-            makeReservationWindow.showMenu(makeReservationController, customer.getDriversLicense());
+            ArrayList<String> locationList = dbHandler.findAllBranch();
+            ArrayList<String> cityList = dbHandler.findAllCity();
+            ArrayList<String> vtList = dbHandler.findAllVT();
+
+            makeReservationWindow.showMenu(vtList, locationList, cityList, makeReservationController, customer.getDriversLicense());
         }
     }
 

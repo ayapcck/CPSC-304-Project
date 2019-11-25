@@ -40,7 +40,7 @@ public class MakeReservationWindow extends Window implements ActionListener {
 
     }
 
-    public void showMenu(MakeReservationDelegate makeReservationDelegate, String license) {
+    public void showMenu(ArrayList<String> vtList, ArrayList<String> branchList, ArrayList<String> cityList, MakeReservationDelegate makeReservationDelegate, String license) {
         this.makeReservationDelegate = makeReservationDelegate;
         this.license = license;
 
@@ -62,8 +62,12 @@ public class MakeReservationWindow extends Window implements ActionListener {
         // place car type
         JLabel carType = new JLabel("Car Type:");
         placeLabel(carType, contentPane, gb, c, 10, 5);
-        String[] vtList = {"SUV", "full-size", "truck", "economy", "mid-size", "standard"};
-        vtBox = new JComboBox(vtList);
+        String[] vtList1 = new String[vtList.size()];
+        System.out.println(vtList.size());
+        for (int i = 0; i < vtList.size(); i++) {
+            vtList1[i] = vtList.get(i);
+        }
+        vtBox = new JComboBox(vtList1);
         vtBox.setSelectedIndex(0);
         vtBox.addActionListener(this);
         c.gridwidth = GridBagConstraints.REMAINDER;
@@ -74,7 +78,12 @@ public class MakeReservationWindow extends Window implements ActionListener {
         // place location label and field
         JLabel location = new JLabel("Location:");
         placeLabel(location, contentPane, gb, c, 0, 10);
-        String[] locationList = {"shop_1", "shop_2", "shop_3", "shop_4"};
+        String[] locationList = new String[branchList.size()];
+        System.out.println(branchList.size());
+        for (int i = 0; i < branchList.size(); i++) {
+            locationList[i] = branchList.get(i);
+            System.out.println(locationList[i]);
+        }
         locationBox = new JComboBox(locationList);
         locationBox.setSelectedIndex(0);
         locationBox.addActionListener(this);
@@ -86,8 +95,11 @@ public class MakeReservationWindow extends Window implements ActionListener {
         // place city label and field
         JLabel cityLabel = new JLabel("City:");
         placeLabel(cityLabel, contentPane, gb, c, 0, 10);
-        String[] cityList = {"Vancouver", "Richmond", "Burnaby", "Coquitlam"};
-        cityBox = new JComboBox(cityList);
+        String[] cityList1 = new String[cityList.size()];
+        for (int i = 0; i < cityList.size(); i++) {
+            cityList1[i] = cityList.get(i);
+        }
+        cityBox = new JComboBox(cityList1);
         cityBox.setSelectedIndex(0);
         cityBox.addActionListener(this);
         c.gridwidth = GridBagConstraints.REMAINDER;

@@ -65,13 +65,16 @@ public class ViewAvailableVehicleResultWindow extends Window implements ActionLi
 
     public void showMoreDetail(ViewVehiclesResultDelegate viewVehiclesResultDelegate, JTable rs) {
         this.viewVehiclesResultDelegate = viewVehiclesResultDelegate;
+        gb = new GridBagLayout();
         contentPane = new JPanel();
+        contentPane.setLayout(gb);
+
         c = new GridBagConstraints();
         this.setContentPane(contentPane);
         JScrollPane jsp = new JScrollPane(rs);
-        jsp.setSize(1000,300);
+        jsp.setPreferredSize(new Dimension(1000, 200));
         c.gridwidth = GridBagConstraints.REMAINDER;
-        c.insets = new Insets(5, 10, 10, 10);
+        c.insets = new Insets(5, 0, 10, 0);
         c.anchor = GridBagConstraints.CENTER;
         gb.setConstraints(jsp, c);
         contentPane.add(jsp);

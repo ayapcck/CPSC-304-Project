@@ -873,4 +873,46 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
+	public ArrayList<String> findAllBranch() {
+		ArrayList<String> locations = new ArrayList<String>();
+		try {
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT DISTINCT location FROM Branch ORDER BY location");
+			while (rs.next()) {
+				locations.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return locations;
+	}
+
+	public ArrayList<String> findAllCity() {
+		ArrayList<String> locations = new ArrayList<String>();
+		try {
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT DISTINCT city FROM Branch ORDER BY city");
+			while (rs.next()) {
+				locations.add(rs.getString("city"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return locations;
+	}
+
+	public ArrayList<String> findAllVT() {
+		ArrayList<String> locations = new ArrayList<String>();
+		try {
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT DISTINCT VTName FROM VehicleType");
+			while (rs.next()) {
+				locations.add(rs.getString(1));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return locations;
+	}
+
 }
