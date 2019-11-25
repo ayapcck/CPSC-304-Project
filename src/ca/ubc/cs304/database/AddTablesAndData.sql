@@ -119,21 +119,18 @@ CREATE TABLE Return(
 INSERT INTO Branch (location, city) VALUES ('shop_1', 'Vancouver');
 INSERT INTO Branch (location, city) VALUES ('shop_2', 'Vancouver');
 INSERT INTO Branch (location, city) VALUES ('shop_3', 'Vancouver');
-INSERT INTO Branch (location, city) VALUES ('shop_4', 'Vancouver');
 INSERT INTO Branch (location, city) VALUES ('shop_1', 'Burnaby');
 INSERT INTO Branch (location, city) VALUES ('shop_2', 'Burnaby');
 INSERT INTO Branch (location, city) VALUES ('shop_3', 'Burnaby');
 INSERT INTO Branch (location, city) VALUES ('shop_4', 'Burnaby');
-INSERT INTO Branch (location, city) VALUES ('shop_1', 'Coquitlam');
-INSERT INTO Branch (location, city) VALUES ('shop_2', 'Coquitlam');
-INSERT INTO Branch (location, city) VALUES ('shop_3', 'Coquitlam');
-INSERT INTO Branch (location, city) VALUES ('shop_4', 'Coquitlam');
-INSERT INTO Branch (location, city) VALUES ('shop_1', 'Richmond');
-INSERT INTO Branch (location, city) VALUES ('shop_2', 'Richmond');
-INSERT INTO Branch (location, city) VALUES ('shop_3', 'Richmond');
-INSERT INTO Branch (location, city) VALUES ('shop_4', 'Richmond');
-INSERT INTO Branch (location, city) VALUES ('shop_5', 'Seattle');
-
+INSERT INTO Branch (location, city) VALUES ('shop_5', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_6', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_7', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_8', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_9', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_10', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_11', 'Burnaby');
+INSERT INTO Branch (location, city) VALUES ('shop_12', 'Burnaby');
 
 INSERT INTO Customer (cellNum, name, address, driversLicense)
 VALUES (6041234567, 'John Smith', '1234 made up lane', '9282019');
@@ -160,15 +157,6 @@ INSERT INTO Customer (cellNum, name, address, driversLicense)
 VALUES (8388772838, 'Jonny Rocket', 'Tim Hortons', '920019293');
 INSERT INTO Customer (cellNum, name, address, driversLicense)
 VALUES (8289199482, 'Robert Frost', '9829 something road', '9maybe8912');
-
-INSERT INTO Customer (cellNum, name, address, driversLicense)
-VALUES (7783648291, 'Julia Frost', '9829 agronomy road', 'jk268g');
-INSERT INTO Customer (cellNum, name, address, driversLicense)
-VALUES (8876354859, 'Lisa Bin', '9829 agronomy road', 'jk568g');
-INSERT INTO Customer (cellNum, name, address, driversLicense)
-VALUES (283794058, 'Charlie Targarian', '9829 agronomy road', 'jk468g');
-INSERT INTO Customer (cellNum, name, address, driversLicense)
-VALUES (7739274854, 'Monica Baby', '9829 city road', 'jk368g');
 
 INSERT INTO VehicleType (VTName, features) VALUES ('SUV', 'car seat');
 INSERT INTO VehicleType (VTName, features) VALUES ('truck', 'car seat');
@@ -255,30 +243,6 @@ VALUES (4, 'D10122', 'red', 'available', 'full-size', 'shop_12', 'Burnaby');
 
 INSERT INTO ForSale (vID, vFSLicense, color, status, VTName, location, city)
 VALUES (5, 'E10111', 'blue', 'available', 'economy', 'shop_1', 'Burnaby');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (10,'A90909', 'red', 'available', 'SUV', 'shop_1', 'Richmond');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (11,'A23909', 'white', 'available', 'SUV', 'shop_1', 'Richmond');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (12,'A80909', 'blue', 'available', 'SUV', 'shop_2', 'Richmond');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (13,'A70909', 'red', 'available', 'SUV', 'shop_3', 'Richmond');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (14,'A60908', 'black', 'available', 'mid-size', 'shop_4', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (15,'A90908', 'red', 'available', 'economy', 'shop_1', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (16,'A23908', 'green', 'available', 'economy', 'shop_1', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (17,'A80965', 'white', 'available', 'SUV', 'shop_2', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (18,'A70900', 'red', 'available', 'economy', 'shop_3', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (19,'D70900', 'green', 'available', 'standard', 'shop_3', 'Coquitlam');
-INSERT INTO ForRent (vID, vLicense, color, status, VTName, location, city)
-VALUES (20,'A60349', 'black', 'available', 'mid-size', 'shop_4', 'Coquitlam');
-
-
 
 
 INSERT INTO TIMEPERIOD (fromDate, fromTime, toDate, toTime)
@@ -315,16 +279,6 @@ VALUES (128, 'economy', '9242019', '2019-11-24', '12:05', '2020-01-20', '1:00', 
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
 VALUES (129, 'economy', '9232019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
-
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
-VALUES (130, 'standard', '1234567', '2019-12-01', '19:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
-VALUES (131, 'standard', '2234567', '2019-12-02', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
-VALUES (132, 'standard', '3234567', '2019-11-03', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');
-INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
-VALUES (133, 'standard', '4234567', '2020-01-01', '12:05', '2021-01-20', '1:00', 'shop_1', 'Vancouver');
-
 
 INSERT INTO Reservations (confNo, VTName, driversLicense, fromDate, fromTime, toDate, toTime, location, city)
 VALUES (130, 'economy', '9222019', '2019-11-24', '12:05', '2020-01-20', '1:00', 'shop_1', 'Vancouver');

@@ -9,6 +9,7 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.xml.transform.Result;
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
@@ -474,8 +475,19 @@ public class DatabaseConnectionHandler {
 		try {
 			if (vehicleExist(reservation.getVtName(), branch.getLocation(), branch.getCity())) {
 				TimePeriod resTimePeriod = reservation.getTimePeriod();
-
+				if (!getTimePeriod(resTimePeriod)) {
+					insertTimePeriod(resTimePeriod);
+				}
 				PreparedStatement ps = connection.prepareStatement("INSERT INTO RESERVATIONS VALUES (?,?,?,?,?,?,?,?,?)");
+				System.out.println(reservation.getConfNo());
+				System.out.println(reservation.getVtName());
+				System.out.println(reservation.getdLicense());
+				System.out.println(resTimePeriod.getFromDate());
+				System.out.println(resTimePeriod.getFromTime());
+				System.out.println(resTimePeriod.getToDate());
+				System.out.println(resTimePeriod.getToTime());
+				System.out.println(reservation.getLocation());
+				System.out.println(reservation.getCity());
 				ps.setInt(1, reservation.getConfNo());
 				ps.setString(2, reservation.getVtName());
 				ps.setString(3, reservation.getdLicense());
@@ -497,6 +509,30 @@ public class DatabaseConnectionHandler {
 		return false;
 	}
 
+	public boolean getTimePeriod(TimePeriod model) {
+		try {
+			PreparedStatement ps = connection.prepareStatement("SELECT * FROM TIMEPERIOD WHERE FROMDATE = ? AND FROMTIME = ? AND TODATE = ? AND TOTIME = ?");
+			ps.setString(1, model.getFromDate());
+			ps.setString(2, model.getFromTime());
+			ps.setString(3, model.getToDate());
+			ps.setString(4, model.getToTime());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				connection.commit();
+				ps.close();
+				return true;
+			} else {
+				connection.commit();
+				ps.close();
+				return false;
+			}
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+			rollbackConnection();
+			return false;
+		}
+
+	}
 	public void updateStatus(String value, String vLicense) {
 		try {
 			PreparedStatement ps = connection.prepareStatement("UPDATE FORRENT SET STATUS = ? WHERE VLICENSE = ?");
@@ -649,7 +685,7 @@ public class DatabaseConnectionHandler {
 
 	public int checkVehicleNum(String carType, String location, String city) {
 		try {
-			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available' ORDER BY vid");
+			PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) AS num FROM ForRent WHERE vtName = ? AND location = ? AND city = ? AND status = 'available'");
 			ps.setString(1, carType);
 			ps.setString(2, location);
 			ps.setString(3, city);
