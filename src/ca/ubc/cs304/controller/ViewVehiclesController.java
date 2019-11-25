@@ -28,7 +28,7 @@ public class ViewVehiclesController implements ViewVehiclesDelegate {
             ViewVehiclesResultController viewVehiclesResultController = new ViewVehiclesResultController(viewAvailableVehicleResultWindow);
             viewAvailableVehicleResultWindow.showMenu(viewVehiclesResultController, count, carType, location, city);
         } else {
-            currentWindow.dispose();
+//            currentWindow.dispose();
             ErrorWindow errorWindow = new ErrorWindow();
             errorWindow.infoBox("Invalid date!", "Invalid input");
             ViewAvailableVehiclesWindow viewWindow = new ViewAvailableVehiclesWindow();
