@@ -108,7 +108,7 @@ CREATE TABLE Rental(
 
 CREATE TABLE Return(
                        rID INTEGER,
-                       returnDate DATE,
+                       returnDate VARCHAR(255),
                        odometer INTEGER,
                        fullTank NUMBER(1),
                        value INTEGER,

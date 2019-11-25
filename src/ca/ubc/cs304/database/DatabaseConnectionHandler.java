@@ -170,7 +170,7 @@ public class DatabaseConnectionHandler {
 		return rentVehicleWithReservation(reservation.getConfNo(), cardName, cardNumber);
 	}
 
-	public Pair<Return, RentalCost> returnVehicle(int rId) {
+	public Pair<Return, RentalCost> returnVehicle(int rId) throws Exception{
         try {
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM RENTAL WHERE  RID = ?");
             ps.setInt(1, rId);
@@ -186,9 +186,9 @@ public class DatabaseConnectionHandler {
                 fromDate = rental.getString(4);
             }
 
-//            if (!rentedVehicle(vLicense)) {
-//                return "Vehicle is not rented";
-//            }
+            if (!rentedVehicle(vLicense)) {
+                throw new Exception("This vehicle was not rented");
+            }
 
             PreparedStatement ps1 = connection.prepareStatement("SELECT * FROM FORRENT WHERE  VLICENSE = ?");
             ps1.setString(1, vLicense);
