@@ -315,14 +315,14 @@ public class DatabaseConnectionHandler {
 
 	// tuples are location, city, type of car, number of that car that were rented.
 	// Each element in the list corresponds to such a tuple
-	public JTable rentalsAtEachLocationByVT(Date date) {
+	public JTable rentalsAtEachLocationByVT(String date) {
 	    try {
             PreparedStatement ps = connection.prepareStatement
                     ("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
                             "from Rental, ForRent\n" +
                             "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
                             "group by ForRent.location, ForRent.city, ForRent.vtname");
-            ps.setDate(1, date);
+            ps.setString(1, date);
             ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
 			return table;
@@ -334,14 +334,14 @@ public class DatabaseConnectionHandler {
 
 
     // total rentals for whole company on specified date
-	public int totalRentalsWholeCompany(Date date) {
+	public int totalRentalsWholeCompany(String date) {
 		int totalRentals = -99;
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct COUNT(Rental.VLicense) as numRentals\n" +
 							"from Rental\n" +
 							"where Rental.fromDate = ?");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				totalRentals = rs.getInt(1);
@@ -354,14 +354,14 @@ public class DatabaseConnectionHandler {
 	}
 
     // tuples are location, city, type of car, number of that car that were rented.
-    public JTable totalNumRentalsEachBranch(Date date) {
+    public JTable totalNumRentalsEachBranch(String date) {
         try {
-            PreparedStatement ps = connection.prepareStatement
-                    ("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLicense) as numRentals\n" +
-                            "from Rental, ForRent\n" +
-                            "where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense\n" +
-                            "group by ForRent.location, ForRent.city");
-            ps.setDate(1, date);
+        	String query = "SELECT DISTINCT ForRent.location, ForRent.city, COUNT(Rental.VLicense) AS numRentals " +
+					"FROM Rental, ForRent " +
+					"WHERE Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense " +
+					"GROUP BY ForRent.location, ForRent.city";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, date);
             ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
 			ps.close();
@@ -724,7 +724,7 @@ public class DatabaseConnectionHandler {
 	}
 
 	// each tuple represent one vtName and the total number of vehicles of that type that are rented on that day
-	public JTable rentalsPerBranchVT(Date date, String location, String city) {
+	public JTable rentalsPerBranchVT(String date, String location, String city) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num\n" +
@@ -732,7 +732,7 @@ public class DatabaseConnectionHandler {
 							"where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense AND ForRent.city = ? AND\n" +
 							"\t\t\tForRent.location = ?\n" +
 							"group by ForRent.location, ForRent.city, ForRent.vtname");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ps.setString(2, city);
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();
@@ -745,7 +745,7 @@ public class DatabaseConnectionHandler {
 		}
 	}
 	// should be one tuple that contains the total number of daily rentals at the branch that was specified
-	public int totalRentalsOneBranch(Date date, String location, String city) {
+	public int totalRentalsOneBranch(String date, String location, String city) {
 		int totalRentals = -1;
 		try {
 			PreparedStatement ps = connection.prepareStatement
@@ -753,7 +753,7 @@ public class DatabaseConnectionHandler {
 							"from Rental, ForRent\n" +
 							"where Rental.fromDate = ? AND Rental.VLicense = ForRent.vLicense AND ForRent.city = ? AND\n" +
 							"\t\t\tForRent.location = ?");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ps.setString(2, city);
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();
@@ -769,14 +769,14 @@ public class DatabaseConnectionHandler {
 
 	// each tuple is a branch, vtname, number of these type of vehicles that were returns. Each tuple doesn't have to
 	// be a unique branch. Each tuple just encodes info about one specific vtName
-	public JTable returnForAllBranchesVT(Date date) {
+	public JTable returnForAllBranchesVT(String date) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num, SUM(Return.value) as revenue\n" +
 							"from Rental, ForRent, Return\n" +
 							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ?\n" +
 							"group by ForRent.location, ForRent.city, ForRent.vtname\t");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
 			ps.close();
@@ -788,14 +788,14 @@ public class DatabaseConnectionHandler {
 	}
 
 	// each tuple is a branch with the total number of returns for that branch with revenue per branch
-	public JTable returnForAllBranches(Date date) {
+	public JTable returnForAllBranches(String date) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct ForRent.location, ForRent.city, COUNT(Rental.VLICENSE) as numReturns, SUM(Return.value) as value\n" +
 							"from Rental, ForRent, Return\n" +
 							"where Return.returnDate = ? AND Rental.VLicense = ForRent.vLicense AND Return.rID = Rental.rId\n" +
 							"group by ForRent.location, ForRent.city");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ResultSet rs = ps.executeQuery();
 			JTable table = new JTable(buildTableModel(rs));
 			ps.close();
@@ -806,14 +806,14 @@ public class DatabaseConnectionHandler {
 		}
 	}
 
-	public int grandTotalRevenue(Date date) {
+	public int grandTotalRevenue(String date) {
 		int grandTotal = -1;
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct SUM(Return.value) as totalRevenue\n" +
 							"from Return\n" +
 							"where Return.returnDate = ?");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				grandTotal = rs.getInt(1);
@@ -827,14 +827,14 @@ public class DatabaseConnectionHandler {
 	}
 
 	// each tuple shows the number of vehicles returned per category, the revenue per category
-	public JTable returnForOneBranchVTAndRevenue(Date date, String location, String city) {
+	public JTable returnForOneBranchVTAndRevenue(String date, String location, String city) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct ForRent.location, ForRent.city, ForRent.vtname, COUNT(ForRent.vtname) as num, SUM(Return.value) as value\n" +
 							"from Rental, ForRent, Return\n" +
 							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ? AND ForRent.city = ? AND ForRent.location = ?\n" +
 							"group by ForRent.location, ForRent.city, ForRent.vtname");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ps.setString(2, city);
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();
@@ -848,14 +848,14 @@ public class DatabaseConnectionHandler {
 	}
 
 	// revenue and total returned cars for one branch in total for specified day and branch
-	public JTable returnOneBranchTotalVtAndRevenue(Date date, String location, String city) {
+	public JTable returnOneBranchTotalVtAndRevenue(String date, String location, String city) {
 		try {
 			PreparedStatement ps = connection.prepareStatement
 					("select distinct SUM(Return.value) as numRevenue, COUNT(Rental.VLicense) as numVehicles\n" +
 							"from Rental, ForRent, Return\n" +
 							"where Rental.rId = Return.rID AND Rental.VLicense = ForRent.vLicense AND Return.returnDate = ? AND ForRent.city = ? AND ForRent.location = ?\n" +
 							"group by ForRent.city, ForRent.location");
-			ps.setDate(1, date);
+			ps.setString(1, date);
 			ps.setString(2, city);
 			ps.setString(3, location);
 			ResultSet rs = ps.executeQuery();

@@ -7,8 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ReportGenerationWindow extends Window implements ActionListener {
@@ -72,9 +74,9 @@ public class ReportGenerationWindow extends Window implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            java.util.Date dateFromWindow = (java.util.Date) datePicker.getModel().getValue();
-            Date date = new java.sql.Date(dateFromWindow.getTime());
-            System.out.println(date);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            Date dateFromWindow = (Date) datePicker.getModel().getValue();
+            String date = df.format(dateFromWindow);
             if (companyWideReport.isSelected()) {
                 if (reportForRental.isSelected()) {
                     reportGenerationDelegate.dailyReportsRentalsWholeCompany(date);

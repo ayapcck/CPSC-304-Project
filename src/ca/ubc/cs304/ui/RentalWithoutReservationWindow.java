@@ -88,7 +88,7 @@ public class RentalWithoutReservationWindow extends Window implements ActionList
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == submit) {
-            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat tf = new SimpleDateFormat("HH:mm");
             Date fromDateTime = (Date) timeSpinnerFrom.getValue();
             Date toDateTime = (Date) timeSpinnerTo.getValue();

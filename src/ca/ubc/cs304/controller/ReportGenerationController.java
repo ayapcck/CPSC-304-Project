@@ -17,7 +17,7 @@ public class ReportGenerationController implements ReportGenerationDelegate {
     }
 
     @Override
-    public void dailyReportsRentalsWholeCompany(Date date) {
+    public void dailyReportsRentalsWholeCompany(String date) {
         JTable totalRentalsEachBranches = dbHandler.totalNumRentalsEachBranch(date);
         JTable rentalsByVTS = dbHandler.rentalsAtEachLocationByVT(date);
         int totalRentals = dbHandler.totalRentalsWholeCompany(date);
@@ -28,7 +28,7 @@ public class ReportGenerationController implements ReportGenerationDelegate {
     }
 
     @Override
-    public void dailyRentalReportsOneBranch(Date date, String location, String city) {
+    public void dailyRentalReportsOneBranch(String date, String location, String city) {
         int totalRentals = dbHandler.totalRentalsOneBranch(date, location, city);
         JTable totalRentalsPerVtType = dbHandler.rentalsPerBranchVT(date, location, city);
         currentWindow.dispose();
@@ -38,7 +38,7 @@ public class ReportGenerationController implements ReportGenerationDelegate {
     }
 
     @Override
-    public void dailyReturnReportsWholeCompany(Date date) {
+    public void dailyReturnReportsWholeCompany(String date) {
         //TODO: display the reports currently in 2 tables and an int for the total reports. Can put it in one table if we need
         JTable totalReturnsByVt = dbHandler.returnForAllBranchesVT(date);
         JTable totalReturnsPerBranch = dbHandler.returnForAllBranches(date);
@@ -50,7 +50,7 @@ public class ReportGenerationController implements ReportGenerationDelegate {
     }
 
     @Override
-    public void dailyReturnReportOneBranch(Date date, String location, String city) {
+    public void dailyReturnReportOneBranch(String date, String location, String city) {
         JTable returnForOneBranch = dbHandler.returnForOneBranchVTAndRevenue(date, location, city);
         JTable returnTotalRevAndReturn = dbHandler.returnOneBranchTotalVtAndRevenue(date, location, city);
         currentWindow.dispose();
