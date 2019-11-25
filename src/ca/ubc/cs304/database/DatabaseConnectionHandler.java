@@ -534,7 +534,6 @@ public class DatabaseConnectionHandler {
 
 	public String[] getDataFromTable(String tableName, String columns) {
 		ArrayList<String> result = new ArrayList<String>();
-		// TODO: do we want to return anything or just print information? display in a ui?
 
 		try {
 			String query = "SELECT ".concat(columns);
@@ -544,7 +543,7 @@ public class DatabaseConnectionHandler {
 			String[] listCols = columns.split(",");
 			while (rs.next()) {
 				for (int i = 1; i <= listCols.length; i++) {
-					System.out.println(rs.getString(i));
+					System.out.println(listCols[i-1] + ": " + rs.getString(i));
 				}
 			}
 			rs.close();
